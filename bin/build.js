@@ -50,7 +50,7 @@ function build(callback) {
 		}
         edfs.loadBar(content, (err, bar) => {
             if (err) {
-                return callback(err):
+                return callback(err);
             }
             updateWallet(bar, callback);
         });

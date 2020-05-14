@@ -1,2 +1,6 @@
-# ssapp-template
-template to be used when building a new SSApp
+# BPD
+Blockchain Platform Deployment demo application.
+
+TODO:
+* persist model
+* cluster manipulation

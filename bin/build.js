@@ -48,7 +48,7 @@ function build(callback) {
 		if (err || content.length === 0) {
 			return createWallet(callback);
 		}
-        edfs.loadBar(contentm (err, bar) => {
+        edfs.loadBar(content, (err, bar) => {
             if (err) {
                 return callback(err):
             }

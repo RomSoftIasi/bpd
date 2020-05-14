@@ -1,0 +1,17 @@
+<psk-page title="Blockchain Platforms Deployment">
+    <psk-container controller-name="ClustersController">
+        <psk-card title="@organization.name">
+            <psk-chapter title="Clusters">
+                <psk-for-each data-view-model="clusters">
+                    <psk-card title="@name">
+                        <psk-button label="Edit" button-class="btn btn-info" event-name="cluster:edit" event-data="@id"></psk-button>
+                        <psk-button label="Remove" button-class="btn btn-danger" event-name="cluster:remove" event-data="@id"></psk-button>
+                    </psk-card>
+                </psk-for-each>
+                <psk-link page="Create Cluster">Create new cluster</psk-link>
+            </psk-chapter>
+        </psk-card>
+        <psk-list-feedbacks>
+        </psk-list-feedbacks>
+    </psk-container>
+</psk-page>

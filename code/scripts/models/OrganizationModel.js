@@ -12,8 +12,53 @@ export default class OrganizationModel {
             files: [],
             organizations: [
                 {
-                    name: "Test",
+                    name: "Organization A",
                     uid: 1,
+                    kubernetesConfig: []
+                },
+                {
+                    name: "Organization B",
+                    uid: 2,
+                    kubernetesConfig: []
+                },
+                {
+                    name: "Organization C",
+                    uid: 3,
+                    kubernetesConfig: []
+                },
+                {
+                    name: "Organization D",
+                    uid: 4,
+                    kubernetesConfig: []
+                },
+                {
+                    name: "Organization E",
+                    uid: 5,
+                    kubernetesConfig: []
+                },
+                {
+                    name: "Organization A",
+                    uid: 6,
+                    kubernetesConfig: []
+                },
+                {
+                    name: "Organization B",
+                    uid: 7,
+                    kubernetesConfig: []
+                },
+                {
+                    name: "Organization C",
+                    uid: 8,
+                    kubernetesConfig: []
+                },
+                {
+                    name: "Organization D",
+                    uid: 9,
+                    kubernetesConfig: []
+                },
+                {
+                    name: "Organization E",
+                    uid: 10,
                     kubernetesConfig: []
                 },
             ],

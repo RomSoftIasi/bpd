@@ -1,0 +1,13 @@
+<psk-container controller-name="ShareQRCodeController">
+    <psk-modal id="shareQrCodeModal" class="bpd-modal" opened>
+
+        <psk-label slot="title" class="bpd-modal-title" label="@title"></psk-label>
+
+        <div class="content">
+            <psk-barcode-generator size="12" type="qrcode" data="@data.identifier"></psk-barcode-generator>
+        </div>
+        <div>
+            <psk-label label="@description"></psk-label>
+        </div>
+    </psk-modal>
+</psk-container>

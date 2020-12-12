@@ -1,16 +1,43 @@
 <psk-page title="Blockchain Platforms Deployment">
     <psk-container controller-name="ClustersController">
-        <psk-card title="@organization.name">
-            <psk-chapter title="Clusters">
+
+        <psk-card class="bpd-header">
+            <psk-label label="Sign out"/>
+        </psk-card>
+
+        <psk-card class="bpd-sub-header">
+            <div>
+                <psk-label label="@organization.name"/>
+            </div>
+            <div>
+                <psk-barcode-generator size="6" type="qrcode" data="@organization.name"></psk-barcode-generator>
+            </div>
+        </psk-card>
+
+        <psk-card class="bpd-dashboard">
+            <psk-label class="bpd-dashboard-title" label="Clusters"/>
+            <div class="bpd-create-organization">
+                <psk-button class="bpd-create-organization-button" event-name="org:create">
+                    <psk-icon icon="plus" color="rgb(255, 255, 255)"></psk-icon>
+                </psk-button>
+                <psk-link style="display: none" page="Create Cluster">Create new cluster</psk-link>
+                <psk-label class="bpd-create-organization-label" label="Create new cluster"/>
+            </div>
+            <div class="bpd-organization-elements">
                 <psk-for-each data-view-model="clusters">
-                    <psk-card title="@name">
-                        <psk-button label="Edit" button-class="btn btn-info" event-name="cluster:edit" event-data="@id"></psk-button>
-                        <psk-button label="Remove" button-class="btn btn-danger" event-name="cluster:remove" event-data="@id"></psk-button>
+                    <psk-card class="bpd-organization-line">
+                        <div class="bpd-organization-card-header">
+                            <psk-button-group class="bpd-organization-menu" icon="ellipsis-v" icon-color="rgb(255, 255, 255)">
+                                <psk-button label="Edit" button-class="btn btn-info" event-name="cluster:edit" event-data="@id"></psk-button>
+                                <psk-button label="Remove" button-class="btn btn-danger" event-name="cluster:remove" event-data="@id"></psk-button>
+                            </psk-button-group>
+                        </div>
+                        <psk-label class="bpd-organization-card-label" label="@name"/>
                     </psk-card>
                 </psk-for-each>
-                <psk-link page="Create Cluster">Create new cluster</psk-link>
-            </psk-chapter>
+            </div>
         </psk-card>
+
         <psk-list-feedbacks>
         </psk-list-feedbacks>
     </psk-container>

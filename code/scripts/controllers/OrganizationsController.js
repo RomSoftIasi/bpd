@@ -18,6 +18,33 @@ export default class OrganizationsController extends BPDController {
             this.feedbackEmitter = e.detail;
         });
 
+        // ============== Button listener
+        this.on('org:create', (e) => {
+            this.showModal('addOrganizationModal', {}, (err, response) => {
+                if (err) {
+                    return console.log(err);
+                }
+                debugger
+            });
+        });
+
+        // Share QRCode
+        this.on('org:getQRCode', (e) => {
+            e.preventDefault();
+            e.stopImmediatePropagation();
+            let organization = this.orgModel.getOrganization(e.data);
+            if(organization === -1) {
+                return;
+            }
+            let qrCodeModalModel = {
+                title: `QRCode for ${organization.name}`,
+                description: `Scan the code above to get your organization data`,
+                data: {
+                    identifier: JSON.stringify(organization)
+                }
+            }
+            this.showModal('shareQRCodeModal', qrCodeModalModel);
+        });
 
         // Edit organization request
         this.on('org:edit', (e) => {
@@ -35,18 +62,21 @@ export default class OrganizationsController extends BPDController {
             const orgUid = e.data;
             this._removeOrganization(orgUid);
         });
+
         // Add new key:value config pair for Kubernetes cluster
         this.on('org:add-kubernetes-config', (e) => {
             e.preventDefault();
             e.stopImmediatePropagation();
             this.orgModel.prepareNewKubernetesConfig();
         });
+
         // Remove key:value config pair for Kubernetes cluster
         this.on('org:remove-kubernetes-config', (e) => {
             e.preventDefault();
             e.stopImmediatePropagation();
             this.orgModel.removeKubernetesConfig(e.data);
         });
+
         // Save organization
         this.on('org:save', (e) => {
             e.preventDefault();
@@ -55,6 +85,7 @@ export default class OrganizationsController extends BPDController {
                 this._onSaveOrganization(err, data);
             });
         });
+
         this.on('org:manage-clusters', (e) => {
             e.preventDefault();
             e.stopImmediatePropagation();

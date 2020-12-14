@@ -26,12 +26,40 @@ export default class ClustersController extends BPDController {
             this._setOrganization();
         })
 
+        this.on('cluster:create', (e) => {
+            let cluster = {cluster: this.clusterModel.getCluster(e.data)};
+            this.showModal('addClusterModal', cluster, (err, response) => {
+                if (err) {
+                    return console.log(err);
+                }
+                debugger
+            });
+        });
+
         // Remove cluster request
         this.on('cluster:remove', (e) => {
             e.preventDefault();
             e.stopImmediatePropagation();
             const id = e.data;
             this._removeCluster(id);
+        })
+
+        // Share QR Code of the cluster
+        this.on('cluster:share', (e) => {
+            e.preventDefault();
+            e.stopImmediatePropagation();
+            let cluster = this.clusterModel.getCluster(e.data);
+            if (cluster === -1) {
+                return;
+            }
+            let qrCodeModalModel = {
+                title: `QRCode for ${cluster.name}`,
+                description: `Scan the code above to get your cluster data`,
+                data: {
+                    identifier: JSON.stringify(cluster)
+                }
+            }
+            this.showModal('shareQRCodeModal', qrCodeModalModel);
         })
 
         // Edit cluster request

@@ -1,0 +1,39 @@
+<psk-container controller-name="AddClusterModal">
+    <psk-modal id="addClusterModal" class="bpd-modal" opened>
+
+        <psk-label slot="title" class="bpd-modal-title" label="@title"></psk-label>
+
+        <div class="content">
+            <psk-text-input class="bpd-input" view-model="@name"></psk-text-input>
+            <psk-card class="bpd-row bpd-input-row">
+                <psk-checkbox view-model="autoStop"></psk-checkbox>
+                <psk-date-input class="bpd-date-input" view-model="@date"></psk-date-input>
+            </psk-card>
+            <psk-text-input class="bpd-input" view-model="@link"></psk-text-input>
+        </div>
+
+        <psk-condition condition="@createCluster">
+            <div slot="condition-true">
+                <psk-card class="bpd-row bpd-creation-row">
+                    <psk-button event-name="cls:create">START</psk-button>
+                </psk-card>
+            </div>
+            <div slot="condition-false">
+                <psk-card class="bpd-translucent-buttons">
+                    <psk-button class="bpd-qr-code-with-text" event-name="cls:ci">
+                        Continuous Integration
+                    </psk-button>
+                    <psk-button class="bpd-qr-code-with-text" event-name="cls:pt">
+                        Performance Testing
+                    </psk-button>
+                </psk-card>
+
+                <psk-card class="bpd-row bpd-creation-row">
+                    <psk-button class="bpd-delete-button" event-name="cls:delete">DELETE</psk-button>
+                    <psk-button event-name="cls:save">SAVE</psk-button>
+                </psk-card>
+            </div>
+        </psk-condition>
+
+    </psk-modal>
+</psk-container>

@@ -15,13 +15,12 @@
         </psk-card>
 
         <psk-card class="bpd-dashboard">
-            <psk-label class="bpd-dashboard-title" label="Clusters"/>
+            <psk-label class="bpd-dashboard-title" label="Blockchain Networks"/>
             <div class="bpd-create-organization">
                 <psk-button class="bpd-create-organization-button" event-name="cluster:create">
                     <psk-icon icon="plus" color="rgb(255, 255, 255)"></psk-icon>
                 </psk-button>
-                <psk-link style="display: none" page="Create Cluster">Create new cluster</psk-link>
-                <psk-label class="bpd-create-organization-label" label="Create new cluster"/>
+                <psk-label class="bpd-create-organization-label" label="Create new Blockchain Network"/>
             </div>
             <div class="bpd-organization-elements">
                 <psk-for-each data-view-model="clusters">
@@ -32,6 +31,8 @@
                                 <psk-button label="Share" class="bpd-organization-button" button-class="btn btn-danger" event-name="cluster:share" event-data="@id"></psk-button>
                                 <psk-button label="Continuous Integration" class="bpd-organization-button" button-class="btn btn-info" event-name="cluster:continuous-integration" event-data="@id"></psk-button>
                                 <psk-button label="Performance Testing" class="bpd-organization-button" button-class="btn btn-danger" event-name="cluster:performance-testing" event-data="@id"></psk-button>
+                                <psk-button label="Monitoring" class="bpd-organization-button" button-class="btn btn-info" event-name="cluster:monitoring" event-data="@id"></psk-button>
+                                <psk-button label="Governance" class="bpd-organization-button" button-class="btn btn-danger" event-name="cluster:governance" event-data="@id"></psk-button>
                             </psk-button-group>
                         </div>
                         <psk-label class="bpd-organization-card-label" label="@name"/>

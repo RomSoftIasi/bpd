@@ -14,52 +14,82 @@ export default class OrganizationModel {
                 {
                     name: "Organization A",
                     uid: 1,
-                    kubernetesConfig: []
+                    kubernetesConfig: [],
+                    hosting: 'aws',
+                    endpoint: 'localhost:8080',
+                    secretKey: 'crh43c7r6c32cbx6vcbcvghecxfgffg3cb764c3v'
                 },
                 {
                     name: "Organization B",
                     uid: 2,
-                    kubernetesConfig: []
+                    kubernetesConfig: [],
+                    hosting: 'aws',
+                    endpoint: 'localhost:8080',
+                    secretKey: 'crh43c7r6c32cbx6vcbcvghecxfgffg3cb764c3v'
                 },
                 {
                     name: "Organization C",
                     uid: 3,
-                    kubernetesConfig: []
+                    kubernetesConfig: [],
+                    hosting: 'aws',
+                    endpoint: 'localhost:8080',
+                    secretKey: 'crh43c7r6c32cbx6vcbcvghecxfgffg3cb764c3v'
                 },
                 {
                     name: "Organization D",
                     uid: 4,
-                    kubernetesConfig: []
+                    kubernetesConfig: [],
+                    hosting: 'aws',
+                    endpoint: 'localhost:8080',
+                    secretKey: 'crh43c7r6c32cbx6vcbcvghecxfgffg3cb764c3v'
                 },
                 {
                     name: "Organization E",
                     uid: 5,
-                    kubernetesConfig: []
+                    kubernetesConfig: [],
+                    hosting: 'aws',
+                    endpoint: 'localhost:8080',
+                    secretKey: 'crh43c7r6c32cbx6vcbcvghecxfgffg3cb764c3v'
                 },
                 {
                     name: "Organization A",
                     uid: 6,
-                    kubernetesConfig: []
+                    kubernetesConfig: [],
+                    hosting: 'aws',
+                    endpoint: 'localhost:8080',
+                    secretKey: 'crh43c7r6c32cbx6vcbcvghecxfgffg3cb764c3v'
                 },
                 {
                     name: "Organization B",
                     uid: 7,
-                    kubernetesConfig: []
+                    kubernetesConfig: [],
+                    hosting: 'aws',
+                    endpoint: 'localhost:8080',
+                    secretKey: 'crh43c7r6c32cbx6vcbcvghecxfgffg3cb764c3v'
                 },
                 {
                     name: "Organization C",
                     uid: 8,
-                    kubernetesConfig: []
+                    kubernetesConfig: [],
+                    hosting: 'aws',
+                    endpoint: 'localhost:8080',
+                    secretKey: 'crh43c7r6c32cbx6vcbcvghecxfgffg3cb764c3v'
                 },
                 {
                     name: "Organization D",
                     uid: 9,
-                    kubernetesConfig: []
+                    kubernetesConfig: [],
+                    hosting: 'aws',
+                    endpoint: 'localhost:8080',
+                    secretKey: 'crh43c7r6c32cbx6vcbcvghecxfgffg3cb764c3v'
                 },
                 {
                     name: "Organization E",
                     uid: 10,
-                    kubernetesConfig: []
+                    kubernetesConfig: [],
+                    hosting: 'aws',
+                    endpoint: 'localhost:8080',
+                    secretKey: 'crh43c7r6c32cbx6vcbcvghecxfgffg3cb764c3v'
                 },
             ],
             editForm: {

@@ -32,7 +32,6 @@ export default class ClustersController extends BPDController {
                 if (err) {
                     return console.log(err);
                 }
-                debugger
             });
         });
 

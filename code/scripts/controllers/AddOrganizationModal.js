@@ -1,6 +1,6 @@
 import ModalController from '../../../cardinal/controllers/base-controllers/ModalController.js';
 
-const model = {
+const initModel = {
     title: 'Add a new organization',
     name: {
         name: 'name',
@@ -48,13 +48,48 @@ export default class AddOrganizationModal extends ModalController {
     constructor(element, history) {
         super(element, history);
 
-        this.model = this.setModel(JSON.parse(JSON.stringify(model)))
+        this.model = this.setModel(this.getParsedModel(this.model))
         this.createNewKubernetesConfig();
         this.addKubernetesConfig();
         this.removeKubernetesConfig();
 
         // Add new key:value config pair for Kubernetes cluster
         this.createOrganization();
+    }
+
+    getParsedModel(receivedModel) {
+        let model = JSON.parse(JSON.stringify(initModel));
+        let existingOrganization = receivedModel.organization;
+        let createOrg = true;
+        if (existingOrganization) {
+            createOrg = false;
+            model = {
+                ...model,
+                title: 'Edit the organization',
+                name: {
+                    ...model.name,
+                    value: existingOrganization.name
+                },
+                hosting: {
+                    ...model.hosting,
+                    value: existingOrganization.hosting
+                },
+                endpoint: {
+                    ...model.endpoint,
+                    value: existingOrganization.endpoint
+                },
+                secretKey: {
+                    ...model.secretKey,
+                    value: existingOrganization.secretKey
+                },
+                kubernetesConfig: existingOrganization.kubernetesConfig
+            }
+        }
+
+        return {
+            ...model,
+            createOrg: createOrg,
+        };
     }
 
     createNewKubernetesConfig() {

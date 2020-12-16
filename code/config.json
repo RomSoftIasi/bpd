@@ -9,6 +9,7 @@
     "modals": {
         "shareQRCodeModal": "modals/share-qrcode-modal.html",
         "addClusterModal": "modals/add-cluster-modal.html",
-        "addOrganizationModal": "modals/add-organization-modal.html"
+        "addOrganizationModal": "modals/add-organization-modal.html",
+        "dsuTypesApprovalModal": "modals/dsu-types-approval-modal.html"
     }
 }

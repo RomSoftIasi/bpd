@@ -24,7 +24,6 @@ export default class OrganizationsController extends BPDController {
                 if (err) {
                     return console.log(err);
                 }
-                debugger
             });
         });
 
@@ -51,8 +50,12 @@ export default class OrganizationsController extends BPDController {
             e.preventDefault();
             e.stopImmediatePropagation();
 
-            const orgUid = e.data;
-            this.redirect(`/organization/edit#orgUid=${orgUid}`);
+            let organization = {organization: this.orgModel.getOrganization(e.data)}
+            this.showModal('addOrganizationModal', organization, (err, response) => {
+                if (err) {
+                    return console.log(err);
+                }
+            });
         });
 
         // Remove organization request

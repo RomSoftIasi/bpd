@@ -1,7 +1,7 @@
 import ModalController from '../../../cardinal/controllers/base-controllers/ModalController.js';
 
 const initModel = {
-    title: 'Add a new cluster',
+    title: 'Add a new Blockchain Network',
     name: {
         name: 'name',
         required: true,
@@ -47,6 +47,7 @@ export default class AddClusterModal extends ModalController {
         this.createCluster();
         this.saveCluster();
         this.deleteCluster();
+        this.clusterGovernance();
     }
 
     getParsedModel(receivedModel) {
@@ -57,7 +58,7 @@ export default class AddClusterModal extends ModalController {
             createCluster = false;
             model = {
                 ...model,
-                title: 'Manage Cluster Deployment',
+                title: 'Manage Blockchain Network Deployment',
                 name: {
                     ...model.name,
                     value: existingCluster.name
@@ -101,12 +102,22 @@ export default class AddClusterModal extends ModalController {
         this.on('cls:save', (event) => this.respondWithResult(event));
     }
 
+    clusterGovernance() {
+        this.on('cls:governance', (event) => {
+            this.showModal('dsuTypesApprovalModal', {}, (err, response) => {
+                if (err) {
+                    return console.log(err);
+                }
+
+            });
+        });
+    }
+
     deleteCluster() {
         this.on('cls:delete', (event) => {
             this._finishProcess(event, {})
         });
     }
-
 
     _finishProcess(event, response) {
         event.stopImmediatePropagation();

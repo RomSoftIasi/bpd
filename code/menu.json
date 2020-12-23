@@ -49,6 +49,20 @@
       "icon": "fa-cog",
       "pageSrc": "clusters/edit.html",
       "indexed": false
+    },
+    {
+      "name": "Governance",
+      "path": "/cluster/governance",
+      "icon": "fa-cog",
+      "pageSrc": "clusters/governance.html",
+      "indexed": false
+    },
+    {
+      "name": "Voting",
+      "path": "/cluster/voting",
+      "icon": "fa-cog",
+      "pageSrc": "clusters/voting.html",
+      "indexed": false
     }
   ]
 }

@@ -10,10 +10,11 @@ export default class DSUTypesApproveModal extends ModalController {
         super(element, history);
 
         this.model = this.setModel(this.getParsedModel(this.model))
-        this.createNewDsuType();
-        this.addDsuType();
-        this.approveDsuType();
-        this.finish();
+        this._createNewDsuType();
+        this._onDSUTypeCreate();
+        this._onDSUTypeApprove();
+        this._onDSUTypeReview();
+        this._onDSUFinish();
     }
 
     getParsedModel(receivedModel) {
@@ -35,30 +36,36 @@ export default class DSUTypesApproveModal extends ModalController {
         };
     }
 
-    createNewDsuType() {
+    _createNewDsuType() {
         const id = (Date.now() + Math.random()).toString().replace('.', '');
         this.model.dsuTypes.push({
             id: {
                 value: id
             },
-            approved: false,
+            approved: true,
+            reviewed: false,
             seed: {
                 placeholder: 'Seed',
                 name: 'Seed',
+                readOnly: false
+            },
+            name: {
+                placeholder: 'Name',
+                name: 'Name',
                 readOnly: false
             }
         });
     }
 
-    addDsuType() {
-        this.on('org:add-dsuType-config', (e) => {
+    _onDSUTypeCreate() {
+        this.on('dsu:add-dsuType-config', (e) => {
             e.preventDefault();
             e.stopImmediatePropagation();
-            this.createNewDsuType();
+            this._createNewDsuType();
         });
     }
 
-    approveDsuType() {
+    _onDSUTypeApprove() {
         this.on('dsu:approve', (e) => {
             e.preventDefault();
             e.stopImmediatePropagation();
@@ -69,13 +76,31 @@ export default class DSUTypesApproveModal extends ModalController {
                 return;
             }
             dsuTypes[dsuTypeIndex].approved = true;
+            dsuTypes[dsuTypeIndex].name.readOnly = true;
             dsuTypes[dsuTypeIndex].seed.readOnly = true;
             this.model.dsuTypes = JSON.parse(JSON.stringify(dsuTypes));
         });
     }
 
-    finish() {
-        this.on('org:finish', (event) => {
+    _onDSUTypeReview() {
+        this.on('dsu:review', (e) => {
+            e.preventDefault();
+            e.stopImmediatePropagation();
+
+            let dsuTypes = this.model.dsuTypes;
+            let dsuTypeIndex = dsuTypes.findIndex(dsuType => dsuType.id.value === e.data)
+            if (dsuTypeIndex === -1) {
+                return;
+            }
+            dsuTypes[dsuTypeIndex].approved = false;
+            dsuTypes[dsuTypeIndex].name.readOnly = true;
+            dsuTypes[dsuTypeIndex].seed.readOnly = true;
+            this.model.dsuTypes = JSON.parse(JSON.stringify(dsuTypes));
+        });
+    }
+
+    _onDSUFinish() {
+        this.on('dsu:finish', (event) => {
             let toReturnObject = {
                 dsuTypes: this.model.dsuTypes
             }

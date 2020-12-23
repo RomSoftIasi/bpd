@@ -33,21 +33,20 @@ const initModel = {
     }
 }
 
-export default class AddClusterModal extends ModalController {
+export default class ClusterCreateEditModal extends ModalController {
     constructor(element, history) {
         super(element, history);
 
         this.model = this.setModel(this.getParsedModel(this.model))
-        debugger
 
         this.model.onChange('autoStop.value', () => {
             this.model.date.readOnly = this.model.autoStop.value == 0;
         });
 
-        this.createCluster();
-        this.saveCluster();
-        this.deleteCluster();
-        this.clusterGovernance();
+        this._onClusterCreate();
+        this._onClusterSave();
+        this._onClusterDelete();
+        this._onClusterGovernance();
     }
 
     getParsedModel(receivedModel) {
@@ -94,26 +93,24 @@ export default class AddClusterModal extends ModalController {
         this._finishProcess(event, toReturnObject)
     }
 
-    createCluster() {
+    _onClusterCreate() {
         this.on('cls:create', (event) => this.respondWithResult(event));
     }
 
-    saveCluster() {
+    _onClusterSave() {
         this.on('cls:save', (event) => this.respondWithResult(event));
     }
 
-    clusterGovernance() {
+    _onClusterGovernance() {
         this.on('cls:governance', (event) => {
-            this.showModal('dsuTypesApprovalModal', {}, (err, response) => {
-                if (err) {
-                    return console.log(err);
-                }
-
-            });
+            let toReturnObject = {
+                redirect: 'governance'
+            }
+            this._finishProcess(event, toReturnObject)
         });
     }
 
-    deleteCluster() {
+    _onClusterDelete() {
         this.on('cls:delete', (event) => {
             this._finishProcess(event, {})
         });

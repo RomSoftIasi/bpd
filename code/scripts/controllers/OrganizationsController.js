@@ -12,22 +12,29 @@ export default class OrganizationsController extends BPDController {
         });
 
         this._setupFormData();
+        this._onOpenFeedback();
+        this._onQRCodeShare();
+        this._onOrganizationCreate();
+        this._onOrganizationEdit();
+        this._onOrganizationRemove();
+        this._onOrganizationSave();
+        this._onClusterManage();
+        this._onKubernetesAdd();
+        this._onKubernetesRemove();
 
-        // ============== Events Listeners
+        window.addEventListener('hashchange', (e) => {
+            console.log('hash changed');
+            this._setupFormData();
+        });
+    }
+
+    _onOpenFeedback() {
         this.on('openFeedback', (e) => {
             this.feedbackEmitter = e.detail;
         });
+    }
 
-        // ============== Button listener
-        this.on('org:create', (e) => {
-            this.showModal('addOrganizationModal', {}, (err, response) => {
-                if (err) {
-                    return console.log(err);
-                }
-            });
-        });
-
-        // Share QRCode
+    _onQRCodeShare() {
         this.on('org:getQRCode', (e) => {
             e.preventDefault();
             e.stopImmediatePropagation();
@@ -44,8 +51,19 @@ export default class OrganizationsController extends BPDController {
             }
             this.showModal('shareQRCodeModal', qrCodeModalModel);
         });
+    }
 
-        // Edit organization request
+    _onOrganizationCreate() {
+        this.on('org:create', (e) => {
+            this.showModal('addOrganizationModal', {}, (err, response) => {
+                if (err) {
+                    return console.log(err);
+                }
+            });
+        });
+    }
+
+    _onOrganizationEdit() {
         this.on('org:edit', (e) => {
             e.preventDefault();
             e.stopImmediatePropagation();
@@ -57,30 +75,18 @@ export default class OrganizationsController extends BPDController {
                 }
             });
         });
+    }
 
-        // Remove organization request
+    _onOrganizationRemove() {
         this.on('org:remove', (e) => {
             e.preventDefault();
             e.stopImmediatePropagation();
             const orgUid = e.data;
             this._removeOrganization(orgUid);
         });
+    }
 
-        // Add new key:value config pair for Kubernetes cluster
-        this.on('org:add-kubernetes-config', (e) => {
-            e.preventDefault();
-            e.stopImmediatePropagation();
-            this.orgModel.prepareNewKubernetesConfig();
-        });
-
-        // Remove key:value config pair for Kubernetes cluster
-        this.on('org:remove-kubernetes-config', (e) => {
-            e.preventDefault();
-            e.stopImmediatePropagation();
-            this.orgModel.removeKubernetesConfig(e.data);
-        });
-
-        // Save organization
+    _onOrganizationSave() {
         this.on('org:save', (e) => {
             e.preventDefault();
             e.stopImmediatePropagation();
@@ -88,7 +94,9 @@ export default class OrganizationsController extends BPDController {
                 this._onSaveOrganization(err, data);
             });
         });
+    }
 
+    _onClusterManage() {
         this.on('org:manage-clusters', (e) => {
             e.preventDefault();
             e.stopImmediatePropagation();
@@ -96,10 +104,21 @@ export default class OrganizationsController extends BPDController {
             const orgUid = e.data;
             this.redirect(`/cluster/index#orgUid=${orgUid}`);
         });
+    }
 
-        window.addEventListener('hashchange', (e) => {
-            console.log('hash changed');
-            this._setupFormData();
+    _onKubernetesAdd() {
+        this.on('org:add-kubernetes-config', (e) => {
+            e.preventDefault();
+            e.stopImmediatePropagation();
+            this.orgModel.prepareNewKubernetesConfig();
+        });
+    }
+
+    _onKubernetesRemove() {
+        this.on('org:remove-kubernetes-config', (e) => {
+            e.preventDefault();
+            e.stopImmediatePropagation();
+            this.orgModel.removeKubernetesConfig(e.data);
         });
     }
 

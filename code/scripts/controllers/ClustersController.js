@@ -7,7 +7,6 @@ export default class ClustersController extends BPDController {
     constructor(element) {
         super(element);
 
-        // =============== Model setup
         this.clusterModel = ClusterModel.getInstance();
 
         this.model = this.clusterModel.registerBindings((data) => {
@@ -16,8 +15,21 @@ export default class ClustersController extends BPDController {
         this.organization = null;
 
         this._setupFormData();
+        this._onOpenFeedback();
 
-        // ============== Events Listeners
+        this._onClusterCreateHandler();
+        this._onClusterRemoveHandler();
+        this._onClusterShareHandler();
+        this._onClusterEditHandler();
+        this._onClusterSaveHandler();
+
+        window.addEventListener('hashchange', (e) => {
+            this._setOrganization();
+            this._setupFormData();
+        })
+    }
+
+    _onOpenFeedback() {
         this.on('openFeedback', (e) => {
             this.feedbackEmitter = e.detail;
             // Set the current organization
@@ -25,25 +37,33 @@ export default class ClustersController extends BPDController {
             // in case we need to show an error
             this._setOrganization();
         })
+    }
 
+    _onClusterCreateHandler() {
         this.on('cluster:create', (e) => {
-            let cluster = {cluster: this.clusterModel.getCluster(e.data)};
-            this.showModal('addClusterModal', cluster, (err, response) => {
+            let cluster = this.clusterModel.getCluster(e.data);
+            this.showModal('addEditClusterModal', {cluster: cluster}, (err, response) => {
                 if (err) {
                     return console.log(err);
                 }
+                if (response.redirect) {
+                    return this.redirect(`/cluster/${response.redirect}#orgUid=${cluster.orgUid}&ntwUid=${cluster.id}`);
+                }
             });
         });
+    }
 
-        // Remove cluster request
+    _onClusterRemoveHandler() {
         this.on('cluster:remove', (e) => {
             e.preventDefault();
             e.stopImmediatePropagation();
             const id = e.data;
-            this._removeCluster(id);
+            const clusterName = this.clusterModel.getClusterName(id);
+            this.clusterModel.removeCluster(id);
         })
+    }
 
-        // Share QR Code of the cluster
+    _onClusterShareHandler() {
         this.on('cluster:share', (e) => {
             e.preventDefault();
             e.stopImmediatePropagation();
@@ -60,8 +80,9 @@ export default class ClustersController extends BPDController {
             }
             this.showModal('shareQRCodeModal', qrCodeModalModel);
         })
+    }
 
-        // Edit cluster request
+    _onClusterEditHandler() {
         this.on('cluster:edit', (e) => {
             e.preventDefault();
             e.stopImmediatePropagation();
@@ -69,7 +90,9 @@ export default class ClustersController extends BPDController {
             const id = e.data;
             this.redirect(`/cluster/edit#id=${id}`);
         });
-        // Save cluster
+    }
+
+    _onClusterSaveHandler() {
         this.on('cluster:save', (e) => {
             e.preventDefault();
             e.stopImmediatePropagation();
@@ -77,11 +100,6 @@ export default class ClustersController extends BPDController {
                 this._onSaveCluster(err, data);
             })
         });
-
-        window.addEventListener('hashchange', (e) => {
-            this._setOrganization();
-            this._setupFormData();
-        })
     }
 
     /**
@@ -97,17 +115,6 @@ export default class ClustersController extends BPDController {
         }
 
         this.redirect(`/cluster/index#orgUid=${data.orgUid}`);
-    }
-
-    /**
-     * Remove cluster
-     *
-     * @param {string} id
-     */
-    _removeCluster(id) {
-        const clusterName = this.clusterModel.getClusterName(id);
-
-        this.clusterModel.removeCluster(id);
     }
 
     /**

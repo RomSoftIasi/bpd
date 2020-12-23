@@ -44,17 +44,15 @@ const initModel = {
     loadWithQR: "Load with QRCode"
 }
 
-export default class AddOrganizationModal extends ModalController {
+export default class CreateOrganizationModal extends ModalController {
     constructor(element, history) {
         super(element, history);
 
         this.model = this.setModel(this.getParsedModel(this.model))
-        this.createNewKubernetesConfig();
-        this.addKubernetesConfig();
-        this.removeKubernetesConfig();
-
-        // Add new key:value config pair for Kubernetes cluster
-        this.createOrganization();
+        this._createNewKubernetesConfig();
+        this._onCreateKubernetesConfig();
+        this._onRemoveKubernetesConfig();
+        this._onCreateOrganization();
     }
 
     getParsedModel(receivedModel) {
@@ -92,7 +90,7 @@ export default class AddOrganizationModal extends ModalController {
         };
     }
 
-    createNewKubernetesConfig() {
+    _createNewKubernetesConfig() {
         const id = (Date.now() + Math.random()).toString().replace('.', '');
         this.model.kubernetesConfig.push({
             key: {
@@ -109,15 +107,15 @@ export default class AddOrganizationModal extends ModalController {
         });
     }
 
-    addKubernetesConfig() {
+    _onCreateKubernetesConfig() {
         this.on('org:add-kubernetes-config', (e) => {
             e.preventDefault();
             e.stopImmediatePropagation();
-            this.createNewKubernetesConfig();
+            this._createNewKubernetesConfig();
         });
     }
 
-    removeKubernetesConfig() {
+    _onRemoveKubernetesConfig() {
         this.on('org:remove-kubernetes-config', (e) => {
             e.preventDefault();
             e.stopImmediatePropagation();
@@ -138,7 +136,7 @@ export default class AddOrganizationModal extends ModalController {
         });
     }
 
-    createOrganization() {
+    _onCreateOrganization() {
         this.on('org:create', (event) => {
             let toReturnObject = {
                 name: this.model.name.value,

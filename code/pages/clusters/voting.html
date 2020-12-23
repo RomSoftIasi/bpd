@@ -1,0 +1,95 @@
+<psk-page title="Voting">
+    <psk-container controller-name="VotingController">
+
+        <psk-card class="bpd-header">
+            <psk-label label="Sign out"/>
+        </psk-card>
+
+        <psk-card class="bpd-sub-header">
+            <div>
+                <psk-label label="@organization.name"/>
+            </div>
+            <div>
+                <psk-label label="@network.name"/>
+            </div>
+        </psk-card>
+
+        <psk-card class="bpd-dashboard bpd-tabs">
+            <psk-label class="bpd-dashboard-title" label="Referendum"/>
+
+            <psk-tab-navigator default="1">
+
+                <psk-tab title="Create">
+                    <psk-card class="bpd-row">
+                        <psk-card class="bpd-for-each-row bpd-margin-left bpd-flex">
+                            <psk-text-input class="bpd-question-title" view-model="questionCreationModel.title"></psk-text-input>
+                            <psk-checkbox view-model="@questionCreationModel.uniqueAnswers"></psk-checkbox>
+                        </psk-card>
+
+                        <psk-for-each data-view-model="questionCreationModel.answers">
+                            <div class="bpd-for-each-row">
+                                <psk-text-input class="bpd-seed" view-model="@"></psk-text-input>
+                            </div>
+                        </psk-for-each>
+
+                        <psk-card class="bpd-for-each-row bpd-margin-north-south">
+                            <psk-button label="Add Answer" event-name="answer:create"
+                                        button-class="btn btn-info btn-sm"></psk-button>
+                        </psk-card>
+
+                        <psk-card class="bpd-for-each-row">
+                            <psk-button event-name="question:create">Create</psk-button>
+                        </psk-card>
+
+                    </psk-card>
+                </psk-tab>
+
+                <psk-tab title="Respond">
+                    <psk-card class="bpd-row">
+                        <psk-for-each data-view-model="questions">
+                            <div class="bpd-for-each-row">
+                                <psk-label label="@title"></psk-label>
+                            </div>
+                            <div class="bpd-for-each-row">
+                                <psk-condition condition="@uniqueAnswers">
+
+                                    <psk-radio-group slot="condition-true" view-model="answerRadioGroup"></psk-radio-group>
+
+                                    <psk-for-each slot="condition-false" data-view-model="@answers">
+                                        <psk-checkbox view-model="@"></psk-checkbox>
+                                    </psk-for-each>
+
+                                </psk-condition>
+                            </div>
+                        </psk-for-each>
+                        <div class="bpd-for-each-row">
+                            <psk-button event-name="voting:respond" button-class="btn btn-sm btn-success">
+                                <psk-icon icon="check" color="rgb(255, 255, 255)"></psk-icon>
+                                Finish
+                            </psk-button>
+                        </div>
+                    </psk-card>
+                </psk-tab>
+
+                <psk-tab title="Results">
+                    <psk-card class="bpd-row">
+
+                        <psk-for-each data-view-model="responses">
+                            <div class="bpd-for-each-row">
+                                <psk-label label="@question.title"></psk-label>
+                            </div>
+                            <div class="bpd-for-each-row">
+                                <psk-for-each data-view-model="@answerResults">
+                                    <psk-progress view-model="@"></psk-progress>
+                                    <psk-card slot="no-data" title="No responses were submitted for this question."></psk-card>
+
+                                </psk-for-each>
+                            </div>
+                        </psk-for-each>
+
+                    </psk-card>
+                </psk-tab>
+            </psk-tab-navigator>
+        </psk-card>
+    </psk-container>
+</psk-page>

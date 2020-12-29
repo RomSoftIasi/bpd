@@ -45,6 +45,7 @@ export default class ClusterCreateEditModal extends ModalController {
 
         this._onClusterCreate();
         this._onClusterSave();
+        this._onClusterMonitoring();
         this._onClusterDelete();
         this._onClusterGovernance();
     }
@@ -99,6 +100,15 @@ export default class ClusterCreateEditModal extends ModalController {
 
     _onClusterSave() {
         this.on('cls:save', (event) => this.respondWithResult(event));
+    }
+
+    _onClusterMonitoring() {
+        this.on('cls:monitoring', (event) => {
+            let toReturnObject = {
+                redirect: 'monitoring'
+            }
+            this._finishProcess(event, toReturnObject)
+        });
     }
 
     _onClusterGovernance() {

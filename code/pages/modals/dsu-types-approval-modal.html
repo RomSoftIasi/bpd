@@ -15,6 +15,12 @@
                         Review
                     </psk-button>
 
+                    <psk-button event-name="dsu:open" event-data="@id.value"
+                                button-class="btn btn-sm btn-success" disabled="@reviewed">
+                        <psk-icon icon="eye" color="rgb(255, 255, 255)"></psk-icon>
+                        Open
+                    </psk-button>
+
                     <psk-button event-name="dsu:approve" event-data="@id.value"
                                 button-class="btn btn-sm btn-success" disabled="@approved">
                         <psk-icon icon="check" color="rgb(255, 255, 255)"></psk-icon>

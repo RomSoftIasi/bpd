@@ -63,6 +63,20 @@
       "icon": "fa-cog",
       "pageSrc": "clusters/voting.html",
       "indexed": false
+    },
+    {
+      "name": "Monitoring",
+      "path": "/cluster/monitoring",
+      "icon": "fa-cog",
+      "pageSrc": "clusters/monitoring.html",
+      "indexed": false
+    },
+    {
+      "name": "Ssapp Review",
+      "path": "/cluster/ssapp-review",
+      "icon": "fa-cog",
+      "pageSrc": "clusters/ssapp-review.html",
+      "indexed": false
     }
   ]
 }

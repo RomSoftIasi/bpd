@@ -13,6 +13,7 @@ export default class DSUTypesApproveModal extends ModalController {
         this._createNewDsuType();
         this._onDSUTypeCreate();
         this._onDSUTypeApprove();
+        this._onDSUTypeOpen();
         this._onDSUTypeReview();
         this._onDSUFinish();
     }
@@ -42,7 +43,7 @@ export default class DSUTypesApproveModal extends ModalController {
             id: {
                 value: id
             },
-            approved: true,
+            approved: false,
             reviewed: false,
             seed: {
                 placeholder: 'Seed',
@@ -92,10 +93,29 @@ export default class DSUTypesApproveModal extends ModalController {
             if (dsuTypeIndex === -1) {
                 return;
             }
-            dsuTypes[dsuTypeIndex].approved = false;
-            dsuTypes[dsuTypeIndex].name.readOnly = true;
-            dsuTypes[dsuTypeIndex].seed.readOnly = true;
-            this.model.dsuTypes = JSON.parse(JSON.stringify(dsuTypes));
+            let toReturnObject = {
+                redirect: 'ssapp-review',
+                seed: dsuTypes[dsuTypeIndex].seed.value
+            }
+            this._finishProcess(e, toReturnObject)
+        });
+    }
+
+    _onDSUTypeOpen() {
+        this.on('dsu:open', (e) => {
+            e.preventDefault();
+            e.stopImmediatePropagation();
+
+            let dsuTypes = this.model.dsuTypes;
+            let dsuTypeIndex = dsuTypes.findIndex(dsuType => dsuType.id.value === e.data)
+            if (dsuTypeIndex === -1) {
+                return;
+            }
+            let toReturnObject = {
+                redirect: 'ssapp-review',
+                seed: dsuTypes[dsuTypeIndex].seed.value
+            }
+            this._finishProcess(e, toReturnObject)
         });
     }
 

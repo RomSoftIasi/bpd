@@ -22,6 +22,8 @@ export default class ClustersController extends BPDController {
         this._onClusterShareHandler();
         this._onClusterEditHandler();
         this._onClusterSaveHandler();
+        this._onClusterMonitoringHandler();
+        this._onClusterGovernanceHandler();
 
         window.addEventListener('hashchange', (e) => {
             this._setOrganization();
@@ -99,6 +101,30 @@ export default class ClustersController extends BPDController {
             this.clusterModel.saveCluster((err, data) => {
                 this._onSaveCluster(err, data);
             })
+        });
+    }
+
+    _onClusterMonitoringHandler() {
+        this.on('cluster:monitoring', (e) => {
+            e.preventDefault();
+            e.stopImmediatePropagation();
+            let cluster = this.clusterModel.getCluster(e.data);
+            if (cluster === -1) {
+                return;
+            }
+            this.redirect(`/cluster/monitoring#orgUid=${cluster.orgUid}&ntwUid=${e.data}`);
+        });
+    }
+
+    _onClusterGovernanceHandler() {
+        this.on('cluster:governance', (e) => {
+            e.preventDefault();
+            e.stopImmediatePropagation();
+            let cluster = this.clusterModel.getCluster(e.data);
+            if (cluster === -1) {
+                return;
+            }
+            this.redirect(`/cluster/governance#orgUid=${cluster.orgUid}&ntwUid=${e.data}`);
         });
     }
 

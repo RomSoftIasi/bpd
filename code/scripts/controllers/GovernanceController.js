@@ -73,6 +73,9 @@ export default class GovernanceController extends BPDController {
                 if (err) {
                     return console.log(err);
                 }
+                if (response.redirect) {
+                    return this.redirect(`/cluster/${response.redirect}#seed=${response.seed}`);
+                }
             });
         });
     }

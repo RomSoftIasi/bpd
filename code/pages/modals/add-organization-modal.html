@@ -12,7 +12,7 @@
 
         <psk-card class="bpd-row">
             <psk-for-each data-view-model="kubernetesConfig">
-                <div class="bpd-for-each-row">
+                <div class="bpd-for-each-row bpd-kconfig-row">
                     <psk-text-input view-model="key"></psk-text-input>
                     <psk-text-input view-model="value"></psk-text-input>
                     <psk-button event-name="org:remove-kubernetes-config" event-data="@id.value"

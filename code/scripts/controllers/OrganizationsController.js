@@ -11,6 +11,48 @@ export default class OrganizationsController extends BPDController {
             return model;
         });
 
+
+        //DEV INTENDED
+        let tempObj = {
+            name: "Organization A",
+            uid: 1,
+            kubernetesConfig: [],
+            hosting: 'aws',
+            endpoint: 'localhost:8080',
+            secretKey: 'crh43c7r6c32cbx6vcbcvghecxfgffg3cb764c3v'
+        }
+
+        const ORGANIZATION_PATH = "/organizations";
+        this.DSUStorage.call("createSSIAndMount", ORGANIZATION_PATH, (err, keySSI) => {
+            if (err) {
+                return console.log(err);
+            }
+            tempObj.keySSI = keySSI;
+            this.DSUStorage.call("listDSUs", "/", (err, dsuList) => {
+                if (err) {
+                    return console.log(err);
+                }
+
+                this.DSUStorage.setObject(ORGANIZATION_PATH + '/' + keySSI + '/data.json', JSON.stringify(tempObj), (err) => {
+                    debugger
+                    if (err) {
+                        return console.log(err);
+                    }
+                    this.DSUStorage.getItem(ORGANIZATION_PATH + '/' + keySSI + '/data.json', (err, content) => {
+                        if (err) {
+                            return console.log(err);
+                        }
+                        let textDecoder = new TextDecoder("utf-8");
+                        let organization = JSON.parse(textDecoder.decode(content));
+                    })
+                });
+            });
+        })
+
+
+        // END DEV INTENDED CODE
+
+
         this._setupFormData();
         this._onOpenFeedback();
         this._onQRCodeShare();
@@ -39,7 +81,7 @@ export default class OrganizationsController extends BPDController {
             e.preventDefault();
             e.stopImmediatePropagation();
             let organization = this.orgModel.getOrganization(e.data);
-            if(organization === -1) {
+            if (organization === -1) {
                 return;
             }
             let qrCodeModalModel = {

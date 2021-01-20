@@ -1,275 +1,89 @@
-import BPDController from "./base-controllers/BPDController.js";
-
-export default class OrganizationsController extends BPDController {
+import ContainerController from '../../cardinal/controllers/base-controllers/ContainerController.js';
+import OrganizationService from '../controllers/Services/OrganizationService.js';
+export default class BPDController extends ContainerController {
 
     constructor(element) {
         super(element);
 
-        let initModel = (organizations ) => {
-            debugger;
-            this.model = this.orgModel.registerBindings((data) => {
-                //data.organizations.splice(0);
-                data.organizations.push(organizations);
-                const model = this.setModel(data);
-                console.log(model);
+        // reset model
+        this.setModel({});
 
-                return model;
-            });
-        };
-
-
-        this.DSUStorage.call('listDSUs', '/organizations', (err, dsuList) => {
-            if (err) {
-                return console.log(err);
-            }
-            console.log(dsuList);
-
-            let orgs = [];
-            //dsuList[0].identifier
-            let getItem = (dsuData) => {
-                this.DSUStorage.getItem('/organizations' + '/' + dsuData.identifier + '/data.json', (err, content) => {
-                    if (err) {
-                        return console.log(err);
-                    }
-
-                    let textDecoder = new TextDecoder("utf-8");
-                    let organization = JSON.parse(textDecoder.decode(content));
-                    orgs.push(organization);
-                    if (dsuList.length > 0) {
-                        getItem(dsuList.shift())
-                    } else {
-                       // debugger;
-                        /*this.model = this.orgModel.registerBindings((data) => {
-                            data.organizations.splice(0);
-                            data.organizations.push(orgs);
-                            const model = this.setModel(data);
-                            console.log(model);
-
-                            return model;
-                        });*/
-                        initModel(orgs);
-                    }
-                });
-            };
-
-            if (dsuList.length > 0) {
-                getItem(dsuList.shift())
-            } else {
-                /*this.model = this.orgModel.registerBindings((data) => {
-                    data.organizations.splice(0);
-                    data.organizations.push(orgs);
-                    const model = this.setModel(data);
-                    console.log(model);
-
-                    return model;
-                });*/
-                initModel(orgs);
-            }
-        });
-
-
-        //DEV INTENDED
-        let tempObj = {
-            name: "Organization ABCCCC",
-            uid: 155,
-            kubernetesConfig: [],
-            hosting: 'aws',
-            endpoint: 'localhost:8080',
-            secretKey: 'crh43c7r6c32cbx6vcbcvghecxfgffg3cb764c3v'
-        }
-
-        const ORGANIZATION_PATH = "/organizations";
-        this.DSUStorage.call("createSSIAndMount", ORGANIZATION_PATH, (err, keySSI) => {
-            if (err) {
-                return console.log(err);
-            }
-            tempObj.keySSI = keySSI;
-            this.DSUStorage.call("listDSUs", "/", (err, dsuList) => {
-                if (err) {
-                    return console.log(err);
-                }
-
-                this.DSUStorage.setObject(ORGANIZATION_PATH + '/' + keySSI + '/data.json', tempObj, (err) => {
-
-                    if (err) {
-                        return console.log(err);
-                    }
-                    this.DSUStorage.getItem(ORGANIZATION_PATH + '/' + keySSI + '/data.json', (err, content) => {
-                        if (err) {
-                            return console.log(err);
-                        }
-
-                        let textDecoder = new TextDecoder("utf-8");
-                        let organization = JSON.parse(textDecoder.decode(content));
-                        console.log(organization);
-                    })
-                });
-            });
-        })
-
-
-        // END DEV INTENDED CODE
-
-
-        this._setupFormData();
-        this._onOpenFeedback();
-        this._onQRCodeShare();
-        this._onOrganizationCreate();
-        this._onOrganizationEdit();
-        this._onOrganizationRemove();
-        this._onOrganizationSave();
-        this._onClusterManage();
-        this._onKubernetesAdd();
-        this._onKubernetesRemove();
-
-        window.addEventListener('hashchange', (e) => {
-            console.log('hash changed');
-            this._setupFormData();
-        });
-    }
-
-    _onOpenFeedback() {
-        this.on('openFeedback', (e) => {
-            this.feedbackEmitter = e.detail;
-        });
-    }
-
-    _onQRCodeShare() {
-        this.on('org:getQRCode', (e) => {
-            e.preventDefault();
-            e.stopImmediatePropagation();
-            let organization = this.orgModel.getOrganization(e.data);
-            if (organization === -1) {
+        // get model
+        this.OrganisationService = new OrganizationService(this.DSUStorage);
+        this.OrganisationService.getOrganizationModel( (err,data) => {
+            if (err){
+                console.log(err);
                 return;
             }
-            let qrCodeModalModel = {
-                title: `QRCode for ${organization.name}`,
-                description: `Scan the code above to get your organization data`,
-                data: {
-                    identifier: JSON.stringify(organization)
-                }
-            }
-            this.showModal('shareQRCodeModal', qrCodeModalModel);
+            //bind
+            this.setModel(data);
         });
+
+
+
+        //attach handlers
+        this._attachHandlerCreateOrg();
+        this._attachHandlerEditOrg();
     }
 
-    _onOrganizationCreate() {
+
+
+    _attachHandlerCreateOrg(){
         this.on('org:create', (e) => {
-            this.showModal('addOrganizationModal', {}, (err, response) => {
-                if (err) {
-                    return console.log(err);
-                }
-            });
-        });
-    }
-
-    _onOrganizationEdit() {
-        this.on('org:edit', (e) => {
             e.preventDefault();
             e.stopImmediatePropagation();
 
-            let organization = {organization: this.orgModel.getOrganization(e.data)}
-            this.showModal('addOrganizationModal', organization, (err, response) => {
-                if (err) {
-                    return console.log(err);
-                }
-            });
-        });
-    }
-
-    _onOrganizationRemove() {
-        this.on('org:remove', (e) => {
-            e.preventDefault();
-            e.stopImmediatePropagation();
-            const orgUid = e.data;
-            this._removeOrganization(orgUid);
-        });
-    }
-
-    _onOrganizationSave() {
-        this.on('org:save', (e) => {
-            e.preventDefault();
-            e.stopImmediatePropagation();
-            this.orgModel.saveOrganization((err, data) => {
-                this._onSaveOrganization(err, data);
-            });
-        });
-    }
-
-    _onClusterManage() {
-        this.on('org:manage-clusters', (e) => {
-            e.preventDefault();
-            e.stopImmediatePropagation();
-
-            const orgUid = e.data;
-            this.redirect(`/cluster/index#orgUid=${orgUid}`);
-        });
-    }
-
-    _onKubernetesAdd() {
-        this.on('org:add-kubernetes-config', (e) => {
-            e.preventDefault();
-            e.stopImmediatePropagation();
-            this.orgModel.prepareNewKubernetesConfig();
-        });
-    }
-
-    _onKubernetesRemove() {
-        this.on('org:remove-kubernetes-config', (e) => {
-            e.preventDefault();
-            e.stopImmediatePropagation();
-            this.orgModel.removeKubernetesConfig(e.data);
-        });
-    }
-
-    /**
-     * Remove organization
-     * @param {string} orgUId
-     */
-    _removeOrganization(orgUid) {
-        const orgName = this.orgModel.getOrganizationName(orgUid);
-
-        this.orgModel.removeOrganization(orgUid);
-    }
-
-    /**
-     * Called after model attempts to save a new
-     * or existing organization
-     * @param {Error} err
-     * @param {object} data
-     */
-    _onSaveOrganization(err, data) {
-        if (err) {
-            this.showError(err);
-            return;
-        }
-
-        this.redirect('/home');
-    }
-
-
-    /**
-     * Parse the current url and detect if we're creating a new organization
-     * or editing an existing one
-     */
-    _setupFormData() {
-        const searchQuery = window.location.pathname.substr(1);
-        const segments = searchQuery.split('/');
-        const entity = segments.shift();
-        const action = segments.shift();
-        const hashParams = this.parseHashFragmentParams();
-
-        if (entity === 'organization') {
-            switch (action) {
-                case 'create':
-                    this.orgModel.clearFormData();
+            this.showModal('addOrganizationModal',{},(err, data) => {
+                if (err)
+                {
+                    console.log(err);
                     return;
-                case 'edit':
-                    if (typeof hashParams.orgUid !== 'undefined') {
-                        this.orgModel.populateFormData(hashParams.orgUid);
+                }
+                //todo : show spinner/loading stuff
+                this.OrganisationService.saveOrganization(data, (err, updatedOrg) => {
+                    if (err)
+                    {
+                        console.log(err);
+                        return;
                     }
-                    return;
-            }
-        }
+                    this.model.organizations.push(updatedOrg);
+                });
+
+            })
+
+        })
     }
+
+    _attachHandlerEditOrg(){
+        this.on('org:edit',(e) => {
+            e.preventDefault();
+            e.stopImmediatePropagation();
+            console.log(e);
+            const uid = e.data;
+            const orgIndex = this.model.organizations.findIndex((org) => org.uid === uid);
+            if (orgIndex === -1)
+            {
+                console.log('org not found @uid', uid, this.model.organizations);
+                return;
+            }
+
+            const orgToEdit = this.model.organizations[orgIndex];
+            this.showModal('editOrganizationModal',orgToEdit, (err, data) => {
+                if (err)
+                {
+                    console.log(err);
+                    return;
+                }
+                this.model.organizations[orgIndex] = data;
+            })
+        })
+    }
+
+
+
+
 }
+
+
+
+

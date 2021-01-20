@@ -48,14 +48,39 @@ export default class CreateOrganizationModal extends ModalController {
     constructor(element, history) {
         super(element, history);
 
-        this.setModel(initModel);
+        this.setModel(this.getParsedModel(this.model))
         this._createNewKubernetesConfig();
         this._onCreateKubernetesConfig();
         this._onRemoveKubernetesConfig();
-        this._onCreateOrganization();
+        this._onUpdateOrganization();
     }
 
+    getParsedModel(receivedModel) {
+        let model = JSON.parse(JSON.stringify(initModel));
+        model = {
+            ...model,
+            title: 'Edit the organization',
+            name: {
+                ...model.name,
+                value: receivedModel.name
+            },
+            hosting: {
+                ...model.hosting,
+                value: receivedModel.hosting
+            },
+            endpoint: {
+                ...model.endpoint,
+                value: receivedModel.endpoint
+            },
+            secretKey: {
+                ...model.secretKey,
+                value: receivedModel.secretKey
+            },
+            kubernetesConfig: receivedModel.kubernetesConfig || []
+        }
 
+        return model;
+    }
 
     _createNewKubernetesConfig() {
         const id = (Date.now() + Math.random()).toString().replace('.', '');
@@ -103,15 +128,18 @@ export default class CreateOrganizationModal extends ModalController {
         });
     }
 
-    _onCreateOrganization() {
-        this.on('org:create', (event) => {
+    _onUpdateOrganization() {
+        this.on('org:update', (event) => {
             let toReturnObject = {
                 name: this.model.name.value,
                 hosting: this.model.hosting.value,
                 endpoint: this.model.endpoint.value,
                 secretKey: this.model.secretKey.value,
             }
-
+            if (typeof this.model.uid !== undefined)
+            {
+                toReturnObject.uid = this.model.uid;
+            }
             this._finishProcess(event, toReturnObject)
         });
     }

@@ -1,7 +1,7 @@
 import ContainerController from '../../../cardinal/controllers/base-controllers/ContainerController.js';
 import OrganizationModel from "../../models/OrganizationModel.js";
 
-export default class BPDController extends ContainerController {
+export default class BPDController1 extends ContainerController {
     constructor(element) {
         super(element);
 

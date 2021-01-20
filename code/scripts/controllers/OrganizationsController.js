@@ -5,17 +5,73 @@ export default class OrganizationsController extends BPDController {
     constructor(element) {
         super(element);
 
-        this.model = this.orgModel.registerBindings((data) => {
-            const model = this.setModel(data);
-            console.log(model);
-            return model;
+        let initModel = (organizations ) => {
+            debugger;
+            this.model = this.orgModel.registerBindings((data) => {
+                //data.organizations.splice(0);
+                data.organizations.push(organizations);
+                const model = this.setModel(data);
+                console.log(model);
+
+                return model;
+            });
+        };
+
+
+        this.DSUStorage.call('listDSUs', '/organizations', (err, dsuList) => {
+            if (err) {
+                return console.log(err);
+            }
+            console.log(dsuList);
+
+            let orgs = [];
+            //dsuList[0].identifier
+            let getItem = (dsuData) => {
+                this.DSUStorage.getItem('/organizations' + '/' + dsuData.identifier + '/data.json', (err, content) => {
+                    if (err) {
+                        return console.log(err);
+                    }
+
+                    let textDecoder = new TextDecoder("utf-8");
+                    let organization = JSON.parse(textDecoder.decode(content));
+                    orgs.push(organization);
+                    if (dsuList.length > 0) {
+                        getItem(dsuList.shift())
+                    } else {
+                       // debugger;
+                        /*this.model = this.orgModel.registerBindings((data) => {
+                            data.organizations.splice(0);
+                            data.organizations.push(orgs);
+                            const model = this.setModel(data);
+                            console.log(model);
+
+                            return model;
+                        });*/
+                        initModel(orgs);
+                    }
+                });
+            };
+
+            if (dsuList.length > 0) {
+                getItem(dsuList.shift())
+            } else {
+                /*this.model = this.orgModel.registerBindings((data) => {
+                    data.organizations.splice(0);
+                    data.organizations.push(orgs);
+                    const model = this.setModel(data);
+                    console.log(model);
+
+                    return model;
+                });*/
+                initModel(orgs);
+            }
         });
 
 
         //DEV INTENDED
         let tempObj = {
-            name: "Organization A",
-            uid: 1,
+            name: "Organization ABCCCC",
+            uid: 155,
             kubernetesConfig: [],
             hosting: 'aws',
             endpoint: 'localhost:8080',
@@ -33,8 +89,8 @@ export default class OrganizationsController extends BPDController {
                     return console.log(err);
                 }
 
-                this.DSUStorage.setObject(ORGANIZATION_PATH + '/' + keySSI + '/data.json', JSON.stringify(tempObj), (err) => {
-                    debugger
+                this.DSUStorage.setObject(ORGANIZATION_PATH + '/' + keySSI + '/data.json', tempObj, (err) => {
+
                     if (err) {
                         return console.log(err);
                     }
@@ -42,8 +98,10 @@ export default class OrganizationsController extends BPDController {
                         if (err) {
                             return console.log(err);
                         }
+
                         let textDecoder = new TextDecoder("utf-8");
                         let organization = JSON.parse(textDecoder.decode(content));
+                        console.log(organization);
                     })
                 });
             });

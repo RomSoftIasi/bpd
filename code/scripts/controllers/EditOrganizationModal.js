@@ -76,27 +76,32 @@ export default class CreateOrganizationModal extends ModalController {
                 ...model.secretKey,
                 value: receivedModel.secretKey
             },
-            kubernetesConfig: receivedModel.kubernetesConfig || []
+            kubernetesConfig: receivedModel.kubernetesConfig.map(kc => this._getKubernetesConfig(kc))
         }
-
         return model;
     }
 
-    _createNewKubernetesConfig() {
-        const id = (Date.now() + Math.random()).toString().replace('.', '');
-        this.model.kubernetesConfig.push({
+    _getKubernetesConfig(kubernetesConfig) {
+        return {
             key: {
                 placeholder: 'Key',
-                name: 'Key'
+                name: 'Key',
+                value: kubernetesConfig.key
             },
             value: {
                 placeholder: 'Value',
-                name: 'Value'
+                name: 'Value',
+                value: kubernetesConfig.value
             },
             id: {
-                value: id
+                value: kubernetesConfig.id
             }
-        });
+        };
+    }
+
+    _createNewKubernetesConfig() {
+        let id = (Date.now() + Math.random()).toString().replace('.', '');
+        this.model.kubernetesConfig.push(this._getKubernetesConfig({id: id, key: '', value: ''}));
     }
 
     _onCreateKubernetesConfig() {
@@ -130,11 +135,21 @@ export default class CreateOrganizationModal extends ModalController {
 
     _onUpdateOrganization() {
         this.on('org:update', (event) => {
+            let kubernetesConfig = this.model.kubernetesConfig
+                .filter(kc => kc.key.value && kc.value.value)
+                .map(kc => {
+                    return {
+                        id: kc.id.value,
+                        value: kc.value.value,
+                        key: kc.key.value,
+                    }
+                })
             let toReturnObject = {
                 name: this.model.name.value,
                 hosting: this.model.hosting.value,
                 endpoint: this.model.endpoint.value,
                 secretKey: this.model.secretKey.value,
+                kubernetesConfig: kubernetesConfig,
             }
             if (typeof this.model.uid !== undefined)
             {

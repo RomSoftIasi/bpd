@@ -48,13 +48,12 @@ export default class CreateOrganizationModal extends ModalController {
     constructor(element, history) {
         super(element, history);
 
-        this.setModel(initModel);
+        this.setModel(JSON.parse(JSON.stringify(initModel)));
         this._createNewKubernetesConfig();
         this._onCreateKubernetesConfig();
         this._onRemoveKubernetesConfig();
         this._onCreateOrganization();
     }
-
 
 
     _createNewKubernetesConfig() {
@@ -105,11 +104,22 @@ export default class CreateOrganizationModal extends ModalController {
 
     _onCreateOrganization() {
         this.on('org:create', (event) => {
+            let kubernetesConfig = this.model.kubernetesConfig
+                .filter(kc => kc.key.value && kc.value.value)
+                .map(kc => {
+                    return {
+                        id: kc.id.value,
+                        value: kc.value.value,
+                        key: kc.key.value,
+                    }
+                })
+
             let toReturnObject = {
                 name: this.model.name.value,
                 hosting: this.model.hosting.value,
                 endpoint: this.model.endpoint.value,
                 secretKey: this.model.secretKey.value,
+                kubernetesConfig: kubernetesConfig,
             }
 
             this._finishProcess(event, toReturnObject)

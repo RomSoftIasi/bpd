@@ -42,12 +42,12 @@ export default class OrganizationService {
 
 
             if (dsuList.length === 0){
-                    callback(undefined,orgs);
+                const model = new OrganizationModel()._getWrapperData();
+                callback(undefined, model);
+                return;
             }
             getOrgDsu(dsuList.shift());
         })
-
-
 
     }
 

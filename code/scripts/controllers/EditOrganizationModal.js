@@ -59,6 +59,7 @@ export default class CreateOrganizationModal extends ModalController {
         let model = JSON.parse(JSON.stringify(initModel));
         model = {
             ...model,
+            uid: receivedModel.uid,
             title: 'Edit the organization',
             name: {
                 ...model.name,
@@ -145,6 +146,7 @@ export default class CreateOrganizationModal extends ModalController {
                     }
                 })
             let toReturnObject = {
+                uid: this.model.uid,
                 name: this.model.name.value,
                 hosting: this.model.hosting.value,
                 endpoint: this.model.endpoint.value,

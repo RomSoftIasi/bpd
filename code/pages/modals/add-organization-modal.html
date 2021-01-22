@@ -28,20 +28,15 @@
                         button-class="btn btn-info btn-sm"></psk-button>
         </psk-card>
 
-        <psk-condition condition="@createOrg">
-            <psk-card slot="condition-true" class="bpd-row bpd-creation-row">
-                <psk-button event-name="org:create">Create</psk-button>
-                <psk-button class="bpd-qr-code-with-text" event-name="org:create-with-qrcode">
-                    <div>
-                        <psk-icon icon="qrcode" color="rgb(0, 0, 255)"></psk-icon>
-                        Load with QRCode
-                    </div>
-                </psk-button>
-            </psk-card>
-            <psk-card slot="condition-false" class="bpd-row bpd-creation-row">
-                <psk-button event-name="org:create">Save</psk-button>
-            </psk-card>
-        </psk-condition>
+        <psk-card class="bpd-row bpd-creation-row">
+            <psk-button event-name="org:create">Create</psk-button>
+            <psk-button class="bpd-qr-code-with-text" event-name="org:create-with-qrcode">
+                <div>
+                    <psk-icon icon="qrcode" color="rgb(0, 0, 255)"></psk-icon>
+                    Load with QRCode
+                </div>
+            </psk-button>
+        </psk-card>
 
     </psk-modal>
 </psk-container>

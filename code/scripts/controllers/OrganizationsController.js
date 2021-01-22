@@ -1,6 +1,6 @@
-import ContainerController from '../../cardinal/controllers/base-controllers/ContainerController.js';
-import OrganizationService from '../controllers/Services/OrganizationService.js';
-export default class BPDController extends ContainerController {
+import BPDController from "./base-controllers/BPDController.js";
+
+export default class OrganizationsController extends BPDController {
 
     constructor(element) {
         super(element);
@@ -9,9 +9,8 @@ export default class BPDController extends ContainerController {
         this.setModel({});
 
         // get model
-        this.OrganisationService = new OrganizationService(this.DSUStorage);
-        this.OrganisationService.getOrganizationModel( (err,data) => {
-            if (err){
+        this.OrganisationService.getOrganizationModel((err, data) => {
+            if (err) {
                 console.log(err);
                 return;
             }
@@ -20,29 +19,26 @@ export default class BPDController extends ContainerController {
         });
 
 
-
         //attach handlers
         this._attachHandlerCreateOrg();
         this._attachHandlerEditOrg();
+        this._attachHandlerManageCluster();
     }
 
 
-
-    _attachHandlerCreateOrg(){
+    _attachHandlerCreateOrg() {
         this.on('org:create', (e) => {
             e.preventDefault();
             e.stopImmediatePropagation();
 
-            this.showModal('addOrganizationModal',{},(err, data) => {
-                if (err)
-                {
+            this.showModal('addOrganizationModal', {}, (err, data) => {
+                if (err) {
                     console.log(err);
                     return;
                 }
                 //todo : show spinner/loading stuff
                 this.OrganisationService.saveOrganization(data, (err, updatedOrg) => {
-                    if (err)
-                    {
+                    if (err) {
                         console.log(err);
                         return;
                     }
@@ -54,34 +50,44 @@ export default class BPDController extends ContainerController {
         })
     }
 
-    _attachHandlerEditOrg(){
-        this.on('org:edit',(e) => {
+    _attachHandlerEditOrg() {
+        this.on('org:edit', (e) => {
             e.preventDefault();
             e.stopImmediatePropagation();
             console.log(e);
             const uid = e.data;
             const orgIndex = this.model.organizations.findIndex((org) => org.uid === uid);
-            if (orgIndex === -1)
-            {
+            if (orgIndex === -1) {
                 console.log('org not found @uid', uid, this.model.organizations);
                 return;
             }
 
             const orgToEdit = this.model.organizations[orgIndex];
-            this.showModal('editOrganizationModal',orgToEdit, (err, data) => {
-                if (err)
-                {
+            this.showModal('editOrganizationModal', orgToEdit, (err, data) => {
+                if (err) {
                     console.log(err);
                     return;
                 }
-                this.model.organizations[orgIndex] = data;
+                //todo : show spinner/loading stuff
+                this.OrganisationService.updateOrganization(data, (err) => {
+                    if (err) {
+                        console.log(err);
+                        return;
+                    }
+                    this.model.organizations[orgIndex] = data;
+                });
             })
         })
     }
 
-
-
-
+    _attachHandlerManageCluster() {
+        this.on('org:manage-clusters', (e) => {
+            e.preventDefault();
+            e.stopImmediatePropagation();
+            const orgUid = e.data;
+            this.redirect(`/cluster/index#orgUid=${orgUid}`);
+        });
+    }
 }
 
 

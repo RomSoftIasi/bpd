@@ -6,7 +6,6 @@ export default class OrganizationsController extends BPDController {
         super(element);
 
         let initModel = (organizations ) => {
-            debugger;
             this.model = this.orgModel.registerBindings((data) => {
                 //data.organizations.splice(0);
                 data.organizations.push(organizations);

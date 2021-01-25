@@ -8,7 +8,8 @@
     },
     "modals": {
         "shareQRCodeModal": "modals/share-qrcode-modal.html",
-        "addEditClusterModal": "modals/create-and-edit-cluster-modal.html",
+        "addClusterModal": "modals/add-cluster-modal.html",
+        "editClusterModal": "modals/edit-cluster-modal.html",
         "addOrganizationModal": "modals/add-organization-modal.html",
         "editOrganizationModal": "modals/edit-organization-modal.html",
         "dsuTypesApprovalModal": "modals/dsu-types-approval-modal.html",

@@ -1,13 +1,16 @@
 import ContainerController from '../../../cardinal/controllers/base-controllers/ContainerController.js';
-import OrganizationService from "../Services/OrganizationService.js";
+import OrganizationModel from "../../models/OrganizationModel.js";
 
 export default class BPDController extends ContainerController {
-    constructor(element) {
-        super(element);
+    constructor(element, history) {
+        super(element, history);
 
         this.feedbackEmitter = null;
 
-        this.OrganisationService = new OrganizationService(this.DSUStorage);
+        // ================ Model setup
+        // Model is singleton in order to preserve state across
+        // different same controller instances
+        this.orgModel = OrganizationModel.getInstance();
     }
 
     /**
@@ -56,7 +59,7 @@ export default class BPDController extends ContainerController {
      * @param {string} url
      */
     redirect(url) {
-        this.render('psk-route-redirect', {url});
+        this.render('psk-route-redirect', { url });
     }
 
     /**

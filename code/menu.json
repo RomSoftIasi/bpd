@@ -13,19 +13,21 @@
       "name": "BPD",
       "path": "/bpd",
       "icon": "fa-home",
+      "tags": "view-organizations",
       "pageSrc": "bpd.html"
     },
     {
       "name": "Create Organization",
       "path": "/organization/create",
       "icon": "fa-cog",
-      "tags": "edit-organization",
+      "tags": "add-organization",
       "pageSrc": "edit-organization.html"
     },
     {
       "name": "Edit Organization",
       "path": "/organization/edit",
       "icon": "fa-cog",
+      "tags": "edit-organization",
       "pageSrc": "edit-organization.html",
       "indexed": false
     },
@@ -33,6 +35,7 @@
       "name": "Manage Clusters",
       "path": "/cluster/index",
       "icon": "fa-cog",
+      "tags": "view-clusters",
       "pageSrc": "clusters/index.html",
       "indexed": false
     },
@@ -40,6 +43,7 @@
       "name": "Edit Cluster",
       "path": "/cluster/edit",
       "icon": "fa-cog",
+      "tags": "edit-clusters",
       "pageSrc": "clusters/edit.html",
       "indexed": false
     },
@@ -47,6 +51,7 @@
       "name": "Create Cluster",
       "path": "/cluster/create",
       "icon": "fa-cog",
+      "tags": "add-clusters",
       "pageSrc": "clusters/edit.html",
       "indexed": false
     },
@@ -54,6 +59,7 @@
       "name": "Governance",
       "path": "/cluster/governance",
       "icon": "fa-cog",
+      "tags": "governance",
       "pageSrc": "clusters/governance.html",
       "indexed": false
     },
@@ -61,6 +67,7 @@
       "name": "Voting",
       "path": "/cluster/voting",
       "icon": "fa-cog",
+      "tags": "voting",
       "pageSrc": "clusters/voting.html",
       "indexed": false
     },
@@ -68,6 +75,7 @@
       "name": "Monitoring",
       "path": "/cluster/monitoring",
       "icon": "fa-cog",
+      "tags": "monitoring",
       "pageSrc": "clusters/monitoring.html",
       "indexed": false
     },
@@ -75,6 +83,7 @@
       "name": "Ssapp Review",
       "path": "/cluster/ssapp-review",
       "icon": "fa-cog",
+      "tags": "ssapp-review",
       "pageSrc": "clusters/ssapp-review.html",
       "indexed": false
     }

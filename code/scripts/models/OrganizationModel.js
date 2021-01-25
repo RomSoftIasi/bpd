@@ -1,15 +1,11 @@
-export default class OrgModel{
+export default class OrgModel {
 
     constructor() {
     }
 
-    _getWrapperData(){
+    _getWrapperData() {
         return {
-            test: 0,
-            files: [],
-            organizations: [
-
-                ]
+            organizations: []
         };
     }
 }

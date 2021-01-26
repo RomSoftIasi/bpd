@@ -1,5 +1,4 @@
-import BPDController from "./base-controllers/BPDController.js";
-import ClusterModel from "../models/ClusterModel.js"
+import ContainerController from '../../../cardinal/controllers/base-controllers/ContainerController.js';
 
 const initialQuestionCreationModel = {
     title: {
@@ -79,12 +78,13 @@ const initModel = {
     questionCreationModel: JSON.parse(JSON.stringify(initialQuestionCreationModel))
 }
 
-export default class VotingController extends BPDController {
+export default class MonitoringController extends ContainerController {
     constructor(element, history) {
         super(element, history);
-        this.clusterModel = ClusterModel.getInstance();
-        this.model = this.setModel(initModel)
+        debugger
+        let orgUid = this.History.getState();
 
+        this.model = this.setModel(initModel)
         this._initModel();
         this._onAnswerClick();
         this._onResponseClick();
@@ -136,9 +136,9 @@ export default class VotingController extends BPDController {
         if (this.model.params.orgUid) {
             this.model.organization = this.orgModel.getOrganization(this.model.params.orgUid);
         }
-        if (this.model.params.ntwUid) {
-            this.model.network = this.clusterModel.getCluster(this.model.params.ntwUid)
-        }
+        // if (this.model.params.ntwUid) {
+        //     this.model.network = this.clusterModel.getCluster(this.model.params.ntwUid)
+        // }
 
         for (let i = 0; i < this.model.questions.length; i++) {
             this.model.responses.push({

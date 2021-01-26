@@ -10,7 +10,7 @@
                 <psk-label label="@organization.name"/>
             </div>
             <div>
-                <psk-barcode-generator size="8" type="qrcode" data="@organization.name"></psk-barcode-generator>
+                <psk-barcode-generator size="8" type="qrcode" data="@organization.uid"></psk-barcode-generator>
             </div>
         </psk-card>
 
@@ -27,12 +27,12 @@
                     <psk-card class="bpd-organization-line">
                         <div class="bpd-organization-card-header">
                             <psk-button-group class="bpd-organization-menu bpd-organization-cluster-menu" icon="ellipsis-v" icon-color="rgb(255, 255, 255)">
-                                <psk-button label="Manage" class="bpd-organization-button" button-class="btn btn-info" event-name="cluster:create" event-data="@id"></psk-button>
-                                <psk-button label="Share" class="bpd-organization-button" button-class="btn btn-danger" event-name="cluster:share" event-data="@id"></psk-button>
-                                <psk-button label="Continuous Integration" class="bpd-organization-button" button-class="btn btn-info" event-name="cluster:continuous-integration" event-data="@id"></psk-button>
-                                <psk-button label="Performance Testing" class="bpd-organization-button" button-class="btn btn-danger" event-name="cluster:performance-testing" event-data="@id"></psk-button>
-                                <psk-button label="Monitoring" class="bpd-organization-button" button-class="btn btn-info" event-name="cluster:monitoring" event-data="@id"></psk-button>
-                                <psk-button label="Governance" class="bpd-organization-button" button-class="btn btn-danger" event-name="cluster:governance" event-data="@id"></psk-button>
+                                <psk-button label="Manage" class="bpd-organization-button" button-class="btn btn-info" event-name="cluster:edit" event-data="@uid"></psk-button>
+                                <psk-button label="Share" class="bpd-organization-button" button-class="btn btn-danger" event-name="cluster:share" event-data="@uid"></psk-button>
+                                <psk-button label="Continuous Integration" class="bpd-organization-button" button-class="btn btn-info" event-name="cluster:continuous-integration" event-data="@uid"></psk-button>
+                                <psk-button label="Performance Testing" class="bpd-organization-button" button-class="btn btn-danger" event-name="cluster:performance-testing" event-data="@uid"></psk-button>
+                                <psk-button label="Monitoring" class="bpd-organization-button" button-class="btn btn-info" event-name="cluster:monitoring" event-data="@uid"></psk-button>
+                                <psk-button label="Governance" class="bpd-organization-button" button-class="btn btn-danger" event-name="cluster:governance" event-data="@uid"></psk-button>
                             </psk-button-group>
                         </div>
                         <psk-label class="bpd-organization-card-label" label="@name"/>

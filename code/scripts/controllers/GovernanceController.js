@@ -1,5 +1,4 @@
-import BPDController from "./base-controllers/BPDController.js";
-import ClusterModel from "../models/ClusterModel.js"
+import ContainerController from '../../../cardinal/controllers/base-controllers/ContainerController.js';
 
 const initModel = {
     title: 'GovernanceModal',
@@ -45,10 +44,11 @@ const initModel = {
     }
 }
 
-export default class GovernanceController extends BPDController {
-    constructor(element) {
-        super(element);
-        this.clusterModel = ClusterModel.getInstance();
+export default class GovernanceController extends ContainerController {
+    constructor(element, history) {
+        super(element, history);
+        debugger
+        let orgUid = this.History.getState();
         this.model = this.setModel(initModel)
 
         this._initModel();
@@ -62,9 +62,9 @@ export default class GovernanceController extends BPDController {
         if (this.model.params.orgUid) {
             this.model.organization = this.orgModel.getOrganization(this.model.params.orgUid);
         }
-        if (this.model.params.ntwUid) {
-            this.model.network = this.clusterModel.getCluster(this.model.params.ntwUid)
-        }
+        // if (this.model.params.ntwUid) {
+        //     this.model.network = this.clusterModel.getCluster(this.model.params.ntwUid)
+        // }
     }
 
     _onContractEdit() {

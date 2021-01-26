@@ -1,5 +1,5 @@
 <psk-container controller-name="ClusterEditModal">
-    <psk-modal id="createEditClusterModal" class="bpd-modal" opened>
+    <psk-modal id="editClusterModal" class="bpd-modal" opened>
 
         <psk-label slot="title" class="bpd-modal-title" label="@title"></psk-label>
 
@@ -11,44 +11,31 @@
             </psk-card>
             <psk-text-input class="bpd-input" view-model="@link"></psk-text-input>
 
-            <psk-condition condition="@createCluster">
-                <div slot="condition-false">
-                    <psk-card class="bpd-translucent-buttons">
-                        <psk-layout template-columns="1fr 1fr">
-                            <psk-button class="bpd-qr-code-with-text" event-name="cls:governance" event-data="@id">
-                                Governance
-                            </psk-button>
-                            <psk-button class="bpd-qr-code-with-text" event-name="cls:monitoring" event-data="@id">
-                                Monitoring
-                            </psk-button>
-                        </psk-layout>
+            <psk-card class="bpd-translucent-buttons">
+                <psk-layout template-columns="1fr 1fr">
+                    <psk-button class="bpd-qr-code-with-text" event-name="cls:governance" event-data="@id">
+                        Governance
+                    </psk-button>
+                    <psk-button class="bpd-qr-code-with-text" event-name="cls:monitoring" event-data="@id">
+                        Monitoring
+                    </psk-button>
+                </psk-layout>
 
-                        <psk-layout template-columns="1fr 1fr">
-                            <psk-button class="bpd-qr-code-with-text" event-name="cls:continuous-integration" event-data="@id">
-                                Continuous Integration
-                            </psk-button>
-                            <psk-button class="bpd-qr-code-with-text" event-name="cls:performance-testing" event-data="@id">
-                                Performance Testing
-                            </psk-button>
-                        </psk-layout>
-                    </psk-card>
-                </div>
-            </psk-condition>
+                <psk-layout template-columns="1fr 1fr">
+                    <psk-button class="bpd-qr-code-with-text" event-name="cls:continuous-integration" event-data="@id">
+                        Continuous Integration
+                    </psk-button>
+                    <psk-button class="bpd-qr-code-with-text" event-name="cls:performance-testing" event-data="@id">
+                        Performance Testing
+                    </psk-button>
+                </psk-layout>
+            </psk-card>
         </div>
 
-        <psk-condition condition="@createCluster">
-            <div slot="condition-true">
-                <psk-card class="bpd-row bpd-creation-row">
-                    <psk-button event-name="cls:create">START</psk-button>
-                </psk-card>
-            </div>
-            <div slot="condition-false">
-                <psk-card class="bpd-row bpd-creation-row">
-                    <psk-button class="bpd-delete-button" event-name="cls:delete">DELETE</psk-button>
-                    <psk-button event-name="cls:save">SAVE</psk-button>
-                </psk-card>
-            </div>
-        </psk-condition>
+        <psk-card class="bpd-row bpd-creation-row">
+            <psk-button class="bpd-delete-button" event-name="cls:delete">DELETE</psk-button>
+            <psk-button event-name="cls:save">SAVE</psk-button>
+        </psk-card>
 
     </psk-modal>
 </psk-container>

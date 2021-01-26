@@ -76,7 +76,7 @@ export default class OrganizationsController extends ContainerController {
         this.on('org:edit', (e) => {
             e.preventDefault();
             e.stopImmediatePropagation();
-            console.log(e);
+
             const uid = e.data;
             const orgIndex = this.model.organizations.findIndex((org) => org.uid === uid);
             if (orgIndex === -1) {

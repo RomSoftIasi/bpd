@@ -5,9 +5,10 @@ export default class OrganizationsController extends ContainerController {
 
     constructor(element, history) {
         super(element, history);
-
+        debugger
         // reset model
         this.setModel({});
+        this.globalThis = this;
 
         // get model
         this.OrganisationService = new OrganizationService(this.DSUStorage);
@@ -18,26 +19,7 @@ export default class OrganizationsController extends ContainerController {
             }
             //bind
             this.setModel(data);
-
-            // SHORTCIRCUIT FOR DEVELOPMENT -- TO BE REMOVED
-            let aux = {
-                name: "this.model.name.value",
-                hosting: "this.model.hosting.value",
-                endpoint: "this.model.endpoint.value",
-                secretKey: "this.model.secretKey.value",
-                kubernetesConfig: []
-            }
-            this.OrganisationService.saveOrganization(aux, (err, updatedOrg) => {
-                if (err) {
-                    console.log(err);
-                    return;
-                }
-                this.model.organizations.push(updatedOrg);
-            });
-            // END OF SHORTCIRCUIT
-
         });
-
 
         //attach handlers
         this._attachHandlerCreateOrg();
@@ -47,26 +29,37 @@ export default class OrganizationsController extends ContainerController {
         this._attachHandlerRemoveOrg();
     }
 
-
     _attachHandlerCreateOrg() {
+        let globalThis = this;
         this.on('org:create', (e) => {
             e.preventDefault();
             e.stopImmediatePropagation();
-
+            debugger
             this.showModal('addOrganizationModal', {}, (err, data) => {
                 if (err) {
                     console.log(err);
                     return;
                 }
-                //todo : show spinner/loading stuff
-                this.OrganisationService.saveOrganization(data, (err, updatedOrg) => {
-                    if (err) {
-                        console.log(err);
-                        return;
-                    }
-                    this.model.organizations.push(updatedOrg);
-                });
 
+                if(data.qrCodeImportRedirect) {
+                    this.closeModal();
+                    this.showModal('qrCodeImportModal', (err, keySSI) => {
+                        if (err) {
+                            console.log(err);
+                            return;
+                        }
+                        debugger
+                    });
+                } else {
+                    //todo : show spinner/loading stuff
+                    this.OrganisationService.saveOrganization(data, (err, updatedOrg) => {
+                        if (err) {
+                            console.log(err);
+                            return;
+                        }
+                        this.model.organizations.push(updatedOrg);
+                    });
+                }
             })
 
         })
@@ -76,7 +69,7 @@ export default class OrganizationsController extends ContainerController {
         this.on('org:edit', (e) => {
             e.preventDefault();
             e.stopImmediatePropagation();
-
+            debugger
             const uid = e.data;
             const orgIndex = this.model.organizations.findIndex((org) => org.uid === uid);
             if (orgIndex === -1) {
@@ -141,12 +134,22 @@ export default class OrganizationsController extends ContainerController {
             e.stopImmediatePropagation();
 
             const uid = e.data;
-            const orgIndex = this.model.organizations.findIndex((org) => org.uid === uid);
-            if (orgIndex === -1) {
-                console.log('org not found @uid', uid, this.model.organizations);
-                return;
-            }
-            this.model.organizations.splice(orgIndex, 1);
+            this.OrganisationService.unmountOrganization(uid, (err, result) => {
+                if (err) {
+                    console.log(err);
+                    return;
+                }
+                console.log('Removed organization with @uid', uid);
+
+                const orgIndex = this.model.organizations.findIndex((org) => org.uid === uid);
+                if (orgIndex === -1) {
+                    console.log('Org not found @uid', uid, this.model.organizations);
+                    return;
+                }
+
+                this.model.organizations.splice(orgIndex, 1);
+            });
+
         });
     }
 }

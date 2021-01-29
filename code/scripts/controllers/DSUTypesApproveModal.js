@@ -1,4 +1,5 @@
 import ModalController from '../../../cardinal/controllers/base-controllers/ModalController.js';
+import ClusterService from "./Services/ClusterService.js";
 
 const initModel = {
     title: 'Manage DSU Types',
@@ -8,14 +9,29 @@ const initModel = {
 export default class DSUTypesApproveModal extends ModalController {
     constructor(element, history) {
         super(element, history);
+        let receivedModel = this.History.getState();
+        this.model = this.setModel({
+            ...receivedModel,
+            ...this.getParsedModel(this.model)
+        })
+        debugger
+        this.ClusterService = new ClusterService(this.DSUStorage);
 
-        this.model = this.setModel(this.getParsedModel(this.model))
+        this.ClusterService.getCluster(receivedModel.organizationUid, receivedModel.clusterUid, (err, cluster) => {
+            if (err) {
+                console.log(err);
+                return;
+            }
+            this.model.cluster = cluster;
+            this.model.dsuTypes = this.model.cluster.dsuTypes || [];
+        })
+
         this._createNewDsuType();
-        this._onDSUTypeCreate();
-        this._onDSUTypeApprove();
-        this._onDSUTypeOpen();
-        this._onDSUTypeReview();
-        this._onDSUFinish();
+        this._attachHandlerCreateDSUType();
+        this._attachHandlerApproveDSUType();
+        this._attachHandlerOpenDSUType();
+        this._attachHandlerReviewDSUType();
+        this._attachHandlerFinishDSUType();
     }
 
     getParsedModel(receivedModel) {
@@ -58,7 +74,7 @@ export default class DSUTypesApproveModal extends ModalController {
         });
     }
 
-    _onDSUTypeCreate() {
+    _attachHandlerCreateDSUType() {
         this.on('dsu:add-dsuType-config', (e) => {
             e.preventDefault();
             e.stopImmediatePropagation();
@@ -66,7 +82,7 @@ export default class DSUTypesApproveModal extends ModalController {
         });
     }
 
-    _onDSUTypeApprove() {
+    _attachHandlerApproveDSUType() {
         this.on('dsu:approve', (e) => {
             e.preventDefault();
             e.stopImmediatePropagation();
@@ -83,7 +99,7 @@ export default class DSUTypesApproveModal extends ModalController {
         });
     }
 
-    _onDSUTypeReview() {
+    _attachHandlerReviewDSUType() {
         this.on('dsu:review', (e) => {
             e.preventDefault();
             e.stopImmediatePropagation();
@@ -97,11 +113,16 @@ export default class DSUTypesApproveModal extends ModalController {
                 redirect: 'ssapp-review',
                 seed: dsuTypes[dsuTypeIndex].seed.value
             }
-            this._finishProcess(e, toReturnObject)
+            let toSendObject = {
+                organizationUid: this.model.organizationUid,
+                clusterUid: this.model.uid,
+                seed: dsuTypes[dsuTypeIndex].seed.value
+            }
+            this.History.navigateToPageByTag('ssapp-review', toSendObject);
         });
     }
 
-    _onDSUTypeOpen() {
+    _attachHandlerOpenDSUType() {
         this.on('dsu:open', (e) => {
             e.preventDefault();
             e.stopImmediatePropagation();
@@ -111,20 +132,26 @@ export default class DSUTypesApproveModal extends ModalController {
             if (dsuTypeIndex === -1) {
                 return;
             }
-            let toReturnObject = {
-                redirect: 'ssapp-review',
+            let toSendObject = {
+                organizationUid: this.model.organizationUid,
+                clusterUid: this.model.uid,
                 seed: dsuTypes[dsuTypeIndex].seed.value
             }
-            this._finishProcess(e, toReturnObject)
+            this.History.navigateToPageByTag('ssapp-review', toSendObject);
         });
     }
 
-    _onDSUFinish() {
+    _attachHandlerFinishDSUType() {
         this.on('dsu:finish', (event) => {
-            let toReturnObject = {
-                dsuTypes: this.model.dsuTypes
-            }
-            this._finishProcess(event, toReturnObject)
+            this.model.cluster.dsuTypes = this.model.dsuTypes;
+            this.ClusterService.updateCluster(this.model.organizationUid, this.model.cluster, (err, data) => {
+                if (err) {
+                    console.log(err);
+                    return;
+                }
+                debugger
+            })
+            this._finishProcess(event, {})
         });
     }
 

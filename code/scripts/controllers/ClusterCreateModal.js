@@ -39,16 +39,23 @@ export default class ClusterCreateModal extends ModalController {
 
         this.model = this.setModel(JSON.parse(JSON.stringify(initModel)))
 
+        this._attachHandlerChangeAutoStop();
+        this._attachHandlerCreateCluster();
+    }
+
+    _attachHandlerChangeAutoStop() {
         this.model.onChange('autoStop.value', () => {
             this.model.date.readOnly = this.model.autoStop.value == 0;
         });
+    }
 
+    _attachHandlerCreateCluster() {
         this.on('cls:create', (event) => {
-            this.respondWithResult(event)
+            this._respondWithResult(event)
         });
     }
 
-    respondWithResult(event) {
+    _respondWithResult(event) {
         let toReturnObject = {
             name: this.model.name.value,
             autoStop: this.model.autoStop.value,

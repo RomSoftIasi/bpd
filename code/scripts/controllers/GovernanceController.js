@@ -1,4 +1,6 @@
 import ContainerController from '../../../cardinal/controllers/base-controllers/ContainerController.js';
+import OrganizationService from "./Services/OrganizationService.js";
+import ClusterService from "./Services/ClusterService.js";
 
 const initModel = {
     title: 'GovernanceModal',
@@ -37,10 +39,10 @@ const initModel = {
         }
     ],
     organization: {
-        name: 'Organization A'
+        name: ''
     },
-    network: {
-        name: 'Network A'
+    cluster: {
+        name: ''
     }
 }
 
@@ -48,48 +50,57 @@ export default class GovernanceController extends ContainerController {
     constructor(element, history) {
         super(element, history);
         debugger
-        let orgUid = this.History.getState();
-        this.model = this.setModel(initModel)
+        this.OrganisationService = new OrganizationService(this.DSUStorage);
+        this.ClusterService = new ClusterService(this.DSUStorage);
 
-        this._initModel();
-        this._onContractEdit();
-        this._onContractReview();
-        this._onVoting();
+        let receivedModel = this.History.getState();
+        this.model = this.setModel({
+            ...JSON.parse(JSON.stringify(initModel)),
+            ...receivedModel
+        })
+
+        this.OrganisationService.getOrganization(receivedModel.organizationUid, (err, organization) => {
+            if (err) {
+                console.log(err);
+                return;
+            }
+            this.model.organization = organization;
+        })
+
+        this.ClusterService.getCluster(receivedModel.organizationUid, receivedModel.clusterUid, (err, cluster) => {
+            if (err) {
+                console.log(err);
+                return;
+            }
+            this.model.cluster = cluster;
+        })
+
+        this._attachHandlerEditContract();
+        this._attachHandlerVotingContract();
     }
 
-    _initModel() {
-        this.model.params = this.parseHashFragmentParams();
-        if (this.model.params.orgUid) {
-            this.model.organization = this.orgModel.getOrganization(this.model.params.orgUid);
-        }
-        // if (this.model.params.ntwUid) {
-        //     this.model.network = this.clusterModel.getCluster(this.model.params.ntwUid)
-        // }
-    }
-
-    _onContractEdit() {
+    _attachHandlerEditContract() {
         this.on('gvn:contract-edit', (event) => {
-            this.showModal('dsuTypesApprovalModal', {}, (err, response) => {
+            let toSendObject = {
+                organizationUid: this.model.organizationUid,
+                clusterUid: this.model.clusterUid
+            }
+            this.showModal('dsuTypesApprovalModal', toSendObject, (err, response) => {
                 if (err) {
                     return console.log(err);
                 }
-                if (response.redirect) {
-                    return this.redirect(`/cluster/${response.redirect}#seed=${response.seed}`);
-                }
+                debugger
             });
         });
     }
 
-    _onContractReview() {
-        this.on('gvn:contract-review', (event) => {
-
-        });
-    }
-
-    _onVoting() {
+    _attachHandlerVotingContract() {
         this.on('gvn:voting', (event) => {
-                this.redirect(`/cluster/voting#orgUid=${this.model.params.orgUid}&ntwUid=${this.model.params.ntwUid}`);
+            let toSendObject = {
+                organizationUid: this.model.organizationUid,
+                clusterUid: this.model.uid
             }
-        );
+            this.History.navigateToPageByTag('voting', toSendObject);
+        });
     }
 }

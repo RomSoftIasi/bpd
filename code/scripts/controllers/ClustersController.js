@@ -7,9 +7,9 @@ export default class ClustersController extends ContainerController {
     constructor(element, history) {
         super(element, history);
 
-        debugger
         this.OrganisationService = new OrganizationService(this.DSUStorage);
         this.ClusterService = new ClusterService(this.DSUStorage);
+
         this.setModel({});
         let orgUid = this.History.getState();
 
@@ -80,7 +80,6 @@ export default class ClustersController extends ContainerController {
 
     _attachHandlerEditCluster() {
         this.on('cluster:edit', (e) => {
-            debugger
             const uid = e.data;
             const clusterIndex = this.model.clusters.findIndex((cluster) => cluster.uid === uid);
             if (clusterIndex === -1) {
@@ -88,20 +87,36 @@ export default class ClustersController extends ContainerController {
                 return;
             }
 
-            const clusterToShare = this.model.clusters[clusterIndex];
-            this.showModal('editClusterModal', {cluster: clusterToShare}, (err, response) => {
+            const clusterToEdit = this.model.clusters[clusterIndex];
+            let toSendObject = {
+                organizationUid: this.model.organization.uid,
+                cluster: clusterToEdit
+            };
+            this.showModal('editClusterModal', toSendObject, (err, response) => {
                 if (err) {
                     console.log(err);
                     return;
                 }
+                debugger
                 //todo : show spinner/loading stuff
-                this.ClusterService.updateCluster(uid, response, (err, updatedCluster) => {
-                    if (err) {
-                        console.log(err);
-                        return;
-                    }
-                    this.model.clusters[clusterIndex] = updatedCluster;
-                });
+                if (response.delete) {
+                    this.ClusterService.unmountCluster(this.model.organization.uid, clusterToEdit.uid, (err, result) => {
+                        if (err) {
+                            console.log(err);
+                            return;
+                        }
+                        console.log('Removed cluster with @uid', clusterToEdit.uid, result);
+                        this.model.clusters.splice(clusterIndex, 1);
+                    });
+                } else {
+                    this.ClusterService.updateCluster(uid, response, (err, updatedCluster) => {
+                        if (err) {
+                            console.log(err);
+                            return;
+                        }
+                        this.model.clusters[clusterIndex] = updatedCluster;
+                    });
+                }
             });
         });
     }

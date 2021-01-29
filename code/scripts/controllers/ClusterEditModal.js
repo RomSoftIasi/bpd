@@ -37,23 +37,28 @@ export default class ClusterEditModal extends ModalController {
     constructor(element, history) {
         super(element, history);
         debugger
-        this.model = this.setModel(this.getParsedModel(this.model))
+        this.model = this.setModel(this._getParsedModel(this.model))
 
+        this._attachHandlerChangeAutoStop();
+        this._attachHandlerSaveCluster();
+        this._attachHandlerMonitoringCluster();
+        this._attachHandlerDeleteCluster();
+        this._attachHandlerGovernanceCluster();
+    }
+
+    _attachHandlerChangeAutoStop() {
         this.model.onChange('autoStop.value', () => {
             this.model.date.readOnly = this.model.autoStop.value == 0;
         });
-
-        this._onClusterSave();
-        this._onClusterMonitoring();
-        this._onClusterDelete();
-        this._onClusterGovernance();
     }
 
-    getParsedModel(receivedModel) {
+    _getParsedModel(receivedModel) {
         let model = JSON.parse(JSON.stringify(initModel));
         let existingCluster = receivedModel.cluster;
         model = {
+            organizationUid: receivedModel.organizationUid,
             ...model,
+            clusterUid: existingCluster.uid,
             name: {
                 ...model.name,
                 value: existingCluster.name
@@ -74,38 +79,45 @@ export default class ClusterEditModal extends ModalController {
         return model;
     }
 
-    respondWithResult(event) {
-        let toReturnObject = {
-            uid: this.model.uid,
-            name: this.model.name.value,
-            autoStop: this.model.autoStop.value,
-            date: this.model.date.value,
-            link: this.model.link.value,
-        }
-        this._finishProcess(event, toReturnObject)
-    }
-
-    _onClusterSave() {
+    _attachHandlerSaveCluster() {
         this.on('cls:save', (event) => {
-            this.respondWithResult(event)
+            let toReturnObject = {
+                uid: this.model.uid,
+                name: this.model.name.value,
+                autoStop: this.model.autoStop.value,
+                date: this.model.date.value,
+                link: this.model.link.value,
+            }
+            this._finishProcess(event, toReturnObject)
         });
     }
 
-    _onClusterMonitoring() {
+    _attachHandlerMonitoringCluster() {
         this.on('cls:monitoring', (event) => {
-            this.History.navigateToPageByTag('monitoring', this.model.uid);
+            debugger
+            let toSendObject = {
+                organizationUid: this.model.organizationUid,
+                clusterUid: this.model.clusterUid
+            }
+            this.closeModal();
+            this.History.navigateToPageByTag('monitoring', toSendObject);
         });
     }
 
-    _onClusterGovernance() {
+    _attachHandlerGovernanceCluster() {
         this.on('cls:governance', (event) => {
-            this.History.navigateToPageByTag('governance', this.model.uid);
+            debugger
+            let toSendObject = {
+                organizationUid: this.model.organizationUid,
+                clusterUid: this.model.clusterUid
+            }
+            this.History.navigateToPageByTag('governance', toSendObject);
         });
     }
 
-    _onClusterDelete() {
+    _attachHandlerDeleteCluster() {
         this.on('cls:delete', (event) => {
-            this._finishProcess(event, {})
+            this._finishProcess(event, {delete: true})
         });
     }
 

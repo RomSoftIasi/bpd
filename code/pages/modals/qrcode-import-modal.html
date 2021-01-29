@@ -1,0 +1,14 @@
+<psk-container controller-name="QRCodeImportController">
+    <psk-modal id="qrCodeModal" opened>
+        <psk-label slot="title" class="title" label="Scan a QR Code or insert a KeySSI"></psk-label>
+
+        <div class='content'>
+            <psk-input value="@data"></psk-input>
+            <psk-grid columns="1" layout="xs=[12] m=[6] l=[6] xl=[6]">
+                <psk-barcode-scanner data="@data"></psk-barcode-scanner>
+            </psk-grid>
+            <psk-button label="Import organization" event-name="import-on-click" disabled="@importIsDisabled"></psk-button>
+        </div>
+        </div>
+    </psk-modal>
+</psk-container>

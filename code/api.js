@@ -34,8 +34,13 @@ function loadDSU(keySSI, callback) {
     resolver.loadDSU(keySSI, callback);
 }
 
+function unmount(path, callback) {
+    mainDSU.unmount(path, callback);
+}
+
 module.exports = {
     listDSUs,
     loadDSU,
-    createSSIAndMount
+    createSSIAndMount,
+    unmount
 }

@@ -49,14 +49,14 @@ export default class CreateOrganizationModal extends ModalController {
         super(element, history);
 
         this.setModel(JSON.parse(JSON.stringify(initModel)));
-        this._createNewKubernetesConfig();
-        this._onCreateKubernetesConfig();
-        this._onRemoveKubernetesConfig();
-        this._onCreateOrganization();
+        this._kubernetesConfigCreate();
+        this._attachHandlerKubernetesConfigCreate();
+        this._attachHandlerKubernetesConfigRemove();
+        this._attachHandlerOrganizationCreate();
+        this._attachHandlerOrganizationImport();
     }
 
-
-    _createNewKubernetesConfig() {
+    _kubernetesConfigCreate() {
         const id = (Date.now() + Math.random()).toString().replace('.', '');
         this.model.kubernetesConfig.push({
             key: {
@@ -73,15 +73,15 @@ export default class CreateOrganizationModal extends ModalController {
         });
     }
 
-    _onCreateKubernetesConfig() {
+    _attachHandlerKubernetesConfigCreate() {
         this.on('org:add-kubernetes-config', (e) => {
             e.preventDefault();
             e.stopImmediatePropagation();
-            this._createNewKubernetesConfig();
+            this._kubernetesConfigCreate();
         });
     }
 
-    _onRemoveKubernetesConfig() {
+    _attachHandlerKubernetesConfigRemove() {
         this.on('org:remove-kubernetes-config', (e) => {
             e.preventDefault();
             e.stopImmediatePropagation();
@@ -102,7 +102,7 @@ export default class CreateOrganizationModal extends ModalController {
         });
     }
 
-    _onCreateOrganization() {
+    _attachHandlerOrganizationCreate() {
         this.on('org:create', (event) => {
             let kubernetesConfig = this.model.kubernetesConfig
                 .filter(kc => kc.key.value && kc.value.value)
@@ -123,6 +123,14 @@ export default class CreateOrganizationModal extends ModalController {
             }
 
             this._finishProcess(event, toReturnObject)
+        });
+    }
+
+    _attachHandlerOrganizationImport() {
+        this.on('org:create-with-qrcode', (event) => {
+            this._finishProcess(event, {
+                qrCodeImportRedirect: true
+            })
         });
     }
 

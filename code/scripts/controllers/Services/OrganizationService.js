@@ -85,6 +85,17 @@ export default class OrganizationService {
         })
     }
 
+    unmountOrganization(orgUid, callback) {
+        let unmountPath = this.ORGANIZATION_PATH + '/' + orgUid;
+        this.DSUStorage.call('unmount', unmountPath, (err, result) => {
+            if (err) {
+                callback(err, undefined);
+                return;
+            }
+            callback(undefined, result);
+        });
+    }
+
     _getDsuStoragePath(keySSI){
         return this.ORGANIZATION_PATH + '/' + keySSI + '/data.json';
     }

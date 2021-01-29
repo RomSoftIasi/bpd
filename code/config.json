@@ -13,6 +13,7 @@
         "addOrganizationModal": "modals/add-organization-modal.html",
         "editOrganizationModal": "modals/edit-organization-modal.html",
         "dsuTypesApprovalModal": "modals/dsu-types-approval-modal.html",
-        "governanceModal": "modals/governance.html"
+        "governanceModal": "modals/governance.html",
+        "qrCodeImportModal": "modals/qrcode-import-modal.html"
     }
 }

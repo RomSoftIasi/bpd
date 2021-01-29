@@ -1,5 +1,4 @@
-import BPDController from "./base-controllers/BPDController.js";
-import ClusterModel from "../models/ClusterModel.js"
+import ContainerController from '../../../cardinal/controllers/base-controllers/ContainerController.js';
 
 const initialQuestionCreationModel = {
     title: {
@@ -79,17 +78,45 @@ const initModel = {
     questionCreationModel: JSON.parse(JSON.stringify(initialQuestionCreationModel))
 }
 
-export default class VotingController extends BPDController {
+export default class VotingController extends ContainerController {
     constructor(element, history) {
         super(element, history);
-        this.clusterModel = ClusterModel.getInstance();
-        this.model = this.setModel(initModel)
 
-        this._initModel();
-        this._onAnswerClick();
-        this._onResponseClick();
-        this._onAnswerCreate();
-        this._onQuestionCreate();
+        let receivedModel = this.History.getState();
+        this.model = this.setModel({
+            ...JSON.parse(JSON.stringify(initModel)),
+            ...receivedModel
+        })
+
+        this.OrganisationService.getOrganization(receivedModel.organizationUid, (err, organization) => {
+            if (err) {
+                console.log(err);
+                return;
+            }
+            this.model.organization = organization;
+        })
+
+        this.ClusterService.getCluster(receivedModel.organizationUid, receivedModel.clusterUid, (err, cluster) => {
+            if (err) {
+                console.log(err);
+                return;
+            }
+            this.model.cluster = cluster;
+        })
+
+        for (let i = 0; i < this.model.questions.length; i++) {
+            this.model.responses.push({
+                question: this.model.questions[i],
+                answerIds: []
+            });
+
+            this._createQuestionDetails(i);
+        }
+
+        this._attachHandlerClickAnswer();
+        this._attachHandlerClickResponse();
+        this._attachHandlerCreateAnswer();
+        this._attachHandlerCreateQuestion();
     }
 
     __getRadiosAnswerFromQuestion(question) {
@@ -131,25 +158,6 @@ export default class VotingController extends BPDController {
         }
     }
 
-    _initModel() {
-        this.model.params = this.parseHashFragmentParams();
-        if (this.model.params.orgUid) {
-            this.model.organization = this.orgModel.getOrganization(this.model.params.orgUid);
-        }
-        if (this.model.params.ntwUid) {
-            this.model.network = this.clusterModel.getCluster(this.model.params.ntwUid)
-        }
-
-        for (let i = 0; i < this.model.questions.length; i++) {
-            this.model.responses.push({
-                question: this.model.questions[i],
-                answerIds: []
-            });
-
-            this._createQuestionDetails(i);
-        }
-    }
-
     findQuestionIndexByAnswerId(answerId) {
         return this.model.questions.findIndex(question => {
             let answers = question.answers;
@@ -174,7 +182,7 @@ export default class VotingController extends BPDController {
         return null;
     }
 
-    _onAnswerClick() {
+    _attachHandlerClickAnswer() {
         this.on('answer:click', (event) => {
             let answerId = event.data;
             let questionIndex = this.findQuestionIndexByAnswerId(answerId);
@@ -226,7 +234,7 @@ export default class VotingController extends BPDController {
         });
     }
 
-    _onResponseClick() {
+    _attachHandlerClickResponse() {
         this.on('voting:respond', (event) => {
             this.model.questions.forEach((question, index) => {
                 let responsesIds = [];
@@ -250,46 +258,10 @@ export default class VotingController extends BPDController {
                 this.model.responses[index] = responses;
                 this._calculateAnswerPercents(index);
             });
-            // let auxQuestions = JSON.parse(JSON.stringify(this.model.questions));
-            // this.model.questions = [];
-            // this.model.questions = auxQuestions.map(question => {
-            //     let defaultAnswers = question.answers.map(answer => {
-            //         return {
-            //             id: answer.id,
-            //             text: answer.text
-            //         };
-            //     });
-            //     return {
-            //         id: question.id,
-            //         uniqueAnswers: question.uniqueAnswers,
-            //         title: question.title,
-            //         answers: defaultAnswers
-            //     };
-            // });
-            //
-            // for (let i = 0; i < auxQuestions.length; i++) {
-            //     this._createQuestionDetails(i);
-            // }
-
-            // for (let i = 0; i < this.model.questions.length; i++) {
-            //     let question = JSON.parse(JSON.stringify(this.model.questions[i]));
-            //     if (this.model.questions[i].uniqueAnswers) {
-            //         question.answerRadioGroup.value = '';
-            //     } else {
-            //         question.answers = question.answers.map(answer => {
-            //             return {
-            //                 ...answer,
-            //                 value: ''
-            //             };
-            //         })
-            //     }
-            //     this.model.questions[i] = question;
-            // }
-
         });
     }
 
-    _onAnswerCreate() {
+    _attachHandlerCreateAnswer() {
         this.on('answer:create', (e) => {
             e.preventDefault();
             e.stopImmediatePropagation();
@@ -297,7 +269,7 @@ export default class VotingController extends BPDController {
         });
     }
 
-    _onQuestionCreate() {
+    _attachHandlerCreateQuestion() {
         this.on('question:create', (e) => {
             e.preventDefault();
             e.stopImmediatePropagation();

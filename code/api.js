@@ -35,13 +35,29 @@ function loadDSU(keySSI, callback) {
     resolver.loadDSU(keySSI, callback);
 }
 
-function unmount(path, callback) {
+function organizationUnmount(path, callback) {
     mainDSU.unmount(path, callback);
+}
+
+function clusterUnmount(organizationUid, clusterPath, callback) {
+    debugger
+    loadDSU(organizationUid, (err, orgDossier) => {
+        if (err) {
+            return callback(err);
+        }
+        orgDossier.unmount(clusterPath, (err, data) => {
+            if (err) {
+                return callback(err);
+            }
+            callback(undefined, data);
+        });
+    });
 }
 
 module.exports = {
     listDSUs,
     loadDSU,
     createSSIAndMount,
-    unmount
+    organizationUnmount,
+    clusterUnmount
 }

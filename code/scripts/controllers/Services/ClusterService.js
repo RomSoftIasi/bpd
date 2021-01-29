@@ -85,8 +85,8 @@ export default class ClusterService {
     }
 
     unmountCluster(orgUid, clusterUid, callback) {
-        let unmountPath = this.ORGANIZATION_PATH + '/' + orgUid + this.CLUSTERS_PATH + '/' + clusterUid;
-        this.DSUStorage.call('unmount', unmountPath, (err, result) => {
+        let clusterPath = this.CLUSTERS_PATH + '/' + clusterUid;
+        this.DSUStorage.call('clusterUnmount', orgUid, clusterPath, (err, result) => {
             if (err) {
                 callback(err, undefined);
                 return;

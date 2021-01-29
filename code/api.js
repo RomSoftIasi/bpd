@@ -5,7 +5,8 @@ function createSSIAndMount(path, callback) {
     const opendsu = require("opendsu");
     const resolver = opendsu.loadAPI("resolver");
     const keySSISpace = opendsu.loadAPI("keyssi")
-    const templateSSI = keySSISpace.buildSeedSSI("default");
+
+    const templateSSI = keySSISpace.buildTemplateSeedSSI("default");
     resolver.createDSU(templateSSI, (err, dsuInstance) => {
         if (err) {
             console.log(err);

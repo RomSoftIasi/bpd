@@ -63,6 +63,7 @@ export default class OrganizationService {
     }
 
     saveOrganization(data, callback){
+        debugger
         this.DSUStorage.call('createSSIAndMount',this.ORGANIZATION_PATH, (err, keySSI) => {
             if (err)
             {

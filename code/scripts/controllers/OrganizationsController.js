@@ -42,12 +42,15 @@ export default class OrganizationsController extends ContainerController {
                 }
 
                 if(data.qrCodeImportRedirect) {
-                    this.closeModal();
-                    this.showModal('qrCodeImportModal', (err, keySSI) => {
+                    this.showModal('qrCodeImportModal',{}, (err, keySSI) => {
                         if (err) {
                             console.log(err);
                             return;
                         }
+                        //todo:
+                        // mount the keyssi
+                        // add api support for mount
+                        // update the model with the added org
                         debugger
                     });
                 } else {
@@ -124,6 +127,7 @@ export default class OrganizationsController extends ContainerController {
                     identifier: orgToShare.uid
                 }
             }
+            console.log('Org to share UID : ',orgToShare.uid);
             this.showModal('shareQRCodeModal', qrCodeModalModel);
         });
     }

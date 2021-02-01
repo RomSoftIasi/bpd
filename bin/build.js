@@ -36,7 +36,7 @@ function storeKeySSI(seed_path, keySSI, callback) {
 }
 
 function createDossier(callback) {
-	resolver.createDSU(keyssi.buildSeedSSI(DEFAULT_DOMAIN), (err, bar) => {
+	resolver.createDSU(keyssi.buildTemplateSeedSSI(DEFAULT_DOMAIN), (err, bar) => {
 		if (err) {
 			return callback(err);
 		}
@@ -56,7 +56,7 @@ function updateDossier(bar, callback) {
 				return callback(err);
 			}
 
-			bar.getKeySSI((err, barKeySSI) => {
+			bar.getKeySSIAsString((err, barKeySSI) => {
 				if (err) {
 					return callback(err);
 				}

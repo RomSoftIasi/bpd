@@ -4,13 +4,13 @@
         <psk-label slot="title" class="bpd-modal-title" label="@title"></psk-label>
 
         <div class="content">
-            <psk-text-input class="bpd-input" view-model="@name"></psk-text-input>
-            <psk-select class="bpd-input" view-model="@hosting"></psk-select>
-            <psk-text-input class="bpd-input" view-model="@endpoint"></psk-text-input>
-            <psk-text-input class="bpd-input" view-model="@secretKey"></psk-text-input>
+            <psk-text-input class="bpd-input" view-model="@name" label="@name.label"></psk-text-input>
+            <!-- <psk-select class="bpd-input" view-model="@hosting"></psk-select> -->
+            <psk-text-input class="bpd-input" view-model="@endpoint" label="@endpoint.label"></psk-text-input>
+            <psk-text-input class="bpd-input" view-model="@secretKey" label="@secretKey.label"></psk-text-input>
         </div>
 
-        <psk-card class="bpd-row">
+        <!-- <psk-card class="bpd-row">
             <psk-for-each data-view-model="kubernetesConfig">
                 <div class="bpd-for-each-row bpd-kconfig-row">
                     <psk-text-input view-model="key"></psk-text-input>
@@ -21,12 +21,12 @@
                     </psk-button>
                 </div>
             </psk-for-each>
-        </psk-card>
+        </psk-card> -->
 
-        <psk-card class="bpd-row">
+        <!-- <psk-card class="bpd-row">
             <psk-button label="Add Configuration" event-name="org:add-kubernetes-config"
-                        button-class="btn btn-info btn-sm"></psk-button>
-        </psk-card>
+                button-class="btn btn-info btn-sm"></psk-button>
+        </psk-card> -->
 
         <psk-card class="bpd-row bpd-creation-row">
             <psk-button event-name="org:create">Create</psk-button>

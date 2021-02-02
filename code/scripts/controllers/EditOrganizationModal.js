@@ -4,6 +4,7 @@ const initModel = {
     title: 'Add a new organization',
     name: {
         name: 'name',
+        label: 'Organization name',
         required: true,
         placeholder: 'Organization name',
         value: ''
@@ -28,12 +29,14 @@ const initModel = {
     },
     endpoint: {
         name: 'endpoint',
+        label: 'Endpoint',
         required: true,
         placeholder: 'Endpoint',
         value: ''
     },
     secretKey: {
-        name: 'secretKey',
+        name: 'Secret Key',
+        label: 'SecretKey',
         required: true,
         placeholder: 'Secret Key',
         value: ''

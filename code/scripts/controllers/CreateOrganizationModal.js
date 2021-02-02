@@ -4,12 +4,14 @@ const initModel = {
     title: 'Add a new organization',
     name: {
         name: 'name',
+        label: 'Organization Name',
         required: true,
         placeholder: 'Organization name',
         value: ''
     },
     hosting: {
         placeholder: "Choose a hosting type",
+        label: 'Hosting',
         required: true,
         options: [
             {
@@ -28,12 +30,14 @@ const initModel = {
     },
     endpoint: {
         name: 'endpoint',
+        label: 'Endpoint',
         required: true,
         placeholder: 'Endpoint',
         value: ''
     },
     secretKey: {
         name: 'secretKey',
+        label: 'SecretKey',
         required: true,
         placeholder: 'Secret Key',
         value: ''

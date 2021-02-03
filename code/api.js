@@ -26,6 +26,19 @@ function createSSIAndMount(path, callback) {
     });
 }
 
+function mount(path,keySSI, callback){
+    mainDSU.mount(path+"/"+keySSI, keySSI, (err) =>{
+        if (err)
+        {
+            return callback(err);
+        }
+        callback(undefined);
+    })
+}
+
+
+
+
 function listDSUs(path, callback) {
     mainDSU.listMountedDossiers(path, callback);
 }
@@ -59,5 +72,6 @@ module.exports = {
     loadDSU,
     createSSIAndMount,
     organizationUnmount,
-    clusterUnmount
+    clusterUnmount,
+    mount
 }

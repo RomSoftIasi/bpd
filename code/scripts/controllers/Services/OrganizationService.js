@@ -75,7 +75,25 @@ export default class OrganizationService {
             this.updateOrganization(data, callback);
         })
     }
+    mountOrganization(keySSI, callback){
+        this.DSUStorage.call('mount',this.ORGANIZATION_PATH, keySSI, (err) =>{
+            if (err)
+            {
+                return callback(err, undefined);
+            }
 
+            this.getOrganization(keySSI, (err, org) =>{
+                debugger
+                if (err)
+                {
+                    return callback(err, undefined);
+                }
+                callback(undefined, org);
+            })
+
+
+        })
+    }
     updateOrganization(data, callback){
         this.DSUStorage.setObject(this._getDsuStoragePath(data.uid), data, (err) => {
             if (err){
@@ -88,7 +106,7 @@ export default class OrganizationService {
 
     unmountOrganization(orgUid, callback) {
         let unmountPath = this.ORGANIZATION_PATH + '/' + orgUid;
-        this.DSUStorage.call('unmount', unmountPath, (err, result) => {
+        this.DSUStorage.call('organizationUnmount', unmountPath, (err, result) => {
             if (err) {
                 callback(err, undefined);
                 return;

@@ -42,16 +42,19 @@ export default class OrganizationsController extends ContainerController {
                 }
 
                 if(data.qrCodeImportRedirect) {
-                    this.showModal('qrCodeImportModal',{}, (err, keySSI) => {
+                    this.showModal('qrCodeImportModal',{}, (err, keySSIModel) => {
                         if (err) {
                             console.log(err);
                             return;
                         }
-                        //todo:
-                        // mount the keyssi
-                        // add api support for mount
-                        // update the model with the added org
-                        debugger
+                        const keySSI = keySSIModel.value;
+                        this.OrganisationService.mountOrganization(keySSI,(err, org) =>{
+                            if (err)
+                            {
+                                return console.log(err);
+                            }
+                            this.model.organizations.push(org);
+                        })
                     });
                 } else {
                     //todo : show spinner/loading stuff

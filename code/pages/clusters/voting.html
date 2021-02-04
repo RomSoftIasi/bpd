@@ -10,7 +10,7 @@
                 <psk-label label="@organization.name"/>
             </div>
             <div>
-                <psk-label label="@network.name"/>
+                <psk-label label="@cluster.name"/>
             </div>
         </psk-card>
 
@@ -46,7 +46,7 @@
 
                 <psk-tab title="Respond">
                     <psk-card class="bpd-row">
-                        <psk-for-each data-view-model="questions">
+                        <psk-for-each data-view-model="cluster.questions">
                             <div class="bpd-for-each-row">
                                 <psk-label label="@title"></psk-label>
                             </div>
@@ -74,7 +74,7 @@
                 <psk-tab title="Results">
                     <psk-card class="bpd-row">
 
-                        <psk-for-each data-view-model="responses">
+                        <psk-for-each data-view-model="cluster.responses">
                             <div class="bpd-for-each-row">
                                 <psk-label label="@question.title"></psk-label>
                             </div>

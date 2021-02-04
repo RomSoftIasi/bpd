@@ -1,4 +1,6 @@
 import ContainerController from '../../../cardinal/controllers/base-controllers/ContainerController.js';
+import OrganizationService from "./Services/OrganizationService.js";
+import ClusterService from "./Services/ClusterService.js";
 
 const initialQuestionCreationModel = {
     title: {
@@ -17,64 +19,12 @@ const initialQuestionCreationModel = {
 
 const initModel = {
     title: 'GovernanceModal',
-    questions: [
-        {
-            id: 1,
-            title: 'Do you want to update the system?',
-            uniqueAnswers: true,
-            answers: [
-                {
-                    id: 1,
-                    text: 'Yes'
-                },
-                {
-                    id: 2,
-                    text: 'No'
-                }
-            ]
-        },
-        {
-            id: 2,
-            title: 'Do you agree with the proposal no. 572?',
-            uniqueAnswers: true,
-            answers: [
-                {
-                    id: 3,
-                    text: 'Yes'
-                },
-                {
-                    id: 4,
-                    text: 'No'
-                }
-            ]
-        },
-        {
-            id: 3,
-            title: 'What cloud provider should we use?',
-            uniqueAnswers: false,
-            answers: [
-                {
-                    id: 5,
-                    text: 'AWS'
-                },
-                {
-                    id: 6,
-                    text: 'Google Cloud'
-                },
-                {
-                    id: 7,
-                    text: 'Azure'
-                }
-            ]
-        }
-    ],
     organization: {
         name: 'Organization A'
     },
-    network: {
+    cluster: {
         name: 'Network A'
     },
-    responses: [],
     questionCreationModel: JSON.parse(JSON.stringify(initialQuestionCreationModel))
 }
 
@@ -88,6 +38,8 @@ export default class VotingController extends ContainerController {
             ...receivedModel
         })
 
+        this.OrganisationService = new OrganizationService(this.DSUStorage);
+        this.ClusterService = new ClusterService(this.DSUStorage);
         this.OrganisationService.getOrganization(receivedModel.organizationUid, (err, organization) => {
             if (err) {
                 console.log(err);
@@ -97,21 +49,21 @@ export default class VotingController extends ContainerController {
         })
 
         this.ClusterService.getCluster(receivedModel.organizationUid, receivedModel.clusterUid, (err, cluster) => {
+
             if (err) {
                 console.log(err);
                 return;
             }
             this.model.cluster = cluster;
+
+            if (!this.model.cluster.responses) {
+                this.model.cluster.responses = [];
+            }
+            if (!this.model.cluster.questions) {
+                this.model.cluster.questions = [];
+            }
+
         })
-
-        for (let i = 0; i < this.model.questions.length; i++) {
-            this.model.responses.push({
-                question: this.model.questions[i],
-                answerIds: []
-            });
-
-            this._createQuestionDetails(i);
-        }
 
         this._attachHandlerClickAnswer();
         this._attachHandlerClickResponse();
@@ -146,20 +98,20 @@ export default class VotingController extends ContainerController {
     }
 
     _createQuestionDetails(questionIndex) {
-        let answersLength = this.model.questions[questionIndex].answers.length;
+        let answersLength =  this.model.cluster.questions[questionIndex].answers.length;
         for (let j = 0; j < answersLength; j++) {
-            this.model.questions[questionIndex].answers[j].disabled = false;
+             this.model.cluster.questions[questionIndex].answers[j].disabled = false;
         }
 
-        if (this.model.questions[questionIndex].uniqueAnswers) {
-            this.model.questions[questionIndex].answerRadioGroup = this.__getRadiosAnswerFromQuestion(this.model.questions[questionIndex]);
+        if ( this.model.cluster.questions[questionIndex].uniqueAnswers) {
+             this.model.cluster.questions[questionIndex].answerRadioGroup = this.__getRadiosAnswerFromQuestion( this.model.cluster.questions[questionIndex]);
         } else {
-            this.model.questions[questionIndex].answers = this.__getCheckboxesAnswerFromQuestion(this.model.questions[questionIndex])
+             this.model.cluster.questions[questionIndex].answers = this.__getCheckboxesAnswerFromQuestion( this.model.cluster.questions[questionIndex])
         }
     }
 
     findQuestionIndexByAnswerId(answerId) {
-        return this.model.questions.findIndex(question => {
+        return  this.model.cluster.questions.findIndex(question => {
             let answers = question.answers;
             for (let i = 0; i < answers.length; i++) {
                 if (answers[i].id === answerId) {
@@ -171,8 +123,8 @@ export default class VotingController extends ContainerController {
     }
 
     findAnswerByAnswerId(answerId) {
-        for (let i = 0; i < this.model.questions.length; i++) {
-            let answers = this.model.questions[i].answers;
+        for (let i = 0; i <  this.model.cluster.questions.length; i++) {
+            let answers =  this.model.cluster.questions[i].answers;
             for (let j = 0; j < answers.length; i++) {
                 if (answers[j].id === answerId) {
                     return answers[j];
@@ -189,36 +141,36 @@ export default class VotingController extends ContainerController {
             if (questionIndex === -1) {
                 return;
             }
-            let answerIndex = this.model.questions[questionIndex].answers.findIndex(answer => answer.id === answerId);
+            let answerIndex =  this.model.cluster.questions[questionIndex].answers.findIndex(answer => answer.id === answerId);
             if (answerIndex === -1) {
                 return;
             }
 
-            let disabledAnswerIndex = this.model.questions[questionIndex].answers.findIndex(ans => ans.disabled);
+            let disabledAnswerIndex =  this.model.cluster.questions[questionIndex].answers.findIndex(ans => ans.disabled);
             if (disabledAnswerIndex !== -1 && disabledAnswerIndex !== answerIndex) {
                 return;
             }
 
-            let nextStateOfClick = !this.model.questions[questionIndex].answers[answerIndex].disabled;
+            let nextStateOfClick = ! this.model.cluster.questions[questionIndex].answers[answerIndex].disabled;
             if (nextStateOfClick) {
-                for (let i = 0; i < this.model.questions.length; i++) {
-                    this.model.questions[i].disabled = !nextStateOfClick;
+                for (let i = 0; i <  this.model.cluster.questions.length; i++) {
+                     this.model.cluster.questions[i].disabled = !nextStateOfClick;
                 }
             }
-            this.model.questions[questionIndex].answers[answerIndex].disabled = nextStateOfClick;
+             this.model.cluster.questions[questionIndex].answers[answerIndex].disabled = nextStateOfClick;
         });
     }
 
     _calculateAnswerPercents(index) {
         let possibleColors = ['red', 'blue', 'green', 'purple', 'black', 'orange', 'brown']
-        let question = this.model.questions[index];
+        let question =  this.model.cluster.questions[index];
         let possibleAnswers = question.answers;
-        let responses = this.model.responses[index].answerIds;
+        let responses = this.model.cluster.responses[index].answerIds;
         let totalResponses = responses.length;
         if (totalResponses === 0) {
             return;
         }
-        this.model.responses[index].answerResults = possibleAnswers.map(answer => {
+        this.model.cluster.responses[index].answerResults = possibleAnswers.map(answer => {
             let responsesOfThisType = responses.filter(res => res == answer.id).length;
 
             let randomIndex = Math.floor(Math.random() * possibleColors.length);
@@ -236,7 +188,7 @@ export default class VotingController extends ContainerController {
 
     _attachHandlerClickResponse() {
         this.on('voting:respond', (event) => {
-            this.model.questions.forEach((question, index) => {
+             this.model.cluster.questions.forEach((question, index) => {
                 let responsesIds = [];
                 if (question.answerRadioGroup) {
                     responsesIds = [question.answerRadioGroup.value]
@@ -250,18 +202,28 @@ export default class VotingController extends ContainerController {
                     .filter(response => (response + "").length > 0)
                     .map(response => parseInt(response));
 
-                let responses = JSON.parse(JSON.stringify(this.model.responses[index]));
+                let responses = JSON.parse(JSON.stringify(this.model.cluster.responses[index]));
 
                 for (let i = 0; i < finalResponses.length; i++) {
                     responses.answerIds.push(finalResponses[i])
                 }
-                this.model.responses[index] = responses;
+
+                this.model.cluster.responses[index] = responses;
                 this._calculateAnswerPercents(index);
+
+                this.ClusterService.updateCluster(this.model.organizationUid, this.model.cluster, (err, data) => {
+                    if (err) {
+                        console.log(err);
+                        return;
+                    }
+
+                })
             });
         });
     }
 
     _attachHandlerCreateAnswer() {
+
         this.on('answer:create', (e) => {
             e.preventDefault();
             e.stopImmediatePropagation();
@@ -286,20 +248,30 @@ export default class VotingController extends ContainerController {
                 })
             }
 
-            let index = this.model.questions.push(questionModel) - 1
+
+            let index =  this.model.cluster.questions.push(questionModel) - 1
 
             if (questionModel.uniqueAnswers) {
-                this.model.questions[index].answerRadioGroup = this.__getRadiosAnswerFromQuestion(questionModel);
+                 this.model.cluster.questions[index].answerRadioGroup = this.__getRadiosAnswerFromQuestion(questionModel);
             } else {
-                this.model.questions[index].answers = this.__getCheckboxesAnswerFromQuestion(questionModel)
+                 this.model.cluster.questions[index].answers = this.__getCheckboxesAnswerFromQuestion(questionModel)
             }
 
-            this.model.responses.push({
-                question: this.model.questions[index],
+            this.model.cluster.responses.push({
+                question: this.model.cluster.questions[index],
                 answerIds: []
             });
 
             this.model.questionCreationModel = JSON.parse(JSON.stringify(initialQuestionCreationModel));
+
+            this.ClusterService.updateCluster(this.model.organizationUid, this.model.cluster, (err, data) => {
+                if (err) {
+                    console.log(err);
+                    return;
+                }
+
+            })
+
         });
     }
 
@@ -315,4 +287,6 @@ export default class VotingController extends ContainerController {
             name: 'Answer'
         });
     }
+
+
 }

@@ -49,7 +49,7 @@ const initModel = {
 export default class GovernanceController extends ContainerController {
     constructor(element, history) {
         super(element, history);
-        debugger
+
         this.OrganisationService = new OrganizationService(this.DSUStorage);
         this.ClusterService = new ClusterService(this.DSUStorage);
 
@@ -98,7 +98,7 @@ export default class GovernanceController extends ContainerController {
         this.on('gvn:voting', (event) => {
             let toSendObject = {
                 organizationUid: this.model.organizationUid,
-                clusterUid: this.model.uid
+                clusterUid: this.model.clusterUid
             }
             this.History.navigateToPageByTag('voting', toSendObject);
         });

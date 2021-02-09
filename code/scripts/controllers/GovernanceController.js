@@ -53,6 +53,7 @@ export default class GovernanceController extends ContainerController {
         this.OrganisationService = new OrganizationService(this.DSUStorage);
         this.ClusterService = new ClusterService(this.DSUStorage);
 
+        debugger
         let receivedModel = this.History.getState();
         this.model = this.setModel({
             ...JSON.parse(JSON.stringify(initModel)),
@@ -89,7 +90,6 @@ export default class GovernanceController extends ContainerController {
                 if (err) {
                     return console.log(err);
                 }
-                debugger
             });
         });
     }

@@ -1,5 +1,8 @@
 import ContainerController from '../../../cardinal/controllers/base-controllers/ContainerController.js';
 import OrganizationService from "./Services/OrganizationService.js";
+import deleteViewModel from "../models/deleteViewModel.js";
+
+
 
 export default class OrganizationsController extends ContainerController {
 
@@ -9,6 +12,7 @@ export default class OrganizationsController extends ContainerController {
         // reset model
         this.setModel({});
         this.globalThis = this;
+
 
         // get model
         this.OrganisationService = new OrganizationService(this.DSUStorage);
@@ -140,22 +144,26 @@ export default class OrganizationsController extends ContainerController {
             e.preventDefault();
             e.stopImmediatePropagation();
 
+            debugger;
             const uid = e.data;
-            this.OrganisationService.unmountOrganization(uid, (err, result) => {
+           deleteViewModel.selectedItemName = e.data;
+
+            this.showModal('deleteModal', deleteViewModel, (err, response) => {
                 if (err) {
-                    console.log(err);
-                    return;
-                }
-                console.log('Removed organization with @uid', uid);
-
-                const orgIndex = this.model.organizations.findIndex((org) => org.uid === uid);
-                if (orgIndex === -1) {
-                    console.log('Org not found @uid', uid, this.model.organizations);
-                    return;
+                    return this.feedbackEmitter(err, null, "an error occured");
                 }
 
-                this.model.organizations.splice(orgIndex, 1);
+                if(response.success) {
+                    const orgIndex = this.model.organizations.findIndex((org) => org.uid === uid);
+                    if (orgIndex === -1) {
+                        console.log('Org not found @uid', uid, this.model.organizations);
+                        return;
+                    }
+
+                    this.model.organizations.splice(orgIndex, 1);
+                }
             });
+
 
         });
     }

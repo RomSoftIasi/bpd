@@ -56,9 +56,18 @@ export default class CreateOrganizationModal extends ModalController {
         this._kubernetesConfigCreate();
         this._attachHandlerKubernetesConfigCreate();
         this._attachHandlerKubernetesConfigRemove();
-        this._attachHandlerOrganizationCreate();
-        this._attachHandlerOrganizationImport();
+
+        this._initListeners();
     }
+
+    _initListeners = () => {
+        this.on('openFeedback', (evt) => {
+            this.feedbackEmitter = evt.detail;
+        });
+
+        this.on('org:create', this._attachHandlerOrganizationCreate);
+        this.on('org:create-with-qrcode', this._attachHandlerOrganizationImport);
+    };
 
     _kubernetesConfigCreate() {
         const id = (Date.now() + Math.random()).toString().replace('.', '');
@@ -106,8 +115,10 @@ export default class CreateOrganizationModal extends ModalController {
         });
     }
 
-    _attachHandlerOrganizationCreate() {
-        this.on('org:create', (event) => {
+    _attachHandlerOrganizationCreate = (event) => {
+            if (this.__displayErrorMessages(event)) {
+                return;
+            }
             let kubernetesConfig = this.model.kubernetesConfig
                 .filter(kc => kc.key.value && kc.value.value)
                 .map(kc => {
@@ -127,19 +138,45 @@ export default class CreateOrganizationModal extends ModalController {
             }
 
             this._finishProcess(event, toReturnObject)
-        });
+
     }
 
-    _attachHandlerOrganizationImport() {
-        this.on('org:create-with-qrcode', (event) => {
+    _attachHandlerOrganizationImport = (event) => {
             this._finishProcess(event, {
                 qrCodeImportRedirect: true
             })
-        });
     }
+
 
     _finishProcess(event, response) {
         event.stopImmediatePropagation();
         this.responseCallback(undefined, response);
     };
+
+    __displayErrorMessages = (event) => {
+
+        return this.__displayErrorRequiredField(event, 'name', this.model.name.value) ||
+            this.__displayErrorRequiredField(event, 'endpoint', this.model.endpoint.value) ||
+                this.__displayErrorRequiredField(event, 'secretKey', this.model.secretKey.value);
+
+    }
+
+    __displayErrorRequiredField(event, fieldName, field) {
+
+        if (field === undefined || field === null || field.length === 0) {
+            this._emitFeedback(event, fieldName.toUpperCase() + " field is required.", "alert-danger")
+            return true;
+        }
+        return false;
+    }
+
+    _emitFeedback(event, message, alertType) {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+
+        if (typeof this.feedbackEmitter === 'function') {
+            this.feedbackEmitter(message, "Validation", alertType)
+        }
+    }
+
 }

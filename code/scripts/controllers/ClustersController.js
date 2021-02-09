@@ -32,11 +32,13 @@ export default class ClustersController extends ContainerController {
         this._attachHandlerCreateCluster();
         this._attachHandlerShareCluster();
         this._attachHandlerEditCluster();
+        this._attachHandlerGovernanceCluster();
+        this._attachHandlerMonitoringCluster();
     }
 
     _attachHandlerCreateCluster() {
         this.on('cluster:create', (e) => {
-            debugger
+
             this.showModal('addClusterModal', {}, (err, cluster) => {
                 if (err) {
                     console.log(err);
@@ -118,6 +120,31 @@ export default class ClustersController extends ContainerController {
                     });
                 }
             });
+        });
+    }
+
+    _attachHandlerGovernanceCluster() {
+
+        this.on('cluster:governance', (event) => {
+            debugger;
+             let toSendObject = {
+                organizationUid: this.model.organization.uid,
+                clusterUid: event.data
+            }
+
+            this.History.navigateToPageByTag('governance', toSendObject);
+        });
+    }
+
+    _attachHandlerMonitoringCluster() {
+        this.on('cluster:monitoring', (event) => {
+
+            let toSendObject = {
+                organizationUid: this.model.organization.uid,
+                clusterUid: event.data
+            }
+
+            this.History.navigateToPageByTag('monitoring', toSendObject);
         });
     }
 }

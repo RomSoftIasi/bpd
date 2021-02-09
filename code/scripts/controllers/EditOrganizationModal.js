@@ -56,8 +56,14 @@ export default class CreateOrganizationModal extends ModalController {
         this._onCreateKubernetesConfig();
         this._onRemoveKubernetesConfig();
         this._onUpdateOrganization();
+        this._initListeners();
     }
-
+    _initListeners = () => {
+        this.on('openFeedback', (evt) => {
+            this.feedbackEmitter = evt.detail;
+        });
+        this.on('org:update', this._attachHandlerOrganizationCreate);
+    };
     getParsedModel(receivedModel) {
         let model = JSON.parse(JSON.stringify(initModel));
         model = {
@@ -139,6 +145,10 @@ export default class CreateOrganizationModal extends ModalController {
 
     _onUpdateOrganization() {
         this.on('org:update', (event) => {
+            if (this.__displayErrorMessages(event)) {
+                return;
+            }
+
             let kubernetesConfig = this.model.kubernetesConfig
                 .filter(kc => kc.key.value && kc.value.value)
                 .map(kc => {
@@ -168,4 +178,31 @@ export default class CreateOrganizationModal extends ModalController {
         event.stopImmediatePropagation();
         this.responseCallback(undefined, response);
     };
+
+
+    __displayErrorMessages = (event) => {
+
+        return this.__displayErrorRequiredField(event, 'name', this.model.name.value) ||
+            this.__displayErrorRequiredField(event, 'endpoint', this.model.endpoint.value) ||
+            this.__displayErrorRequiredField(event, 'secretKey', this.model.secretKey.value);
+
+    }
+
+    __displayErrorRequiredField(event, fieldName, field) {
+
+        if (field === undefined || field === null || field.length === 0) {
+            this._emitFeedback(event, fieldName.toUpperCase() + " field is required.", "alert-danger")
+            return true;
+        }
+        return false;
+    }
+
+    _emitFeedback(event, message, alertType) {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        debugger;
+        if (typeof this.feedbackEmitter === 'function') {
+            this.feedbackEmitter(message, "Validation", alertType)
+        }
+    }
 }

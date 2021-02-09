@@ -41,6 +41,10 @@ export default class ClusterCreateModal extends ModalController {
 
         this._attachHandlerChangeAutoStop();
         this._attachHandlerCreateCluster();
+
+        this.on('openFeedback', (evt) => {
+            this.feedbackEmitter = evt.detail;
+        });
     }
 
     _attachHandlerChangeAutoStop() {
@@ -50,7 +54,11 @@ export default class ClusterCreateModal extends ModalController {
     }
 
     _attachHandlerCreateCluster() {
+
         this.on('cls:create', (event) => {
+            if (this.__displayErrorMessages(event)) {
+                return;
+            }
             this._respondWithResult(event)
         });
     }
@@ -58,10 +66,11 @@ export default class ClusterCreateModal extends ModalController {
     _respondWithResult(event) {
         let toReturnObject = {
             name: this.model.name.value,
-            autoStop: this.model.autoStop.value,
+            autoStop: this.model.autoStop.value==1,
             date: this.model.date.value,
             link: this.model.link.value,
         }
+
         this._finishProcess(event, toReturnObject)
     }
 
@@ -69,4 +78,25 @@ export default class ClusterCreateModal extends ModalController {
         event.stopImmediatePropagation();
         this.responseCallback(undefined, response);
     };
+
+    __displayErrorMessages = (event) => {
+        return this.__displayErrorRequiredField(event, 'name', this.model.name.value) ||
+             this.__displayErrorRequiredField(event, 'link', this.model.link.value) ;
+    }
+
+    __displayErrorRequiredField(event, fieldName, field) {
+        if (field === undefined || field === null || field.length === 0) {
+            this._emitFeedback(event, fieldName.toUpperCase() + " field is required.", "alert-danger")
+            return true;
+        }
+        return false;
+    }
+
+    _emitFeedback(event, message, alertType) {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        if (typeof this.feedbackEmitter === 'function') {
+            this.feedbackEmitter(message, "Validation", alertType)
+        }
+    }
 }

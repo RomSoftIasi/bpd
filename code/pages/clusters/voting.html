@@ -28,7 +28,7 @@
 
                         <psk-for-each data-view-model="questionCreationModel.answers">
                             <div class="bpd-for-each-row">
-                                <psk-text-input class="bpd-seed" view-model="@"></psk-text-input>
+                                <psk-text-input class="bpd-seed"  view-model="@"></psk-text-input>
                             </div>
                         </psk-for-each>
 
@@ -62,12 +62,15 @@
                                 </psk-condition>
                             </div>
                         </psk-for-each>
+                        <psk-condition condition="hasQuestions">
                         <div class="bpd-for-each-row">
-                            <psk-button event-name="voting:respond" button-class="btn btn-sm btn-success">
+
+                            <psk-button event-name="voting:respond" button-class="btn btn-sm btn-success"  >
                                 <psk-icon icon="check" color="rgb(255, 255, 255)"></psk-icon>
                                 Finish
                             </psk-button>
                         </div>
+                        </psk-condition>
                     </psk-card>
                 </psk-tab>
 
@@ -90,6 +93,7 @@
                     </psk-card>
                 </psk-tab>
             </psk-tab-navigator>
+            <psk-list-feedbacks messages-to-display="5" time-alive="3000"></psk-list-feedbacks>
         </psk-card>
     </psk-container>
 </psk-page>

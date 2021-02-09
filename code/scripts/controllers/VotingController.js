@@ -22,6 +22,7 @@ const initModel = {
     organization: {
         name: 'Organization A'
     },
+    hasQuestions: false,
     cluster: {
         name: 'Network A'
     },
@@ -61,6 +62,9 @@ export default class VotingController extends ContainerController {
             }
             if (!this.model.cluster.questions) {
                 this.model.cluster.questions = [];
+                this.model.hasQuestions = false;
+            } else {
+                this.model.hasQuestions = true;
             }
 
         })
@@ -69,6 +73,10 @@ export default class VotingController extends ContainerController {
         this._attachHandlerClickResponse();
         this._attachHandlerCreateAnswer();
         this._attachHandlerCreateQuestion();
+
+        this.on('openFeedback', (evt) => {
+            this.feedbackEmitter = evt.detail;
+        });
     }
 
     __getRadiosAnswerFromQuestion(question) {
@@ -111,7 +119,7 @@ export default class VotingController extends ContainerController {
     }
 
     findQuestionIndexByAnswerId(answerId) {
-        return  this.model.cluster.questions.findIndex(question => {
+        return this.model.cluster.questions.findIndex(question => {
             let answers = question.answers;
             for (let i = 0; i < answers.length; i++) {
                 if (answers[i].id === answerId) {
@@ -188,7 +196,7 @@ export default class VotingController extends ContainerController {
 
     _attachHandlerClickResponse() {
         this.on('voting:respond', (event) => {
-             this.model.cluster.questions.forEach((question, index) => {
+            this.model.cluster.questions.forEach((question, index) => {
                 let responsesIds = [];
                 if (question.answerRadioGroup) {
                     responsesIds = [question.answerRadioGroup.value]
@@ -227,15 +235,39 @@ export default class VotingController extends ContainerController {
         this.on('answer:create', (e) => {
             e.preventDefault();
             e.stopImmediatePropagation();
+
+            if (this.model.questionCreationModel && this.model.questionCreationModel.answers) {
+                let size = this.model.questionCreationModel.answers.length;
+                if (size > 0) {
+
+                    let lastAnswer = this.model.questionCreationModel.answers[size - 1];
+                    if (!lastAnswer.value || lastAnswer.value.length < 1) {
+                        this._emitFeedback(e, "Please complete the field answer !", "alert-danger")
+                        return;
+                    }
+                }
+            }
+
             this._createAnswer();
+
         });
     }
 
     _attachHandlerCreateQuestion() {
         this.on('question:create', (e) => {
+
+            if (this.__displayErrorForQuestion(e)) {
+                return;
+            }
+
+            if (this.__displayErrorIfNoAnswers(e)) {
+                return;
+            }
+
             e.preventDefault();
             e.stopImmediatePropagation();
 
+            this.model.hasQuestions = true;
             let questionModel = {
                 id: this.getRandomId(),
                 title: this.model.questionCreationModel.title.value,
@@ -284,9 +316,36 @@ export default class VotingController extends ContainerController {
         this.model.questionCreationModel.answers.push({
             id: id,
             placeholder: 'Answer',
-            name: 'Answer'
+            name: 'Answer',
+            required: true,
         });
     }
 
+    __displayErrorForQuestion = (event) => {
 
+        if (this.model.questionCreationModel.title.value === undefined || this.model.questionCreationModel.title.value === null || this.model.questionCreationModel.title.value.length === 0) {
+            this._emitFeedback(event, "Please complete the field question!", "alert-danger")
+            return true;
+        }
+        return false;
+
+    }
+
+    __displayErrorIfNoAnswers = (event) => {
+
+        if (!this.model.questionCreationModel.answers || !this.model.questionCreationModel.answers[0].value || this.model.questionCreationModel.answers[0].value.length === 0) {
+            this._emitFeedback(event, "Please add answers for question!", "alert-danger")
+            return true;
+        }
+        return false;
+
+    }
+
+    _emitFeedback(event, message, alertType) {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        if (typeof this.feedbackEmitter === 'function') {
+            this.feedbackEmitter(message, "Validation", alertType)
+        }
+    }
 }

@@ -36,9 +36,6 @@ function mount(path,keySSI, callback){
     })
 }
 
-
-
-
 function listDSUs(path, callback) {
     mainDSU.listMountedDossiers(path, callback);
 }

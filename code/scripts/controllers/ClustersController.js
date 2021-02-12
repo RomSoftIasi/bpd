@@ -46,19 +46,9 @@ export default class ClustersController extends ContainerController {
                     return;
                 }
 
-                let clusterDetails = {
-                    clusterName: cluster.name,
-                    urlConfigRepo: cluster.link,
-                    configMap: {},
-                }
 
-                ClusterControllerApi.deployCluster(clusterDetails, (err, data) => {
-                    if (err) {
-                        console.log(err);
-                        return;
-                    }
-                    console.log("Deploy cluster response -> ", data);
-                })
+
+
 
                 //todo : show spinner/loading stuff
                 this.ClusterService.saveCluster(this.model.organization.uid, cluster, (err, updatedCluster) => {
@@ -115,6 +105,7 @@ export default class ClustersController extends ContainerController {
                     console.log(err);
                     return;
                 }
+
                 debugger
                 //todo : show spinner/loading stuff
                 if (response.delete) {
@@ -127,6 +118,18 @@ export default class ClustersController extends ContainerController {
                         this.model.clusters.splice(clusterIndex, 1);
                     });
                 } else {
+                    let clusterDetails = {
+                        clusterName: clusterToEdit.name,
+                        urlConfigRepo: clusterToEdit.link,
+                        configMap: {},
+                    }
+                    ClusterControllerApi.deployCluster(clusterDetails, (err, data) => {
+                        if (err) {
+                            console.log(err);
+                            return;
+                        }
+                        console.log("Deploy cluster response -> ", data);
+                    })
                     this.ClusterService.updateCluster(uid, response, (err, updatedCluster) => {
                         if (err) {
                             console.log(err);

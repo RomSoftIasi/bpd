@@ -45,7 +45,13 @@ function makeRequest(method, path, body, callback) {
         .then(response => {
             response.json()
                 .then((data) => {
+                    if (!response.ok || response.status != 201) {
+                        callback(response);
+                    }
                     callback(undefined, data);
+                })
+                .catch(error => {
+                    return callback(error);
                 });
         })
         .catch(error => {

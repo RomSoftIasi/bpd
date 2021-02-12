@@ -1,12 +1,13 @@
 import ModalController from '../../../cardinal/controllers/base-controllers/ModalController.js';
+import ClusterControllerApi from "../../clustersControllerApi.js";
 
 const initModel = {
     title: 'Add a new Blockchain Network',
     name: {
-        name: 'name',
+        placeholder: "Cluster name",
+        label: 'Choose a cluster name',
         required: true,
-        placeholder: 'Cluster name',
-        value: ''
+        options: []
     },
     autoStop: {
         name: "autoStop",
@@ -39,6 +40,20 @@ export default class ClusterCreateModal extends ModalController {
 
         this.model = this.setModel(JSON.parse(JSON.stringify(initModel)))
 
+        ClusterControllerApi.listClusters((err, data) => {
+            if (err) {
+                console.log(err);
+                return;
+            }
+            console.log("Clusters", data);
+            this.model.name.options = data.map(cluster => {
+                return {
+                    label: cluster.name,
+                    value: cluster.name
+                }
+            });
+        })
+
         this._attachHandlerChangeAutoStop();
         this._attachHandlerCreateCluster();
 
@@ -54,7 +69,6 @@ export default class ClusterCreateModal extends ModalController {
     }
 
     _attachHandlerCreateCluster() {
-
         this.on('cls:create', (event) => {
             if (this.__displayErrorMessages(event)) {
                 return;

@@ -1,7 +1,6 @@
 import ContainerController from '../../../cardinal/controllers/base-controllers/ContainerController.js';
 import OrganizationService from "./Services/OrganizationService.js";
 import deleteViewModel from "../models/deleteViewModel.js";
-import ClusterControllerApi from "../../clustersControllerApi.js";
 
 export default class OrganizationsController extends ContainerController {
 
@@ -11,14 +10,6 @@ export default class OrganizationsController extends ContainerController {
         // reset model
         this.setModel({});
         this.globalThis = this;
-
-        ClusterControllerApi.listClusters((err, data) => {
-            if (err) {
-                console.log(err);
-                return;
-            }
-            console.log("Clusters", data);
-        })
 
         // get model
         this.OrganisationService = new OrganizationService(this.DSUStorage);

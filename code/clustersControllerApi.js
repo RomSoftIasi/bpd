@@ -13,10 +13,19 @@ const protocol = endpointURL.protocol.replace(':', "");
 
 const CLUSTER_PATH = "controlContainer";
 const CLUSTER_LIST_PATH = `${CLUSTER_PATH}/listClusters`;
+const CLUSTER_DEPLOY_PATH = `${CLUSTER_PATH}/deploy`;
 
 function listClusters(callback) {
-    const bodyData = JSON.stringify({});
-    const apiMethod = 'GET';
+    makeRequest('GET', CLUSTER_LIST_PATH, {}, callback);
+}
+
+function deployCluster(clusterDetails, callback) {
+    makeRequest('POST', CLUSTER_DEPLOY_PATH, clusterDetails, callback);
+}
+
+function makeRequest(method, path, body, callback) {
+    debugger
+    const bodyData = JSON.stringify(body);
     const apiHeaders = {
         'Content-Type': 'application/json',
         'Content-Length': bodyData.length
@@ -24,12 +33,15 @@ function listClusters(callback) {
     const options = {
         hostname: apiEndpoint,
         port: apiPort,
-        CLUSTER_LIST_PATH,
-        apiMethod,
+        path,
+        method,
         apiHeaders
     };
-    let protocol = opendsu.loadAPI('http');
-    protocol.fetch(SERVER_ENDPOINT + CLUSTER_LIST_PATH, options)
+    if (body && JSON.stringify(body) !== JSON.stringify({})) {
+        options.body = bodyData;
+    }
+    let protocolInit = opendsu.loadAPI(protocol);
+    protocolInit.fetch(SERVER_ENDPOINT + path, options)
         .then(response => {
             response.json()
                 .then((data) => {
@@ -42,5 +54,6 @@ function listClusters(callback) {
 }
 
 export default {
-    listClusters
+    listClusters,
+    deployCluster
 }

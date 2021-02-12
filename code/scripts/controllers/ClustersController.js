@@ -1,6 +1,7 @@
 import ContainerController from '../../../cardinal/controllers/base-controllers/ContainerController.js';
 import OrganizationService from "./Services/OrganizationService.js";
 import ClusterService from "./Services/ClusterService.js";
+import ClusterControllerApi from "../../clustersControllerApi.js";
 
 export default class ClustersController extends ContainerController {
 
@@ -44,6 +45,21 @@ export default class ClustersController extends ContainerController {
                     console.log(err);
                     return;
                 }
+
+                let clusterDetails = {
+                    clusterName: cluster.name,
+                    urlConfigRepo: cluster.link,
+                    configMap: {},
+                }
+
+                ClusterControllerApi.deployCluster(clusterDetails, (err, data) => {
+                    if (err) {
+                        console.log(err);
+                        return;
+                    }
+                    console.log("Deploy cluster response -> ", data);
+                })
+
                 //todo : show spinner/loading stuff
                 this.ClusterService.saveCluster(this.model.organization.uid, cluster, (err, updatedCluster) => {
                     if (err) {

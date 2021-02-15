@@ -59,6 +59,7 @@ export default class ClusterEditModal extends ModalController {
         this._attachHandlerMonitoringCluster();
         this._attachHandlerDeleteCluster();
         this._attachHandlerGovernanceCluster();
+        this._attachHandlerDeployCluster();
 
     }
 
@@ -107,6 +108,20 @@ export default class ClusterEditModal extends ModalController {
                 uid: this.model.clusterUid,
                 name: this.model.name.value,
                 //checked: this.model.autoStop.value,
+                autoStop:this.model.autoStop.value,
+                date: this.model.date.value,
+                link: this.model.link.value,
+            }
+            this._finishProcess(event, toReturnObject)
+        });
+    }
+
+    _attachHandlerDeployCluster() {
+        this.on('cls:deploy', (event) => {
+
+            let toReturnObject = {
+                uid: this.model.clusterUid,
+                name: this.model.name.value,
                 autoStop:this.model.autoStop.value,
                 date: this.model.date.value,
                 link: this.model.link.value,

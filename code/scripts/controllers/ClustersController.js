@@ -35,8 +35,15 @@ export default class ClustersController extends ContainerController {
         this._attachHandlerEditCluster();
         this._attachHandlerGovernanceCluster();
         this._attachHandlerMonitoringCluster();
+        this._attachEventEmmiter();
     }
 
+    _attachEventEmmiter()
+    {
+        this.on('openFeedback', (evt) => {
+            this.feedbackEmitter = evt.detail;
+        });
+    }
     _attachHandlerCreateCluster() {
         this.on('cluster:create', (e) => {
 
@@ -118,26 +125,62 @@ export default class ClustersController extends ContainerController {
                         this.model.clusters.splice(clusterIndex, 1);
                     });
                 } else {
-                    let clusterDetails = {
-                        clusterName: clusterToEdit.name,
-                        urlConfigRepo: clusterToEdit.link,
-                        configMap: {},
+
+                    if (response.installCluster)
+                    {
+                        this.InstallAndSaveClusterInfo(uid,response,clusterIndex, (err) => {
+                            if (err)
+                            {
+                                this._emitFeedback(e,"Failed to install cluster!","alert-danger");
+                                return;
+                            }
+                            this._emitFeedback(e,"Cluster installation was successfully!","alert-success");
+                            return;
+                        })
                     }
-                    ClusterControllerApi.deployCluster(clusterDetails, (err, data) => {
-                        if (err) {
-                            console.log(err);
+                    else {
+                        this.SaveClusterInfo(uid,response,clusterIndex, (err) => {
+                            if (err)
+                            {
+                                this._emitFeedback(e,"Failed to save cluster details!","alert-danger");
+                                return;
+                            }
                             return;
-                        }
-                        console.log("Deploy cluster response -> ", data);
-                    })
-                    this.ClusterService.updateCluster(uid, response, (err, updatedCluster) => {
-                        if (err) {
-                            console.log(err);
-                            return;
-                        }
-                        this.model.clusters[clusterIndex] = updatedCluster;
-                    });
+                        })
+                    }
                 }
+            });
+        });
+    }
+
+    SaveClusterInfo(orguid, clusterDetails, clusterIndex, callback){
+        this.ClusterService.updateCluster(orguid, clusterDetails, (err, updatedCluster) => {
+            if (err) {
+                console.log(err);
+                return callback(err);
+            }
+            this.model.clusters[clusterIndex] = updatedCluster;
+            return callback(undefined);
+        });
+    }
+
+    InstallAndSaveClusterInfo(orguid, clusterDetails, clusterIndex, callback){
+        let installClusterInfo = {
+            clusterName: clusterDetails.name,
+            urlConfigRepo: clusterDetails.link,
+            configMap: {},
+        }
+        ClusterControllerApi.deployCluster(installClusterInfo, (err, data) => {
+            if (err) {
+                console.log(err);
+                return callback(err);
+            }
+            console.log("Deploy cluster response -> ", data);
+            this.SaveClusterInfo(orguid, clusterDetails, clusterIndex, (err) => {
+                if (err){
+                    return callback(err);
+                }
+                callback(undefined);
             });
         });
     }
@@ -165,5 +208,13 @@ export default class ClustersController extends ContainerController {
 
             this.History.navigateToPageByTag('monitoring', toSendObject);
         });
+    }
+
+    _emitFeedback(event, message, alertType) {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        if (typeof this.feedbackEmitter === 'function') {
+            this.feedbackEmitter(message, "Info", alertType)
+        }
     }
 }

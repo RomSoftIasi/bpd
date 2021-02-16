@@ -5,7 +5,7 @@ const opendsu = require("opendsu");
 /commandForControlContainer/number/command?params
  */
 
-const SERVER_ENDPOINT = "http://localhost:8080/";
+const SERVER_ENDPOINT = window.location.origin;
 const endpointURL = new URL(SERVER_ENDPOINT);
 const apiEndpoint = endpointURL.hostname;
 const apiPort = endpointURL.port;
@@ -41,7 +41,7 @@ function makeRequest(method, path, body, callback) {
         options.body = bodyData;
     }
     let protocolInit = opendsu.loadAPI(protocol);
-    protocolInit.fetch(SERVER_ENDPOINT + path, options)
+    protocolInit.fetch(SERVER_ENDPOINT + path+"#x-blockchain-domain-request", options)
         .then(response => {
             console.log(response);
             console.log('status code',response.statusCode);

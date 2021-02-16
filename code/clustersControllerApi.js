@@ -40,7 +40,7 @@ function makeRequest(method, path, body, callback) {
     if (body && JSON.stringify(body) !== JSON.stringify({})) {
         options.body = bodyData;
     }
-    let protocolInit = opendsu.loadAPI(protocol);
+    let protocolInit = opendsu.loadAPI('http');
     protocolInit.fetch(SERVER_ENDPOINT + path+"#x-blockchain-domain-request", options)
         .then(response => {
             console.log(response);

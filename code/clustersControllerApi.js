@@ -12,7 +12,7 @@ if (SERVER_ENDPOINT[SERVER_ENDPOINT.length-1] !== "/") {
 const endpointURL = new URL(SERVER_ENDPOINT);
 const apiEndpoint = endpointURL.hostname;
 const apiPort = endpointURL.port;
-const protocol = endpointURL.protocol.replace(':', "");
+
 
 const CLUSTER_PATH = "controlContainer";
 const CLUSTER_LIST_PATH = `${CLUSTER_PATH}/listClusters`;

@@ -60,7 +60,22 @@ export default class ClusterEditModal extends ModalController {
         this._attachHandlerDeleteCluster();
         this._attachHandlerGovernanceCluster();
         this._attachHandlerInstallCluster();
+        this._attachEventEmmiter();
+    }
 
+    _attachEventEmmiter()
+    {
+        this.on('openFeedback', (evt) => {
+            this.feedbackEmitter = evt.detail;
+        });
+    }
+
+    _emitFeedback(event, message, alertType) {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        if (typeof this.feedbackEmitter === 'function') {
+            this.feedbackEmitter(message, "Info", alertType)
+        }
     }
 
     _attachHandlerChangeAutoStop() {
@@ -127,7 +142,9 @@ export default class ClusterEditModal extends ModalController {
                 link: this.model.link.value,
                 installCluster: true
             }
-            this._finishProcess(event, toReturnObject)
+            this._emitFeedback(event,"Cluster installation was initiated ...","alert-success");
+            setTimeout(()=>{this._finishProcess(event, toReturnObject)},4500);
+
         });
     }
 

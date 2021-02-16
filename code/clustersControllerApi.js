@@ -43,6 +43,9 @@ function makeRequest(method, path, body, callback) {
     let protocolInit = opendsu.loadAPI(protocol);
     protocolInit.fetch(SERVER_ENDPOINT + path, options)
         .then(response => {
+            console.log(response);
+            console.log('status code',response.statusCode);
+            console.log('status',response.status);
             response.json()
                 .then((data) => {
                     if (!response.ok || response.status != 201) {

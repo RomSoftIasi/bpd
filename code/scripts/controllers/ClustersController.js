@@ -36,6 +36,8 @@ export default class ClustersController extends ContainerController {
         this._attachHandlerGovernanceCluster();
         this._attachHandlerMonitoringCluster();
         this._attachEventEmmiter();
+
+
     }
 
     _attachEventEmmiter()
@@ -52,11 +54,6 @@ export default class ClustersController extends ContainerController {
                     console.log(err);
                     return;
                 }
-
-
-
-
-
                 //todo : show spinner/loading stuff
                 this.ClusterService.saveCluster(this.model.organization.uid, cluster, (err, updatedCluster) => {
                     if (err) {
@@ -107,13 +104,13 @@ export default class ClustersController extends ContainerController {
                 organizationUid: this.model.organization.uid,
                 cluster: clusterToEdit
             };
+
             this.showModal('editClusterModal', toSendObject, (err, response) => {
                 if (err) {
                     console.log(err);
                     return;
                 }
-
-                debugger
+                this._emitFeedback(e,"Cluster installation was initiated2 ...","alert-success");
                 //todo : show spinner/loading stuff
                 if (response.delete) {
                     this.ClusterService.unmountCluster(this.model.organization.uid, clusterToEdit.uid, (err, result) => {
@@ -128,22 +125,20 @@ export default class ClustersController extends ContainerController {
 
                     if (response.installCluster)
                     {
+                        console.log("Cluster installation was initiated ...");
                         this.InstallAndSaveClusterInfo(uid,response,clusterIndex, (err) => {
                             if (err)
                             {
-                                this._emitFeedback(e,"Failed to install cluster!","alert-danger");
-                                return;
+                                return console.log(e,"Failed to install cluster!");
                             }
-                            this._emitFeedback(e,"Cluster installation was successfully!","alert-success");
-                            return;
+                            return console.log("Cluster installation was successfully!");
                         })
                     }
                     else {
                         this.SaveClusterInfo(uid,response,clusterIndex, (err) => {
                             if (err)
                             {
-                                this._emitFeedback(e,"Failed to save cluster details!","alert-danger");
-                                return;
+                                return console.log("Failed to save cluster details!");
                             }
                             return;
                         })
@@ -172,12 +167,13 @@ export default class ClustersController extends ContainerController {
         }
         ClusterControllerApi.deployCluster(installClusterInfo, (err, data) => {
             if (err) {
+                console.log("cluster failed");
                 console.log(err);
                 return callback(err);
             }
-            console.log("Deploy cluster response -> ", data);
             this.SaveClusterInfo(orguid, clusterDetails, clusterIndex, (err) => {
                 if (err){
+                    console.log(err);
                     return callback(err);
                 }
                 callback(undefined);
@@ -188,7 +184,6 @@ export default class ClustersController extends ContainerController {
     _attachHandlerGovernanceCluster() {
 
         this.on('cluster:governance', (event) => {
-            debugger;
              let toSendObject = {
                 organizationUid: this.model.organization.uid,
                 clusterUid: event.data

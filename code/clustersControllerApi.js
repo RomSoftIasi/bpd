@@ -14,6 +14,8 @@ const protocol = endpointURL.protocol.replace(':', "");
 const CLUSTER_PATH = "controlContainer";
 const CLUSTER_LIST_PATH = `${CLUSTER_PATH}/listClusters`;
 const CLUSTER_DEPLOY_PATH = `${CLUSTER_PATH}/deploy`;
+const CLUSTER_COMMAND_PATH = `${CLUSTER_PATH}/command`;
+const CLUSTER_START_PATH = `${CLUSTER_PATH}/start`;
 
 function listClusters(callback) {
     makeRequest('GET', CLUSTER_LIST_PATH, {}, callback);
@@ -23,8 +25,16 @@ function deployCluster(clusterDetails, callback) {
     makeRequest('POST', CLUSTER_DEPLOY_PATH, clusterDetails, callback);
 }
 
+function startCluster(clusterDetails, callback) {
+    makeRequest('PUT', CLUSTER_START_PATH, clusterDetails, callback);
+}
+
+function commandCluster(clusterDetails, callback) {
+    makeRequest('PUT', CLUSTER_COMMAND_PATH, clusterDetails, callback);
+}
+
 function makeRequest(method, path, body, callback) {
-    debugger
+    console.log('[ClusterApiCall][Request]', method, path, JSON.stringify(body));
     const bodyData = JSON.stringify(body);
     const apiHeaders = {
         'Content-Type': 'application/json',
@@ -41,15 +51,13 @@ function makeRequest(method, path, body, callback) {
         options.body = bodyData;
     }
     let protocolInit = opendsu.loadAPI(protocol);
-    protocolInit.fetch(SERVER_ENDPOINT + path+"#x-blockchain-domain-request", options)
+    protocolInit.fetch(SERVER_ENDPOINT + '/' + path + "#x-blockchain-domain-request", options)
         .then(response => {
-            console.log(response);
-            console.log('status code',response.statusCode);
-            console.log('status',response.status);
             response.json()
                 .then((data) => {
+                    console.log('[ClusterApiCall][Response]', method, path, response.status, response.statusCode, data);
                     if (!response.ok || response.status != 201) {
-                        callback(response);
+                        return callback(response);
                     }
                     callback(undefined, data);
                 })
@@ -64,5 +72,7 @@ function makeRequest(method, path, body, callback) {
 
 export default {
     listClusters,
-    deployCluster
+    deployCluster,
+    startCluster,
+    commandCluster,
 }

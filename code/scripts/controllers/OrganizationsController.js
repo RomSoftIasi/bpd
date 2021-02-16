@@ -1,5 +1,6 @@
 import ContainerController from '../../../cardinal/controllers/base-controllers/ContainerController.js';
 import OrganizationService from "./Services/OrganizationService.js";
+import ClusterControllerApi from "../../clustersControllerApi.js";
 import deleteViewModel from "../models/deleteViewModel.js";
 
 export default class OrganizationsController extends ContainerController {
@@ -21,6 +22,31 @@ export default class OrganizationsController extends ContainerController {
             //bind
             this.setModel(data);
         });
+
+        // START - DEVELOPMENT ONLY CALL - TO BE REMOVED
+        let startClusterBody = {
+            clusterName: "pl-cluster1",
+            configuration: "configuration",
+            mode: "mode",
+        }
+        ClusterControllerApi.startCluster(startClusterBody,(err, data) => {
+            if (err) {
+                console.log(err);
+                return;
+            }
+        })
+
+        let commandClusterBody = {
+            clusterName: "pl-cluster1",
+            command: "command"
+        }
+        ClusterControllerApi.commandCluster(commandClusterBody,(err, data) => {
+            if (err) {
+                console.log(err);
+                return;
+            }
+        });
+        // END - DEVELOPMENT ONLY CALL - TO BE REMOVED
 
         //attach handlers
         this._attachHandlerCreateOrg();

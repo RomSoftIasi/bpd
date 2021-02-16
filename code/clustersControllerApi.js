@@ -5,7 +5,10 @@ const opendsu = require("opendsu");
 /commandForControlContainer/number/command?params
  */
 
-const SERVER_ENDPOINT = window.location.origin;
+let SERVER_ENDPOINT = window.location.origin;
+if (SERVER_ENDPOINT[SERVER_ENDPOINT.length-1] !== "/") {
+    SERVER_ENDPOINT += "/";
+}
 const endpointURL = new URL(SERVER_ENDPOINT);
 const apiEndpoint = endpointURL.hostname;
 const apiPort = endpointURL.port;

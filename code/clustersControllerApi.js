@@ -5,7 +5,7 @@ const opendsu = require("opendsu");
 /commandForControlContainer/number/command?params
  */
 
-const SERVER_ENDPOINT = "http://127.0.0.1:8080/";
+const SERVER_ENDPOINT = "http://localhost:8080/";
 const endpointURL = new URL(SERVER_ENDPOINT);
 const apiEndpoint = endpointURL.hostname;
 const apiPort = endpointURL.port;

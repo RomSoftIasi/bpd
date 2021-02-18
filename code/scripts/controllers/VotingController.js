@@ -5,7 +5,13 @@ import ClusterService from "./Services/ClusterService.js";
 const initialQuestionCreationModel = {
     title: {
         placeholder: 'Question',
-        name: 'Question'
+        name: 'Question',
+        label: 'Question'
+    },
+    signature :{
+      placeholder: 'e13664398bb18ca2f90c647ca940e4654ddc28f006a597bdf753dfb56d6f0e39',
+      name: 'Question signature',
+      label: 'Question signature'
     },
     uniqueAnswers: {
         checkboxLabel: "Unique Answer",

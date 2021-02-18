@@ -9,10 +9,16 @@ const initModel = {
         placeholder: 'Organization name',
         value: ''
     },
+    jenkinsURL: {
+      name: 'Jenkins CI server URL',
+      label: 'Jenkins CI server URL',
+      placeholder: 'Jenkins CI server URL',
+      value: 'http://Jenkins/CI/Server/URL'
+    },
     hosting: {
         placeholder: "Choose a hosting type",
         label: 'Hosting',
-        required: true,
+        required: false,
         options: [
             {
                 label: 'AWS',
@@ -31,14 +37,14 @@ const initModel = {
     endpoint: {
         name: 'endpoint',
         label: 'Endpoint',
-        required: true,
+        required: false,
         placeholder: 'Endpoint',
         value: ''
     },
     secretKey: {
         name: 'secretKey',
         label: 'SecretKey',
-        required: true,
+        required: false,
         placeholder: 'Secret Key',
         value: ''
     },
@@ -155,9 +161,7 @@ export default class CreateOrganizationModal extends ModalController {
 
     __displayErrorMessages = (event) => {
 
-        return this.__displayErrorRequiredField(event, 'name', this.model.name.value) ||
-            this.__displayErrorRequiredField(event, 'endpoint', this.model.endpoint.value) ||
-                this.__displayErrorRequiredField(event, 'secretKey', this.model.secretKey.value);
+        return this.__displayErrorRequiredField(event, 'Organization name', this.model.name.value)
 
     }
 

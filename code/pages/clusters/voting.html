@@ -21,9 +21,10 @@
 
                 <psk-tab title="Create">
                     <psk-card class="bpd-row">
-                        <psk-card class="bpd-for-each-row bpd-margin-left bpd-flex">
+                        <psk-card class="bpd-question-for-each-row bpd-flex">
                             <psk-text-input class="bpd-question-title" view-model="questionCreationModel.title"></psk-text-input>
-                            <psk-checkbox view-model="@questionCreationModel.uniqueAnswers"></psk-checkbox>
+                            <psk-text-input class="bpd-input bpd-question-title" view-model="questionCreationModel.signature" ></psk-text-input>
+
                         </psk-card>
 
                         <psk-for-each data-view-model="questionCreationModel.answers">
@@ -38,7 +39,12 @@
                         </psk-card>
 
                         <psk-card class="bpd-for-each-row">
-                            <psk-button event-name="question:create">Create</psk-button>
+                           <br>
+                        </psk-card>
+
+                        <psk-card class="bpd-for-each-row bpd-flex">
+                            <psk-checkbox view-model="@questionCreationModel.uniqueAnswers"></psk-checkbox>
+                            <psk-button event-name="question:create">Create question</psk-button>
                         </psk-card>
 
                     </psk-card>
@@ -88,6 +94,10 @@
 
                                 </psk-for-each>
                             </div>
+                            <div class="bpd-for-each-row">
+                                <psk-button event-name="result:apply">Apply to Smart Contract</psk-button>
+                            </div>
+                            <hr>
                         </psk-for-each>
 
                     </psk-card>

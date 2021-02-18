@@ -2,7 +2,7 @@ import ModalController from '../../../cardinal/controllers/base-controllers/Moda
 import ClusterControllerApi from "../../ClustersControllerApi.js";
 
 const initModel = {
-    title: 'Add a new Blockchain Network',
+    title: '',
     name: {
         placeholder: "Cluster name",
         label: 'Choose a cluster name',
@@ -34,13 +34,21 @@ const initModel = {
     }
 }
 
-export default class ClusterCreateModal extends ModalController {
+export default class ClusterCreateSecondStepModal extends ModalController {
     constructor(element, history) {
         super(element, history);
 
-        this.model = this.setModel(JSON.parse(JSON.stringify(initModel)))
+        debugger
 
-        this.ClusterControllerApi = new ClusterControllerApi();
+        initModel.title = this.model.title || 'Create a Blockchain Network';
+        initModel.name.value = this.model.name || '';
+        initModel.autoStop.checked = this.model.autoStop || '';
+        initModel.date.value = this.model.date || '';
+        initModel.link.value = this.model.link || '';
+
+        this.ClusterControllerApi = new ClusterControllerApi(this.model.endpoint);
+
+        this.model = this.setModel(JSON.parse(JSON.stringify(initModel)))
         this.ClusterControllerApi.listClusters((err, data) => {
             if (err) {
                 console.log(err);
@@ -56,7 +64,8 @@ export default class ClusterCreateModal extends ModalController {
         })
 
         this._attachHandlerChangeAutoStop();
-        this._attachHandlerCreateCluster();
+        this._attachHandlerPrevStep();
+        this._attachHandlerNextStep();
 
         this.on('openFeedback', (evt) => {
             this.feedbackEmitter = evt.detail;
@@ -69,30 +78,30 @@ export default class ClusterCreateModal extends ModalController {
         });
     }
 
-    _attachHandlerCreateCluster() {
-        this.on('cls:create', (event) => {
+    _attachHandlerPrevStep() {
+        this.on('cls:prev', (event) => {
+            this._finishProcess(event, {
+                redirect: 'addClusterFirstStepModal'
+            })
+        });
+    }
+    _attachHandlerNextStep() {
+        this.on('cls:next', (event) => {
             if (this.__displayErrorMessages(event)) {
                 return;
             }
-            this._respondWithResult(event)
+            let toReturnObject = {
+                redirect: 'addClusterThirdStepModal',
+                data: {
+                    name: this.model.name.value,
+                    autoStop: this.model.autoStop.value == 1,
+                    date: this.model.date.value,
+                    link: this.model.link.value,
+                }
+            }
+            this._finishProcess(event, toReturnObject)
         });
     }
-
-    _respondWithResult(event) {
-        let toReturnObject = {
-            name: this.model.name.value,
-            autoStop: this.model.autoStop.value==1,
-            date: this.model.date.value,
-            link: this.model.link.value,
-        }
-
-        this._finishProcess(event, toReturnObject)
-    }
-
-    _finishProcess(event, response) {
-        event.stopImmediatePropagation();
-        this.responseCallback(undefined, response);
-    };
 
     __displayErrorMessages = (event) => {
         return this.__displayErrorRequiredField(event, 'name', this.model.name.value) ||
@@ -114,4 +123,9 @@ export default class ClusterCreateModal extends ModalController {
             this.feedbackEmitter(message, "Validation", alertType)
         }
     }
+
+    _finishProcess(event, response) {
+        event.stopImmediatePropagation();
+        this.responseCallback(undefined, response);
+    };
 }

@@ -1,5 +1,5 @@
 import ModalController from '../../../cardinal/controllers/base-controllers/ModalController.js';
-import ClusterControllerApi from "../../clustersControllerApi.js";
+import ClusterControllerApi from "../../ClustersControllerApi.js";
 
 const initModel = {
     title: 'Manage Blockchain Network Deployment',
@@ -39,8 +39,8 @@ export default class ClusterEditModal extends ModalController {
         super(element, history);
         debugger
         this.model = this.setModel(this._getParsedModel(this.model))
-
-        ClusterControllerApi.listClusters((err, data) => {
+        this.ClusterControllerApi = new ClusterControllerApi();
+        this.ClusterControllerApi.listClusters((err, data) => {
             if (err) {
                 console.log(err);
                 return;

@@ -4,9 +4,9 @@ import ClusterControllerApi from "../../clustersControllerApi.js";
 const initModel = {
     title: 'Manage Blockchain Network Deployment',
     name: {
-        placeholder: "Cluster name",
-        label: 'Choose a cluster name',
+        label: 'Cluster used for installation',
         required: true,
+        disabled : true,
         options: []
     },
     autoStop: {

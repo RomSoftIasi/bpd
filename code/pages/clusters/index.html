@@ -25,6 +25,9 @@
             <div class="bpd-organization-elements">
                 <psk-for-each data-view-model="clusters">
                     <psk-card class="bpd-organization-line">
+                        <psk-button class="bpd-hotspot-button" event-name="cluster:edit" event-data="@uid">
+                            <psk-label class="bpd-organization-card-label" label="@name"/>
+                        </psk-button>
                         <div class="bpd-organization-card-header">
                             <psk-button-group class="bpd-organization-menu bpd-organization-cluster-menu" icon="ellipsis-v" icon-color="rgb(255, 255, 255)">
                                 <psk-button label="Edit" class="bpd-organization-button" button-class="btn btn-info" event-name="cluster:edit" event-data="@uid"></psk-button>
@@ -36,7 +39,6 @@
                                 <psk-button label="Governance" class="bpd-organization-button" button-class="btn btn-danger" event-name="cluster:governance" event-data="@uid"></psk-button>
                             </psk-button-group>
                         </div>
-                        <psk-label class="bpd-organization-card-label" label="@name"/>
                     </psk-card>
                 </psk-for-each>
             </div>

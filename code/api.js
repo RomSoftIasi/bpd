@@ -50,7 +50,6 @@ function organizationUnmount(path, callback) {
 }
 
 function clusterUnmount(organizationUid, clusterPath, callback) {
-    debugger
     loadDSU(organizationUid, (err, orgDossier) => {
         if (err) {
             return callback(err);

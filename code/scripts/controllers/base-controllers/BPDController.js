@@ -59,7 +59,7 @@ export default class BPDController extends ContainerController {
      * @param {string} url
      */
     redirect(url) {
-        this.render('psk-route-redirect', { url });
+        this.render('psk-route-redirect', {url});
     }
 
     /**

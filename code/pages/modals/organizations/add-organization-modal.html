@@ -1,0 +1,23 @@
+<psk-container controller-name="organizations/CreateOrganizationModal">
+    <psk-modal id="addOrganizationModal" class="bpd-modal" opened>
+
+        <psk-label slot="title" class="bpd-modal-title" label="@title"></psk-label>
+
+        <div class="content">
+            <psk-text-input class="bpd-input" view-model="@name" label="@name.label"></psk-text-input>
+            <psk-text-input class="bpd-input" view-model="@jenkinsURL" label="@jenkinsURL.label"></psk-text-input>
+        </div>
+
+        <psk-list-feedbacks messages-to-display="5" time-alive="3000"></psk-list-feedbacks>
+        <psk-card class="bpd-row bpd-creation-row">
+            <psk-button event-name="org:create">Create</psk-button>
+            <psk-button class="bpd-qr-code-with-text" event-name="org:create-with-qrcode">
+                <div>
+                    <psk-icon icon="qrcode" color="rgb(0, 0, 255)"></psk-icon>
+                    Load with QRCode
+                </div>
+            </psk-button>
+        </psk-card>
+
+    </psk-modal>
+</psk-container>

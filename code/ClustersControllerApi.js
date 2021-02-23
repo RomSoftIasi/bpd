@@ -9,7 +9,6 @@ export default class ClustersControllerApi {
     CLUSTER_START_PATH = `${this.CLUSTER_PATH}/start`;
 
     constructor(serverEndpoint) {
-        debugger
         let SERVER_ENDPOINT = serverEndpoint || window.location.origin;
         if (SERVER_ENDPOINT[SERVER_ENDPOINT.length - 1] !== "/") {
             SERVER_ENDPOINT += "/";

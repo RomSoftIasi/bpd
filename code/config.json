@@ -8,17 +8,16 @@
     },
     "modals": {
         "shareQRCodeModal": "modals/share-qrcode-modal.html",
-        "addClusterModal": "modals/add-cluster-modal.html",
-        "editClusterModal": "modals/edit-cluster-modal.html",
-        "addOrganizationModal": "modals/add-organization-modal.html",
-        "editOrganizationModal": "modals/edit-organization-modal.html",
-        "dsuTypesApprovalModal": "modals/dsu-types-approval-modal.html",
-        "governanceModal": "modals/governance.html",
         "qrCodeImportModal": "modals/qrcode-import-modal.html",
-        "deleteModal": "modals/delete-modal.html",
 
-        "addClusterFirstStepModal": "modals/cluster-create/add-cluster-first-step-modal.html",
-        "addClusterSecondStepModal": "modals/cluster-create/add-cluster-second-step-modal.html",
-        "addClusterThirdStepModal": "modals/cluster-create/add-cluster-third-step-modal.html"
+        "addOrganizationModal": "modals/organizations/add-organization-modal.html",
+        "editOrganizationModal": "modals/organizations/edit-organization-modal.html",
+        "deleteOrganizationModal": "modals/organizations/delete-organization-modal.html",
+        "dsuTypesApprovalModal": "modals/organizations/dsu-types-approval-modal.html",
+
+        "manageClusterModal": "modals/clusters/manage-cluster-modal.html",
+        "addClusterFirstStepModal": "modals/clusters/create-and-edit/add-cluster-first-step-modal.html",
+        "addClusterSecondStepModal": "modals/clusters/create-and-edit/add-cluster-second-step-modal.html",
+        "addClusterThirdStepModal": "modals/clusters/create-and-edit/add-cluster-third-step-modal.html"
     }
 }

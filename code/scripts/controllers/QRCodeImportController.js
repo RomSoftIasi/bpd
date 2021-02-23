@@ -3,7 +3,6 @@ import ModalController from '../../../cardinal/controllers/base-controllers/Moda
 export default class QRCodeImportController extends ModalController {
     constructor(element, history) {
         super(element, history);
-        debugger
         this.setModel({
             data: '',
             importIsDisabled: true

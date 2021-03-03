@@ -9,7 +9,9 @@ const initModel = {
         placeholder: "{\n" +
             "\t\"registry\": \"docker.io\"\n" +
             "}",
-        value: ''
+        value: "{\n" +
+            "\t\"registry\": \"docker.io\"\n" +
+            "}"
     },
 }
 
@@ -18,7 +20,7 @@ export default class ClusterCreateThirdStepModal extends ModalController {
         super(element, history);
 
         initModel.title = this.model.title || 'Create a Blockchain Network';
-        initModel.config.value = this.model.config || '';
+        initModel.config.value = this.model.config || initModel.config.value;
         this.model = this.setModel(JSON.parse(JSON.stringify(initModel)))
 
         this._attachHandlerPrevStep();

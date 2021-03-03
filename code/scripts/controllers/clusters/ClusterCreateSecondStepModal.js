@@ -29,8 +29,8 @@ const initModel = {
         label: 'Link to the GIT project with cluster configuration or other configuration UI',
         name: 'link',
         required: true,
-        placeholder: 'Link',
-        value: ''
+        placeholder: 'https://github.com/PharmaLedger-IMI/opendsu-cluster-template.git',
+        value: 'https://github.com/PharmaLedger-IMI/opendsu-cluster-template.git'
     }
 }
 
@@ -42,7 +42,7 @@ export default class ClusterCreateSecondStepModal extends ModalController {
         initModel.name.value = this.model.name || '';
         initModel.autoStop.checked = this.model.autoStop || '';
         initModel.date.value = this.model.date || '';
-        initModel.link.value = this.model.link || '';
+        initModel.link.value = this.model.link || initModel.link.value;
 
         this.ClusterControllerApi = new ClusterControllerApi(this.model.endpoint);
 

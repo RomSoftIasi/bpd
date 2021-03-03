@@ -14,7 +14,7 @@ const initModel = {
         label: 'Jenkins',
         required: true,
         placeholder: 'http://jenkins/CI/Server/URL',
-        value: ''
+        value: 'http://jenkins/CI/Server/URL'
     },
 }
 
@@ -24,7 +24,7 @@ export default class ClusterCreateFirstStepModal extends ModalController {
 
         initModel.title = this.model.title || 'Create a Blockchain Network';
         initModel.endpoint.value = this.model.endpoint || window.location.origin;
-        initModel.jenkins.value = this.model.jenkins || '';
+        initModel.jenkins.value = this.model.jenkins || initModel.jenkins.value;
 
         this.model = this.setModel(JSON.parse(JSON.stringify(initModel)))
 

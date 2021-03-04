@@ -4,8 +4,8 @@ import ClusterControllerApi from "../../../ClustersControllerApi.js";
 const initModel = {
     title: '',
     name: {
-        placeholder: "Cluster name",
-        label: 'Choose a cluster name',
+        placeholder: "Job to be executed",
+        label: 'Select the job to be executed',
         required: true,
         options: []
     },
@@ -24,13 +24,6 @@ const initModel = {
             value: ''
         },
         readOnly: true
-    },
-    link: {
-        label: 'Link to the GIT project with cluster configuration or other configuration UI',
-        name: 'link',
-        required: true,
-        placeholder: 'https://github.com/PharmaLedger-IMI/opendsu-cluster-template.git',
-        value: 'https://github.com/PharmaLedger-IMI/opendsu-cluster-template.git'
     }
 }
 
@@ -42,7 +35,7 @@ export default class ClusterCreateSecondStepModal extends ModalController {
         initModel.name.value = this.model.name || '';
         initModel.autoStop.checked = this.model.autoStop || '';
         initModel.date.value = this.model.date || '';
-        initModel.link.value = this.model.link || initModel.link.value;
+
 
         this.ClusterControllerApi = new ClusterControllerApi(this.model.endpoint);
 
@@ -94,8 +87,7 @@ export default class ClusterCreateSecondStepModal extends ModalController {
                 data: {
                     name: this.model.name.value,
                     autoStop: this.model.autoStop.value == 1,
-                    date: this.model.date.value,
-                    link: this.model.link.value,
+                    date: this.model.date.value
                 }
             }
             this._finishProcess(event, toReturnObject)
@@ -103,8 +95,7 @@ export default class ClusterCreateSecondStepModal extends ModalController {
     }
 
     __displayErrorMessages = (event) => {
-        return this.__displayErrorRequiredField(event, 'name', this.model.name.value) ||
-            this.__displayErrorRequiredField(event, 'link', this.model.link.value);
+        return this.__displayErrorRequiredField(event, 'name', this.model.name.value);
     }
 
     __displayErrorRequiredField(event, fieldName, field) {

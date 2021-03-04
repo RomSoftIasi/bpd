@@ -16,6 +16,18 @@ const initModel = {
         placeholder: 'http://jenkins/CI/Server/URL',
         value: 'http://jenkins/CI/Server/URL'
     },
+    user: {
+        name: 'user',
+        label: 'User',
+        required: true,
+        placeholder: 'Jenkins user name'
+    },
+    token: {
+        name: 'token',
+        label: 'Authorization token',
+        required: true,
+        placeholder: 'Jenkins authorization token'
+    }
 }
 
 export default class ClusterCreateFirstStepModal extends ModalController {
@@ -25,6 +37,8 @@ export default class ClusterCreateFirstStepModal extends ModalController {
         initModel.title = this.model.title || 'Create a Blockchain Network';
         initModel.endpoint.value = this.model.endpoint || window.location.origin;
         initModel.jenkins.value = this.model.jenkins || initModel.jenkins.value;
+        initModel.user.value = this.model.user || initModel.user.value;
+        initModel.token.value = this.model.token || initModel.token.value;
 
         this.model = this.setModel(JSON.parse(JSON.stringify(initModel)))
 
@@ -43,8 +57,9 @@ export default class ClusterCreateFirstStepModal extends ModalController {
             let toReturnObject = {
                 redirect: 'addClusterSecondStepModal',
                 data: {
-                    endpoint: this.model.endpoint.value,
-                    jenkins: this.model.jenkins.value
+                    jenkins: this.model.jenkins.value,
+                    user: this.model.user.value,
+                    token: this.model.token.value
                 }
             }
             this._finishProcess(event, toReturnObject)
@@ -52,8 +67,9 @@ export default class ClusterCreateFirstStepModal extends ModalController {
     }
 
     __displayErrorMessages = (event) => {
-        return this.__displayErrorRequiredField(event, 'endpoint', this.model.endpoint.value) ||
-            this.__displayErrorRequiredField(event, 'jenkins', this.model.jenkins.value);
+        return this.__displayErrorRequiredField(event, 'jenkins', this.model.jenkins.value) ||
+            this.__displayErrorRequiredField(event, 'user', this.model.user.value) ||
+            this.__displayErrorRequiredField(event, 'token', this.model.token.value);
     }
 
     __displayErrorRequiredField(event, fieldName, field) {

@@ -4,11 +4,12 @@ import ClusterControllerApi from "../../../ClustersControllerApi.js";
 const initModel = {
     title: 'Manage Blockchain Network Deployment',
     name: {
-        label: 'Cluster used for installation',
+        label: 'Pipeline used for installation',
         required: true,
         disabled: true,
         options: []
     }
+
 }
 
 export default class ClusterManageModal extends ModalController {
@@ -17,12 +18,13 @@ export default class ClusterManageModal extends ModalController {
 
         this.model = this.setModel(this._getParsedModel(this.model))
         this.ClusterControllerApi = new ClusterControllerApi();
-        this.ClusterControllerApi.listClusters((err, data) => {
+        console.log(this.model);
+        this.ClusterControllerApi.listJenkinsPipelines(this.model.jenkins, this.model.user, this.model.token,(err, data) => {
             if (err) {
                 console.log(err);
                 return;
             }
-            console.log("Clusters", data);
+            console.log("Pipelines", data);
             this.model.name.options = data.map(cluster => {
                 return {
                     label: cluster.name,
@@ -49,7 +51,11 @@ export default class ClusterManageModal extends ModalController {
             name: {
                 ...model.name,
                 value: existingCluster.name
-            }
+            },
+            jenkins: existingCluster.jenkins,
+            user: existingCluster.user,
+            token: existingCluster.token,
+            pipelineToken: existingCluster.pipelineToken
         }
         return model;
     }
@@ -59,6 +65,10 @@ export default class ClusterManageModal extends ModalController {
             let toReturnObject = {
                 uid: this.model.clusterUid,
                 name: this.model.name.value,
+                jenkins: this.model.jenkins,
+                user: this.model.user,
+                token: this.model.token,
+                pipelineToken: this.model.pipelineToken,
                 installCluster: true
             }
             this._emitFeedback(event, "Cluster installation was initiated ...", "alert-success");

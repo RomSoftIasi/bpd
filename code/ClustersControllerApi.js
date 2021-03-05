@@ -3,13 +3,13 @@ const opendsu = require("opendsu");
 export default class ClustersControllerApi {
 
     CLUSTER_PATH = "controlContainer";
-    CLUSTER_LIST_PATH = `${this.CLUSTER_PATH}/listClusters`;
+    JENKINS_PIPELINES_LIST_PATH = `${this.CLUSTER_PATH}/listJenkinsPipelines`;
     CLUSTER_DEPLOY_PATH = `${this.CLUSTER_PATH}/deploy`;
     CLUSTER_COMMAND_PATH = `${this.CLUSTER_PATH}/command`;
     CLUSTER_START_PATH = `${this.CLUSTER_PATH}/start`;
 
-    constructor(serverEndpoint) {
-        let SERVER_ENDPOINT = serverEndpoint || window.location.origin;
+    constructor() {
+        let SERVER_ENDPOINT = window.location.origin;
         if (SERVER_ENDPOINT[SERVER_ENDPOINT.length - 1] !== "/") {
             SERVER_ENDPOINT += "/";
         }
@@ -20,8 +20,12 @@ export default class ClustersControllerApi {
     }
 
 
-    listClusters(callback) {
-        this.makeRequest('GET', this.CLUSTER_LIST_PATH, {}, callback);
+    listJenkinsPipelines(jenkinsEndPoint, user, token, callback) {
+        this.makeRequest('POST', this.JENKINS_PIPELINES_LIST_PATH, {
+            jenkinsEndPoint,
+            user,
+            token
+        }, callback);
     }
 
     deployCluster(clusterDetails, callback) {

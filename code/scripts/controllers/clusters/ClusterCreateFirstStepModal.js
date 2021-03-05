@@ -2,13 +2,6 @@ import ModalController from '../../../cardinal/controllers/base-controllers/Moda
 
 const initModel = {
     title: '',
-    endpoint: {
-        name: 'endpoint',
-        label: 'Endpoint',
-        required: true,
-        placeholder: 'Endpoint',
-        value: ''
-    },
     jenkins: {
         name: 'jenkins',
         label: 'Jenkins',
@@ -35,7 +28,6 @@ export default class ClusterCreateFirstStepModal extends ModalController {
         super(element, history);
 
         initModel.title = this.model.title || 'Create a Blockchain Network';
-        initModel.endpoint.value = this.model.endpoint || window.location.origin;
         initModel.jenkins.value = this.model.jenkins || initModel.jenkins.value;
         initModel.user.value = this.model.user || initModel.user.value;
         initModel.token.value = this.model.token || initModel.token.value;

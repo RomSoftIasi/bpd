@@ -24,6 +24,12 @@ const initModel = {
             value: ''
         },
         readOnly: true
+    },
+    pipelineToken: {
+        required: true,
+        placeholder: 'Pipeline access token',
+        label: 'Pipeline access token',
+        value: ''
     }
 }
 
@@ -33,23 +39,26 @@ export default class ClusterCreateSecondStepModal extends ModalController {
 
         initModel.title = this.model.title || 'Create a Blockchain Network';
         initModel.name.value = this.model.name || '';
+        initModel.pipelineToken.value = this.model.pipelineToken || '';
         initModel.autoStop.checked = this.model.autoStop || '';
         initModel.date.value = this.model.date || '';
+        initModel.jenkins = this.model.jenkins ;
+        initModel.user = this.model.user ;
+        initModel.token = this.model.token ;
 
-
-        this.ClusterControllerApi = new ClusterControllerApi(this.model.endpoint);
+        this.ClusterControllerApi = new ClusterControllerApi();
 
         this.model = this.setModel(JSON.parse(JSON.stringify(initModel)))
-        this.ClusterControllerApi.listClusters((err, data) => {
+        this.ClusterControllerApi.listJenkinsPipelines(this.model.jenkins, this.model.user, this.model.token,(err, data) => {
             if (err) {
                 console.log(err);
                 return;
             }
             console.log("Clusters", data);
-            this.model.name.options = data.map(cluster => {
+            this.model.name.options = data.map(pipeline => {
                 return {
-                    label: cluster.name,
-                    value: cluster.name
+                    label: pipeline.name,
+                    value: pipeline.name
                 }
             });
         })
@@ -87,7 +96,8 @@ export default class ClusterCreateSecondStepModal extends ModalController {
                 data: {
                     name: this.model.name.value,
                     autoStop: this.model.autoStop.value == 1,
-                    date: this.model.date.value
+                    date: this.model.date.value,
+                    pipelineToken: this.model.pipelineToken.value
                 }
             }
             this._finishProcess(event, toReturnObject)

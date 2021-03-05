@@ -170,7 +170,7 @@ export default class ClustersController extends ContainerController {
                 } else {
                     if (response.installCluster) {
                         console.log("Cluster installation was initiated ...");
-                        this._installAndSaveClusterInfo(uid, response, clusterIndex, (err) => {
+                        this._installCluster(response, (err) => {
                             if (err) {
                                 return console.log(e, "Failed to install cluster!");
                             }
@@ -200,24 +200,23 @@ export default class ClustersController extends ContainerController {
         });
     }
 
-    _installAndSaveClusterInfo(orguid, clusterDetails, clusterIndex, callback) {
+    _installCluster(clusterDetails, callback) {
         let installClusterInfo = {
-            clusterName: clusterDetails.name,
-            urlConfigRepo: clusterDetails.link,
+            pipeline: clusterDetails.name,
+            user: clusterDetails.user,
+            token: clusterDetails.token,
+            jenkins: clusterDetails.jenkins,
+            pipelineToken: clusterDetails.pipelineToken,
             configMap: {},
         }
+        console.log(installClusterInfo);
+        console.log(clusterDetails);
         this.ClusterControllerApi.deployCluster(installClusterInfo, (err, data) => {
             if (err) {
                 console.log(err);
                 return callback(err);
             }
-            this._saveClusterInfo(orguid, clusterDetails, clusterIndex, (err) => {
-                if (err) {
-                    console.log(err);
-                    return callback(err);
-                }
-                callback(undefined);
-            });
+            callback(undefined);
         });
     }
 

@@ -26,7 +26,7 @@ const initModel = {
         readOnly: true
     },
     pipelineToken: {
-        required: true,
+        required: false,
         placeholder: 'Pipeline access token',
         label: 'Pipeline access token',
         value: ''

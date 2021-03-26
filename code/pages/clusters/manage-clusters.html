@@ -17,11 +17,24 @@
         <psk-card class="bpd-dashboard">
             <psk-label class="bpd-dashboard-title" label="Blockchain Networks"/>
             <div class="bpd-create-organization">
-                <psk-button class="bpd-create-organization-button" event-name="cluster:create">
+                <psk-button class="bpd-create-organization-button" event-name="cluster:initiatenetwork">
                     <psk-icon icon="plus" color="rgb(255, 255, 255)"></psk-icon>
                 </psk-button>
-                <psk-label class="bpd-create-organization-label" label="Create new Blockchain Network"/>
+                <psk-label class="bpd-create-organization-label" label="Initiate network"/>
             </div>
+            <div class="bpd-create-organization">
+                <psk-button class="bpd-create-organization-button" event-name="cluster:join">
+                    <psk-icon icon="sign-in" color="rgb(255, 255, 255)"></psk-icon>
+                </psk-button>
+                <psk-label class="bpd-create-organization-label" label="Join network"/>
+            </div>
+            <div class="bpd-create-organization">
+                <psk-button class="bpd-create-organization-button" event-name="cluster:update">
+                    <psk-icon icon="cog" color="rgb(255, 255, 255)"></psk-icon>
+                </psk-button>
+                <psk-label class="bpd-create-organization-label" label="Update network"/>
+            </div>
+
             <div class="bpd-organization-elements">
                 <psk-for-each data-view-model="clusters">
                     <psk-card class="bpd-organization-line">

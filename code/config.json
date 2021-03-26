@@ -16,8 +16,6 @@
         "dsuTypesApprovalModal": "modals/organizations/dsu-types-approval-modal.html",
 
         "manageClusterModal": "modals/clusters/manage-cluster-modal.html",
-        "addClusterFirstStepModal": "modals/clusters/create-and-edit/add-cluster-first-step-modal.html",
-        "addClusterSecondStepModal": "modals/clusters/create-and-edit/add-cluster-second-step-modal.html",
-        "addClusterThirdStepModal": "modals/clusters/create-and-edit/add-cluster-third-step-modal.html"
+        "initiateNetworkModal": "modals/clusters/operations/initiate-network.html"
     }
 }

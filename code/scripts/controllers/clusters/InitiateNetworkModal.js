@@ -2,13 +2,13 @@ import ModalController from '../../../cardinal/controllers/base-controllers/Moda
 
 const initModel = {
     title: '',
-    clusteroperation: 'initiateNetwork',
+    clusterOperation: 'initiateNetwork',
     name: {
-      name: 'name',
-      label: 'Blockchain name',
-      required: true,
-      placeholder: 'Enter blockchain name (eg. ePI)',
-      value: ''
+        name: 'name',
+        label: 'Blockchain name',
+        required: true,
+        placeholder: 'Enter blockchain name (eg. ePI)',
+        value: ''
     },
     jenkins: {
         name: 'jenkins',
@@ -42,11 +42,11 @@ const initModel = {
     }
 }
 
-export default class ClusterCreateFirstStepModal extends ModalController {
+export default class InitiateNetworkModal extends ModalController {
     constructor(element, history) {
         super(element, history);
 
-        initModel.title = this.model.title || 'Create a Blockchain Network';
+        initModel.title = this.model.title || 'Initiate Network';
         initModel.jenkins.value = this.model.jenkins || initModel.jenkins.value;
         initModel.user.value = this.model.user || initModel.user.value;
         initModel.token.value = this.model.token || initModel.token.value;
@@ -55,15 +55,15 @@ export default class ClusterCreateFirstStepModal extends ModalController {
 
         this.model = this.setModel(JSON.parse(JSON.stringify(initModel)))
 
-        this._attachHandlerInstall();
+        this._attachHandlerSaveNetwork();
 
         this.on('openFeedback', (evt) => {
             this.feedbackEmitter = evt.detail;
         });
     }
 
-    _attachHandlerInstall() {
-        this.on('cls:install', (event) => {
+    _attachHandlerSaveNetwork() {
+        this.on('cls:save', (event) => {
             if (this.__displayErrorMessages(event)) {
                 return;
             }
@@ -74,7 +74,7 @@ export default class ClusterCreateFirstStepModal extends ModalController {
                     user: this.model.user.value,
                     token: this.model.token.value,
                     config: this.model.config.value,
-                    clusteroperation: this.model.clusteroperation
+                    clusterOperation: this.model.clusterOperation
                 }
             }
             this._finishProcess(event, toReturnObject)

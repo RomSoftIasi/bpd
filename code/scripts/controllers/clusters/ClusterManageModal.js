@@ -3,10 +3,10 @@ import ClusterControllerApi from "../../../ClustersControllerApi.js";
 
 const initModel = {
     title: 'Manage Blockchain Network Deployment',
+    disableAll : false,
     name: {
-        label: 'Pipeline used for installation',
+        label: 'Blockchain name',
         required: true,
-        disabled: true,
         options: []
     }
 
@@ -18,7 +18,12 @@ export default class ClusterManageModal extends ModalController {
 
         this.model = this.setModel(this._getParsedModel(this.model))
         this.ClusterControllerApi = new ClusterControllerApi();
-        console.log(this.model);
+        console.log('Manage cluster ',this.model);
+
+        /*setTimeout(() => {
+            this.model.disableAll = false;
+        }, 4500);*/
+        /*
         this.ClusterControllerApi.listJenkinsPipelines(this.model.jenkins, this.model.user, this.model.token,(err, data) => {
             if (err) {
                 console.log(err);
@@ -31,7 +36,7 @@ export default class ClusterManageModal extends ModalController {
                     value: cluster.name
                 }
             });
-        })
+        })*/
 
         this._attachHandlerMonitoringCluster();
         this._attachHandlerDeleteCluster();
@@ -55,7 +60,9 @@ export default class ClusterManageModal extends ModalController {
             jenkins: existingCluster.jenkins,
             user: existingCluster.user,
             token: existingCluster.token,
-            pipelineToken: existingCluster.pipelineToken
+            pipelineToken: existingCluster.pipelineToken,
+            clusterOperation: existingCluster.clusterOperation,
+            config: existingCluster.config
         }
         return model;
     }
@@ -69,7 +76,8 @@ export default class ClusterManageModal extends ModalController {
                 user: this.model.user,
                 token: this.model.token,
                 pipelineToken: this.model.pipelineToken,
-                installCluster: true
+                clusterOperation: this.model.clusterOperation,
+                config: this.model.config
             }
             this._emitFeedback(event, "Cluster installation was initiated ...", "alert-success");
             setTimeout(() => {

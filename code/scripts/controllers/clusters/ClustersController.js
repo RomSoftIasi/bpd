@@ -31,7 +31,7 @@ export default class ClustersController extends ContainerController {
             this.model.clusters = data.clusters;
         })
 
-        this._attachHandlerCreateCluster();
+        this._attachHandlerInitiateNetworkOnCluster();
         this._attachHandlerEditCluster();
         this._attachHandlerShareCluster();
         this._attachHandlerManageCluster();
@@ -64,13 +64,14 @@ export default class ClustersController extends ContainerController {
         });
     }
 
-    _attachHandlerCreateCluster() {
-        this.on('cluster:create', (e) => {
-            this._showModal('addClusterFirstStepModal', {}, (err, data) => {
+    _attachHandlerInitiateNetworkOnCluster() {
+        this.on('cluster:initiatenetwork', (e) => {
+            this._showModal('initiateNetworkModal', {title:'Initiate Network'}, (err, data) => {
                 if (err) {
                     console.log(err);
                     return;
                 }
+                console.log(data);
                 this.ClusterService.saveCluster(this.model.organization.uid, data, (err, updatedCluster) => {
                     if (err) {
                         console.log(err);
@@ -116,23 +117,28 @@ export default class ClustersController extends ContainerController {
             }
 
             const clusterToEdit = this.model.clusters[clusterIndex];
-            let toSendObject = {
-                ...clusterToEdit,
-                readOnlyMode: true,
-                title: 'Edit Blockchain Network'
-            }
-            this._showModal('addClusterFirstStepModal', toSendObject, (err, response) => {
-                if (err) {
-                    console.log(err);
-                    return;
+
+            if (clusterToEdit.clusterOperation === 'initiateNetwork')
+            {
+                let toSendObject = {
+                    ...clusterToEdit,
+                    readOnlyMode: true,
+                    title: 'Initiate Network parameters'
                 }
-                this._saveClusterInfo(uid, response, clusterIndex, (err) => {
+                this._showModal('initiateNetworkModal', toSendObject, (err, response) => {
                     if (err) {
-                        return console.log("Failed to save cluster details!");
+                        console.log(err);
+                        return;
                     }
-                    return;
+                    this._saveClusterInfo(uid, response, clusterIndex, (err) => {
+                        if (err) {
+                            return console.log("Failed to save cluster details!");
+                        }
+                        return;
+                    })
                 })
-            })
+            }
+
         });
     }
 
@@ -157,6 +163,7 @@ export default class ClustersController extends ContainerController {
                     return;
                 }
                 this._emitFeedback(e, "Cluster installation was initiated ...", "alert-success");
+                console.log('install cluster data',response);
                 //todo : show spinner/loading stuff
                 if (response.delete) {
                     this.ClusterService.unmountCluster(this.model.organization.uid, clusterToEdit.uid, (err, result) => {
@@ -168,8 +175,10 @@ export default class ClustersController extends ContainerController {
                         this.model.clusters.splice(clusterIndex, 1);
                     });
                 } else {
-                    if (response.installCluster) {
-                        console.log("Cluster installation was initiated ...");
+                    if (response.clusterOperation === "initiateNetwork" ) {
+                        console.log("Initiate Network was started ...", response.name);
+                        console.log(response);
+                        //todo : define pipeline based on scenario
                         this._installCluster(response, (err) => {
                             if (err) {
                                 return console.log(e, "Failed to install cluster!");
@@ -202,12 +211,13 @@ export default class ClustersController extends ContainerController {
 
     _installCluster(clusterDetails, callback) {
         let installClusterInfo = {
-            pipeline: clusterDetails.name,
+            networkName: clusterDetails.name,
             user: clusterDetails.user,
             token: clusterDetails.token,
             jenkins: clusterDetails.jenkins,
             pipelineToken: clusterDetails.pipelineToken,
-            configMap: {},
+            clusterOperation: clusterDetails.clusterOperation,
+            configMap: clusterDetails.config,
         }
         console.log(installClusterInfo);
         console.log(clusterDetails);

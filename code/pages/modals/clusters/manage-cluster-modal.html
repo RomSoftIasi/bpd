@@ -4,23 +4,31 @@
         <psk-label slot="title" class="bpd-modal-title" label="@title"></psk-label>
 
         <div class="content">
-            <psk-select class="bpd-input" view-model="@name"></psk-select>
+            <psk-text-input class="bpd-input" view-model="@name" read-only="@disableAll"></psk-text-input>
+
+            <psk-condition condition="@disableAll">
+
+            <div class="content" style="width: 100%" slot="condition-true">
+                <psk-textarea class="bpd-text-area" view-model="logs"></psk-textarea>
+            </div>
+
+            </psk-condition>
 
             <psk-card class="bpd-translucent-buttons">
                 <psk-layout template-columns="1fr 1fr">
-                    <psk-button class="bpd-qr-code-with-text" event-name="cls:governance" event-data="@id">
+                    <psk-button class="bpd-qr-code-with-text" event-name="cls:governance" event-data="@id"  disabled="@disableAll">
                         Governance
                     </psk-button>
-                    <psk-button class="bpd-qr-code-with-text" event-name="cls:monitoring" event-data="@id">
+                    <psk-button class="bpd-qr-code-with-text" event-name="cls:monitoring" event-data="@id"  disabled="@disableAll">
                         Monitoring
                     </psk-button>
                 </psk-layout>
 
                 <psk-layout template-columns="1fr 1fr">
-                    <psk-button class="bpd-qr-code-with-text" event-name="cls:continuous-integration" event-data="@id">
+                    <psk-button class="bpd-qr-code-with-text" event-name="cls:continuous-integration" event-data="@id"  disabled="@disableAll">
                         Continuous Integration
                     </psk-button>
-                    <psk-button class="bpd-qr-code-with-text" event-name="cls:performance-testing" event-data="@id">
+                    <psk-button class="bpd-qr-code-with-text" event-name="cls:performance-testing" event-data="@id"  disabled="@disableAll">
                         Performance Testing
                     </psk-button>
                 </psk-layout>
@@ -28,9 +36,18 @@
         </div>
 
         <psk-card class="bpd-row bpd-creation-row bpd-three-buttons-row">
-            <psk-button event-name="cls:installcluster">
+
+            <psk-button event-name="cls:cleancluster"  disabled="@disableAll">
+                <psk-icon icon="minus" color="rgb(255, 255, 255)"></psk-icon>
+                Remove network
+            </psk-button>
+            <psk-button event-name="cls:updatecluster" disabled="@disableAll">
+                <psk-icon icon="cog" color="rgb(255, 255, 255)"></psk-icon>
+                Update network
+            </psk-button>
+            <psk-button event-name="cls:installcluster"  disabled="@disableAll">
                 <psk-icon icon="anchor" color="rgb(255, 255, 255)"></psk-icon>
-                Install cluster
+                Install network
             </psk-button>
         </psk-card>
         <psk-list-feedbacks>

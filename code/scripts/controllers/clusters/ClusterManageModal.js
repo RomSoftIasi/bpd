@@ -3,7 +3,6 @@ import ClusterControllerApi from "../../../ClustersControllerApi.js";
 
 const initModel = {
     title: 'Manage Blockchain Network Deployment',
-    disableAll : false,
     name: {
         label: 'Blockchain name',
         required: true,
@@ -19,6 +18,94 @@ export default class ClusterManageModal extends ModalController {
         this.model = this.setModel(this._getParsedModel(this.model))
         this.ClusterControllerApi = new ClusterControllerApi();
         console.log('Manage cluster ',this.model);
+        let clusterInfo;
+        switch(this.model.clusterStatus) {
+            case "Pending" :
+                clusterInfo = "Blockchain Network installation pending ...";
+                break;
+            case "Installed" :
+                clusterInfo = "Blockchain Network installed successfully.";
+                break;
+            case "Fail" :
+                clusterInfo = "Blockchain Network failed to install.";
+                break;
+            case "None" :
+                clusterInfo = "Blockchain Network is ready to install.";
+                break;
+        }
+        this.model.clusterStatusInfo = "Cluster status : "+clusterInfo;
+        this.model.installNetworkVisible = this.model.clusterStatus === 'None' || this.model.clusterStatus === 'Pending';
+        this.model.removeNetworkVisible = this.model.clusterStatus === 'Installed';
+        this.model.updateNetworkVisible = this.model.clusterStatus === 'Installed';
+        this.model.disableBlockchainName = true;
+        this.model.disableAll = this.model.clusterStatus === 'Pending';
+        this.model.viewLogs = this.model.clusterStatus === 'Installed';
+        this.model.disableLogs = true;
+        this.model.logs.value = 'Loading blockchain network logs ....';
+        const builds = [];
+        let log;
+        if (this.model.clusterInstallationInfo)
+        {
+            JSON.parse(this.model.clusterInstallationInfo.pipelines).map(el => builds.push(
+                {
+                    buildNo: el.buildNo,
+                    pipeline: el.name
+                }))
+
+            const getLogs = (jenkinsPipeline, buildNo) => {
+                this.ClusterControllerApi.getPipelineLog(jenkinsPipeline, buildNo, this.model, (err, data) => {
+                    let pipeLog;
+                    if (err)
+                    {
+                        pipeLog = 'Failed to retrieve logs';
+                        console.log(err);
+                    } else {
+                        pipeLog = data.message;
+                    }
+                    if (!log)
+                    {
+                        log = pipeLog;
+                    } else {
+                        log = log + '\n' + pipeLog;
+                    }
+                    if (builds.length === 0)
+                    {
+                        this.model.logs.value = log;
+                        this.model.disableLogs = false;
+                    }
+                    else{
+                        const cElem = builds.shift();
+                        getLogs(cElem.pipeline, cElem.buildNo);
+                    }
+                })
+            }
+
+            const cElem = builds.shift();
+            getLogs(cElem.pipeline, cElem.buildNo);
+        }
+
+
+        /*const buildNo = 32
+        const jenkinsPipeline = 'gov-tests';
+
+        this.ClusterControllerApi.getPipelineLog(jenkinsPipeline, buildNo, this.model, (err, data) => {
+            if (err)
+            {
+                log = 'Failed to retrieve logs';
+                console.log(err);
+            } else {
+                log = data.message;
+            }
+            this.model.logs.value = log;
+        })*/
+       /*
+        this.ClusterControllerApi.getTestReport((err, result) => {
+            if (err){
+                return console.log(err);
+            }
+            let myWindow = window.open("", "_self");
+            myWindow.document.write(result);
+        })*/
 
         /*setTimeout(() => {
             this.model.disableAll = false;
@@ -62,7 +149,12 @@ export default class ClusterManageModal extends ModalController {
             token: existingCluster.token,
             pipelineToken: existingCluster.pipelineToken,
             clusterOperation: existingCluster.clusterOperation,
-            config: existingCluster.config
+            config: existingCluster.config,
+            clusterStatus: existingCluster.clusterStatus,
+            clusterInstallationInfo: existingCluster.clusterInstallationInfo,
+            logs :{
+                value: ''
+            }
         }
         return model;
     }
@@ -77,7 +169,9 @@ export default class ClusterManageModal extends ModalController {
                 token: this.model.token,
                 pipelineToken: this.model.pipelineToken,
                 clusterOperation: this.model.clusterOperation,
-                config: this.model.config
+                config: this.model.config,
+                clusterStatus: 'Pending',
+                clusterInstallationInfo: this.model.clusterInstallationInfo
             }
             this._emitFeedback(event, "Cluster installation was initiated ...", "alert-success");
             setTimeout(() => {

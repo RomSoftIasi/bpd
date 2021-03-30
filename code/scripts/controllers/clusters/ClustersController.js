@@ -109,10 +109,10 @@ export default class ClustersController extends ContainerController {
 
     _attachHandlerEditCluster() {
         this.on('cluster:edit', (e) => {
-            const uid = e.data;
-            const clusterIndex = this.model.clusters.findIndex((cluster) => cluster.uid === uid);
+            const clusterUid = e.data;
+            const clusterIndex = this.model.clusters.findIndex((cluster) => cluster.uid === clusterUid);
             if (clusterIndex === -1) {
-                console.log('Cluster not found @uid', uid, this.model.clusters);
+                console.log('Cluster not found @uid', clusterUid, this.model.clusters);
                 return;
             }
 
@@ -125,12 +125,12 @@ export default class ClustersController extends ContainerController {
                     readOnlyMode: true,
                     title: 'Initiate Network parameters'
                 }
-                this._showModal('initiateNetworkModal', toSendObject, (err, response) => {
+                this._showModal('initiateEditNetworkModal', toSendObject, (err, clusterData) => {
                     if (err) {
                         console.log(err);
                         return;
                     }
-                    this._saveClusterInfo(uid, response, clusterIndex, (err) => {
+                    this._saveClusterInfo(this.model.organization.uid, clusterData, clusterIndex, (err) => {
                         if (err) {
                             return console.log("Failed to save cluster details!");
                         }
@@ -144,10 +144,10 @@ export default class ClustersController extends ContainerController {
 
     _attachHandlerManageCluster() {
         this.on('cluster:manage', (e) => {
-            const uid = e.data;
-            const clusterIndex = this.model.clusters.findIndex((cluster) => cluster.uid === uid);
+            const clusterUid = e.data;
+            const clusterIndex = this.model.clusters.findIndex((cluster) => cluster.uid === clusterUid);
             if (clusterIndex === -1) {
-                console.log('Cluster not found @uid', uid, this.model.clusters);
+                console.log('Cluster not found @uid', clusterUid, this.model.clusters);
                 return;
             }
 
@@ -179,14 +179,30 @@ export default class ClustersController extends ContainerController {
                         console.log("Initiate Network was started ...", response.name);
                         console.log(response);
                         //todo : define pipeline based on scenario
-                        this._installCluster(response, (err) => {
+                        this._saveClusterInfo(this.model.organization.uid, response, clusterIndex, (err) => {
                             if (err) {
-                                return console.log(e, "Failed to install cluster!");
+                                return console.log("Failed to save cluster details!");
                             }
-                            return console.log("Cluster installation was successfully!");
+                            this._installCluster(response, (err, data) => {
+                                if (err) {
+                                    response.clusterStatus = 'Fail';
+                                    response.clusterInstallationInfo = err;
+                                    console.log(e, "Failed to install cluster!");
+                                }
+                                else {
+                                    console.log("Cluster installation was successfully!");
+                                    response.clusterStatus = 'Installed';
+                                    response.clusterInstallationInfo = data;
+                                }
+                                this._saveClusterInfo(this.model.organization.uid, response, clusterIndex, (err) => {
+                                    if (err) {
+                                        return console.log("Failed to save cluster details!");
+                                    }
+                                })
+                            })
                         })
                     } else {
-                        this._saveClusterInfo(uid, response, clusterIndex, (err) => {
+                        this._saveClusterInfo(this.model.organization.uid, response, clusterIndex, (err) => {
                             if (err) {
                                 return console.log("Failed to save cluster details!");
                             }
@@ -205,6 +221,7 @@ export default class ClustersController extends ContainerController {
                 return callback(err);
             }
             this.model.clusters[clusterIndex] = updatedCluster;
+            console.log('Saved cluster : ', updatedCluster);
             return callback(undefined);
         });
     }
@@ -218,6 +235,7 @@ export default class ClustersController extends ContainerController {
             pipelineToken: clusterDetails.pipelineToken,
             clusterOperation: clusterDetails.clusterOperation,
             configMap: clusterDetails.config,
+            clusterStatus: clusterDetails.clusterStatus
         }
         console.log(installClusterInfo);
         console.log(clusterDetails);
@@ -226,7 +244,7 @@ export default class ClustersController extends ContainerController {
                 console.log(err);
                 return callback(err);
             }
-            callback(undefined);
+            callback(undefined, data);
         });
     }
 

@@ -16,6 +16,7 @@
         "dsuTypesApprovalModal": "modals/organizations/dsu-types-approval-modal.html",
 
         "manageClusterModal": "modals/clusters/manage-cluster-modal.html",
-        "initiateNetworkModal": "modals/clusters/operations/initiate-network.html"
+        "initiateNetworkModal": "modals/clusters/operations/initiate-network.html",
+        "initiateEditNetworkModal": "modals/clusters/operations/initiate-edit-network.html"
     }
 }

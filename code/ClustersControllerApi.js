@@ -30,6 +30,24 @@ export default class ClustersControllerApi {
         this.makeRequest('PUT', this.CLUSTER_COMMAND_PATH, clusterDetails, callback);
     }
 
+    getTestReport(callback) {
+
+    }
+
+    getPipelineLog(jenkinsPipeline, buildNo, clusterDetails, callback){
+        const data = {
+            command: 'jenkinsLog',
+            buildNo: buildNo,
+            jenkinsPipeline: jenkinsPipeline,
+            jenkinsData: {
+                user: clusterDetails.user,
+                token: clusterDetails.token,
+                jenkins: clusterDetails.jenkins,
+            }
+        }
+        this.commandCluster(data, callback);
+    }
+
     makeRequest(method, path, body, callback) {
         console.log('[ClusterApiCall][Request]', method, path, JSON.stringify(body));
         const bodyData = JSON.stringify(body);

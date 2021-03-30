@@ -3,6 +3,8 @@ import ModalController from '../../../cardinal/controllers/base-controllers/Moda
 const initModel = {
     title: '',
     clusterOperation: 'initiateNetwork',
+    clusterStatus: 'None',
+    disableAll: false,
     name: {
         name: 'name',
         label: 'Blockchain name',
@@ -52,8 +54,9 @@ export default class InitiateNetworkModal extends ModalController {
         initModel.token.value = this.model.token || initModel.token.value;
         initModel.name.value = this.model.name || initModel.name.value;
         initModel.config.value = this.model.config || initModel.config.value;
-
+        initModel.clusterStatus = this.model.clusterStatus || 'None';
         this.model = this.setModel(JSON.parse(JSON.stringify(initModel)))
+        this.model.disableAll = this.model.clusterStatus === 'Installed' || this.model.clusterStatus === 'Pending'
 
         this._attachHandlerSaveNetwork();
 
@@ -74,7 +77,8 @@ export default class InitiateNetworkModal extends ModalController {
                     user: this.model.user.value,
                     token: this.model.token.value,
                     config: this.model.config.value,
-                    clusterOperation: this.model.clusterOperation
+                    clusterOperation: this.model.clusterOperation,
+                    clusterStatus: this.model.clusterStatus
                 }
             }
             this._finishProcess(event, toReturnObject)

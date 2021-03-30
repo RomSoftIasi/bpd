@@ -2,68 +2,58 @@ import ModalController from '../../../cardinal/controllers/base-controllers/Moda
 
 const initModel = {
     title: '',
-    clusteroperation: 'initiateNetwork',
+    disableAll: false,
     name: {
-      name: 'name',
-      label: 'Blockchain name',
-      required: true,
-      placeholder: 'Enter blockchain name (eg. ePI)',
-      value: ''
+        name: 'name',
+        label: 'Blockchain name',
+        required: true
     },
     jenkins: {
         name: 'jenkins',
         label: 'Jenkins',
         required: true,
-        placeholder: 'http://jenkins/CI/Server/URL',
-        value: 'http://jenkins/CI/Server/URL'
     },
     user: {
         name: 'user',
         label: 'User',
         required: true,
-        placeholder: 'Jenkins user name'
     },
     token: {
         name: 'token',
         label: 'Authorization token',
         required: true,
-        placeholder: 'Jenkins authorization token'
     },
     config: {
         label: "Deployment configuration",
         name: "configuration",
-        required: true,
-        placeholder: "{\n" +
-            "\t\"registry\": \"docker.io\"\n" +
-            "}",
-        value: "{\n" +
-            "\t\"registry\": \"docker.io\"\n" +
-            "}"
+        required: true
     }
 }
 
-export default class ClusterCreateFirstStepModal extends ModalController {
+export default class InitiateEditNetworkModal extends ModalController {
     constructor(element, history) {
         super(element, history);
 
-        initModel.title = this.model.title || 'Create a Blockchain Network';
-        initModel.jenkins.value = this.model.jenkins || initModel.jenkins.value;
-        initModel.user.value = this.model.user || initModel.user.value;
-        initModel.token.value = this.model.token || initModel.token.value;
-        initModel.name.value = this.model.name || initModel.name.value;
-        initModel.config.value = this.model.config || initModel.config.value;
-
+        initModel.title = this.model.title || 'Initiate Network';
+        initModel.jenkins.value = this.model.jenkins;
+        initModel.user.value = this.model.user;
+        initModel.token.value = this.model.token;
+        initModel.name.value = this.model.name;
+        initModel.config.value = this.model.config;
+        initModel.clusterStatus = this.model.clusterStatus;
+        initModel.clusterOperation = this.model.clusterOperation;
         this.model = this.setModel(JSON.parse(JSON.stringify(initModel)))
+        this.model.disableAll = this.model.clusterStatus === 'Installed' || this.model.clusterStatus === 'Pending'
 
-        this._attachHandlerInstall();
+        this._attachHandlerUpdateNetwork();
 
         this.on('openFeedback', (evt) => {
             this.feedbackEmitter = evt.detail;
         });
     }
 
-    _attachHandlerInstall() {
-        this.on('cls:install', (event) => {
+    _attachHandlerUpdateNetwork() {
+        this.on('cls:update', (event) => {
             if (this.__displayErrorMessages(event)) {
                 return;
             }
@@ -74,7 +64,8 @@ export default class ClusterCreateFirstStepModal extends ModalController {
                     user: this.model.user.value,
                     token: this.model.token.value,
                     config: this.model.config.value,
-                    clusteroperation: this.model.clusteroperation
+                    clusterOperation: this.model.clusterOperation,
+                    clusterStatus: this.model.clusterStatus
                 }
             }
             this._finishProcess(event, toReturnObject)

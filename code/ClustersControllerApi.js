@@ -30,8 +30,19 @@ export default class ClustersControllerApi {
         this.makeRequest('PUT', this.CLUSTER_COMMAND_PATH, clusterDetails, callback);
     }
 
-    getTestReport(callback) {
-
+    getTestReport(jenkinsPipeline, buildNo,artefactName, clusterDetails,callback) {
+        const data = {
+            command: 'jenkinsArtefact',
+            buildNo: buildNo,
+            jenkinsPipeline: jenkinsPipeline,
+            artefactName: artefactName,
+            jenkinsData: {
+                user: clusterDetails.user,
+                token: clusterDetails.token,
+                jenkins: clusterDetails.jenkins,
+            }
+        }
+        this.commandCluster(data, callback);
     }
 
     getPipelineLog(jenkinsPipeline, buildNo, clusterDetails, callback){
@@ -68,21 +79,30 @@ export default class ClustersControllerApi {
         let protocolInit = opendsu.loadAPI('http');
         protocolInit.fetch(this.serverEndpoint + path + "#x-blockchain-domain-request", options)
             .then(response => {
-                response.json()
-                    .then((data) => {
-                        console.log('[ClusterApiCall][Response]', method, path, response.status, response.statusCode, data);
-                        if (!response.ok || response.status != 201) {
-                            return callback(response);
-                        }
-                        callback(undefined, data);
-                    })
-                    .catch(error => {
-                        return callback(error);
-                    });
+                console.log('[ClusterApiCall][Response]', method, path, response.status, response.statusCode);
+                if (!response.ok || [200,201].indexOf(response.status) === -1) {
+                    return callback(response);
+                }
+
+                for(let entry of response.headers.entries()) {
+                    if (entry[0] === 'content-type' && entry[1] === 'application/raw')
+                    {
+                        console.log('Received raw response');
+                        return response.text();
+                    }
+                }
+                //fallback to default json
+                console.log('Received json response');
+                return response.json();
+            })
+            .then((data) => {
+              // console.log('Received data from ControlContainer: ',data);
+                callback(undefined, data);
             })
             .catch(error => {
                 return callback(error);
             })
+
     }
 }
 

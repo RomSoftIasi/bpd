@@ -46,7 +46,8 @@ export default class ClusterManageModal extends ModalController {
         let log;
         if (this.model.clusterInstallationInfo)
         {
-            JSON.parse(this.model.clusterInstallationInfo.pipelines).map(el => builds.push(
+            const pipelines = JSON.parse(this.model.clusterInstallationInfo.pipelines)
+            pipelines.map(el => builds.push(
                 {
                     buildNo: el.buildNo,
                     pipeline: el.name
@@ -84,51 +85,14 @@ export default class ClusterManageModal extends ModalController {
             getLogs(cElem.pipeline, cElem.buildNo);
         }
 
+        //this.quickTest();
 
-        /*const buildNo = 32
-        const jenkinsPipeline = 'gov-tests';
-
-        this.ClusterControllerApi.getPipelineLog(jenkinsPipeline, buildNo, this.model, (err, data) => {
-            if (err)
-            {
-                log = 'Failed to retrieve logs';
-                console.log(err);
-            } else {
-                log = data.message;
-            }
-            this.model.logs.value = log;
-        })*/
-       /*
-        this.ClusterControllerApi.getTestReport((err, result) => {
-            if (err){
-                return console.log(err);
-            }
-            let myWindow = window.open("", "_self");
-            myWindow.document.write(result);
-        })*/
-
-        /*setTimeout(() => {
-            this.model.disableAll = false;
-        }, 4500);*/
-        /*
-        this.ClusterControllerApi.listJenkinsPipelines(this.model.jenkins, this.model.user, this.model.token,(err, data) => {
-            if (err) {
-                console.log(err);
-                return;
-            }
-            console.log("Pipelines", data);
-            this.model.name.options = data.map(cluster => {
-                return {
-                    label: cluster.name,
-                    value: cluster.name
-                }
-            });
-        })*/
 
         this._attachHandlerMonitoringCluster();
         this._attachHandlerDeleteCluster();
         this._attachHandlerGovernanceCluster();
         this._attachHandlerInstallCluster();
+        this._attachHandlerCICluster();
         this._attachEventEmmiter();
     }
 
@@ -201,6 +165,7 @@ export default class ClusterManageModal extends ModalController {
         });
     }
 
+
     _attachHandlerDeleteCluster() {
         this.on('cls:delete', (event) => {
             this._finishProcess(event,
@@ -210,6 +175,11 @@ export default class ClusterManageModal extends ModalController {
         });
     }
 
+    _attachHandlerCICluster() {
+        this.on('cls:continuous-integration', (event) => {
+           this.showTestReport();
+        });
+    }
     _emitFeedback(event, message, alertType) {
         event.preventDefault();
         event.stopImmediatePropagation();
@@ -228,4 +198,52 @@ export default class ClusterManageModal extends ModalController {
         event.stopImmediatePropagation();
         this.responseCallback(undefined, response);
     };
+
+/*
+    quickTest(){
+        this.ClusterControllerApi.getTestReport('gov-tests', 51,'privatesky/testReport.html', this.model,(err, htmlContent) => {
+            if (err)
+            {
+                return console.log(err);
+            }
+
+            //const innerHtml = Buffer.from(htmlContent, 'base64').toString('ascii');
+            let myWindow = window.open("", "MsgWindow", "width=800,height=600");
+            myWindow.document.write(htmlContent);
+        })
+    }
+*/
+
+    showTestReport(){
+        let artefacts = [];
+        if (this.model.clusterInstallationInfo){
+            console.log('Gather artefacts ...')
+            const pipelines = JSON.parse(this.model.clusterInstallationInfo.pipelines)
+            console.log(pipelines);
+            pipelines.map(el =>{
+                console.log(el);
+                if (el.artifacts && el.artifacts.length > 0)
+                {
+                    el.artifacts.map(art => artefacts.push({
+                        buildNo: el.buildNo,
+                        jenkinsPipeline: el.name,
+                        artefactName: art.relativePath
+                    }))
+                }
+            })
+            console.log(artefacts);
+            if (artefacts.length === 0){
+                return;
+            }
+            const artefact = artefacts[0];
+            this.ClusterControllerApi.getTestReport(artefact.jenkinsPipeline, artefact.buildNo,artefact.artefactName, this.model,(err, htmlContent) => {
+                if (err)
+                {
+                    return console.log(err);
+                }
+                let myWindow = window.open("", "MsgWindow", "width=800,height=600");
+                myWindow.document.write(htmlContent);
+            })
+        }
+    }
 }

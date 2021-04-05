@@ -78,6 +78,8 @@ export default class ClusterService {
     updateCluster(orgUid, data, callback) {
         this.DSUStorage.setObject(this._getClusterPath(orgUid, data.uid), data, (err) => {
             if (err) {
+                console.log(err);
+                console.log('Failed to update data :', data);
                 callback(err, undefined);
                 return;
             }
@@ -102,5 +104,29 @@ export default class ClusterService {
 
     _getClusterPath(organizationSSI, clusterSSI) {
         return this._getClustersPath(organizationSSI) + '/' + clusterSSI + '/data.json';
+    }
+
+    getClusterUIStatus(clusterStatus)
+    {
+        let clusterInfo;
+        switch(clusterStatus) {
+            case "Pending" :
+                clusterInfo = "Blockchain Network installation pending ...";
+                break;
+            case "Installed" :
+                clusterInfo = "Blockchain Network installed successfully.";
+                break;
+            case "Fail" :
+                clusterInfo = "Blockchain Network failed to install.";
+                break;
+            case "None" :
+                clusterInfo = "Blockchain Network is ready to install.";
+                break;
+            default:
+                clusterInfo = "Blockchain Network is ready to install.";
+                break;
+        }
+
+        return clusterInfo;
     }
 }

@@ -29,6 +29,26 @@ export default class ClustersController extends ContainerController {
                 return;
             }
             this.model.clusters = data.clusters;
+            this.model.clusters.map(el => el.nameWithStatus = this.getClusterNameWithStatus(el));
+            /*
+            this.model.clusters.forEach(el => {
+                el.clusterStatus = 'Installed';
+                const clusterIndex = this.model.clusters.findIndex((cluster) => cluster.uid === el.uid);
+                this._saveClusterInfo(this.model.organization.uid,el,clusterIndex,(err, data)=>{
+                  if (err) {
+                      return console.log('_saveClusterInfo error: ',err, el);
+                  }
+                  console.log('_saveClusterInfo done :',data);
+                });
+            })
+            */
+
+            this.model.clusters.forEach(cluster => {
+                if (cluster.clusterStatus === 'Pending')
+                {
+                    this._reconnectAndWaitForClusterInstallationToFinish(cluster);
+                }
+            })
         })
 
         this._attachHandlerInitiateNetworkOnCluster();
@@ -39,7 +59,9 @@ export default class ClustersController extends ContainerController {
         this._attachHandlerMonitoringCluster();
         this._attachEventEmmiter();
     }
-
+    getClusterNameWithStatus(clusterModel){
+        return clusterModel.name +' - '+ this.ClusterService.getClusterUIStatus(clusterModel.clusterStatus)
+    }
     _attachEventEmmiter() {
         this.on('openFeedback', (evt) => {
             this.feedbackEmitter = evt.detail;
@@ -77,6 +99,7 @@ export default class ClustersController extends ContainerController {
                         console.log(err);
                         return;
                     }
+                    updatedCluster.nameWithStatus = this.getClusterNameWithStatus(updatedCluster);
                     this.model.clusters.push(updatedCluster);
                 });
             })
@@ -134,6 +157,7 @@ export default class ClustersController extends ContainerController {
                         if (err) {
                             return console.log("Failed to save cluster details!");
                         }
+                        clusterData.nameWithStatus = this.getClusterNameWithStatus(clusterData);
                         return;
                     })
                 })
@@ -183,21 +207,24 @@ export default class ClustersController extends ContainerController {
                             if (err) {
                                 return console.log("Failed to save cluster details!");
                             }
-                            this._installCluster(response, (err, data) => {
+                            response.nameWithStatus = this.getClusterNameWithStatus(response);
+                            this._initiateAndWaitToInstallCluster(response, (err, data) => {
                                 if (err) {
                                     response.clusterStatus = 'Fail';
                                     response.clusterInstallationInfo = err;
                                     console.log(e, "Failed to install cluster!");
                                 }
                                 else {
-                                    console.log("Cluster installation was successfully!");
+                                    console.log("Cluster installation was Initiated!");
                                     response.clusterStatus = 'Installed';
                                     response.clusterInstallationInfo = data;
                                 }
+                                response.nameWithStatus = this.getClusterNameWithStatus(response);
                                 this._saveClusterInfo(this.model.organization.uid, response, clusterIndex, (err) => {
                                     if (err) {
                                         return console.log("Failed to save cluster details!");
                                     }
+                                    response.nameWithStatus = this.getClusterNameWithStatus(response);
                                 })
                             })
                         })
@@ -206,6 +233,7 @@ export default class ClustersController extends ContainerController {
                             if (err) {
                                 return console.log("Failed to save cluster details!");
                             }
+                            response.nameWithStatus = this.getClusterNameWithStatus(response);
                             return;
                         })
                     }
@@ -226,9 +254,53 @@ export default class ClustersController extends ContainerController {
         });
     }
 
-    _installCluster(clusterDetails, callback) {
+    _reconnectAndWaitForClusterInstallationToFinish(clusterDetails){
+        const clusterIndex = this.model.clusters.findIndex((cluster) => cluster.uid === clusterDetails.uid);
+        this._waitForClusterInstallationToFinish(clusterDetails.name, (err, data) => {
+            if (err) {
+                clusterDetails.clusterStatus = 'Fail';
+                clusterDetails.clusterInstallationInfo = err;
+                console.log(e, "Failed to install cluster!");
+            }
+            else {
+                console.log("Cluster installation was Initiated!");
+                clusterDetails.clusterStatus = 'Installed';
+                clusterDetails.clusterInstallationInfo = data;
+            }
+            clusterDetails.nameWithStatus = this.getClusterNameWithStatus(clusterDetails);
+            this._saveClusterInfo(this.model.organization.uid, clusterDetails, clusterIndex, (err) => {
+                if (err) {
+                    return console.log("Failed to save cluster details!");
+                }
+                clusterDetails.nameWithStatus = this.getClusterNameWithStatus(clusterDetails);
+            })
+        })
+    }
+
+    _initiateAndWaitToInstallCluster(clusterDetails, callback)
+    {
+        //initiate cluster installation and check from time to time to check if the installation is done
+
+        this._initiateInstallCluster(clusterDetails, (err, data) => {
+            if (err){
+                return callback(err, undefined);
+            }
+            this._waitForClusterInstallationToFinish(clusterDetails.name, (err, data) => {
+                if (err){
+                    return callback(err, undefined);
+                }
+                return callback(undefined, data);
+            })
+        })
+    }
+
+    _waitForClusterInstallationToFinish(blockchainNetworkName, callback){
+        this.ClusterControllerApi.loopUntilClusterIsInstalled(blockchainNetworkName, callback);
+    }
+
+    _initiateInstallCluster(clusterDetails, callback) {
         let installClusterInfo = {
-            networkName: clusterDetails.name,
+            blockchainNetwork: clusterDetails.name,
             user: clusterDetails.user,
             token: clusterDetails.token,
             jenkins: clusterDetails.jenkins,
@@ -239,7 +311,7 @@ export default class ClustersController extends ContainerController {
         }
         console.log(installClusterInfo);
         console.log(clusterDetails);
-        this.ClusterControllerApi.deployCluster(installClusterInfo, (err, data) => {
+        this.ClusterControllerApi.startDeployCluster(installClusterInfo, (err, data) => {
             if (err) {
                 console.log(err);
                 return callback(err);

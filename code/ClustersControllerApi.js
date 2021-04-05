@@ -6,6 +6,7 @@ export default class ClustersControllerApi {
     CLUSTER_DEPLOY_PATH = `${this.CLUSTER_PATH}/deploy`;
     CLUSTER_COMMAND_PATH = `${this.CLUSTER_PATH}/command`;
     CLUSTER_START_PATH = `${this.CLUSTER_PATH}/start`;
+    CLUSTER_STATUS_PATH = `${this.CLUSTER_PATH}/status`;
 
     constructor() {
         let SERVER_ENDPOINT = window.location.origin;
@@ -18,7 +19,29 @@ export default class ClustersControllerApi {
         this.apiPort = endpointURL.port;
     }
 
-    deployCluster(clusterDetails, callback) {
+    loopUntilClusterIsInstalled(blockchainNetworkName, callback){
+        const checkStatus = function (clusterApi, blockchainNetworkName, callback){
+            clusterApi.makeRequest('GET',clusterApi.CLUSTER_STATUS_PATH+'/'+blockchainNetworkName, {},(err, data) =>{
+                if (err) {
+                    return callback(err,undefined);
+                }
+                if (data.status && data.status === 'Pending'){
+                    //loop
+                    console.log('Check cluster status', blockchainNetworkName);
+                    setTimeout(() => checkStatus(clusterApi,blockchainNetworkName, callback),60*1000);
+
+                } else {
+                    //got result
+                    console.log('Cluster status check finished : ', blockchainNetworkName, data);
+                    return callback (undefined, data);
+                }
+            })
+        }
+
+        checkStatus(this, blockchainNetworkName, callback);
+    }
+
+    startDeployCluster(clusterDetails, callback) {
         this.makeRequest('POST', this.CLUSTER_DEPLOY_PATH, clusterDetails, callback);
     }
 
@@ -80,7 +103,7 @@ export default class ClustersControllerApi {
         protocolInit.fetch(this.serverEndpoint + path + "#x-blockchain-domain-request", options)
             .then(response => {
                 console.log('[ClusterApiCall][Response]', method, path, response.status, response.statusCode);
-                if (!response.ok || [200,201].indexOf(response.status) === -1) {
+                if (!response.ok || [200,201,202].indexOf(response.status) === -1) {
                     return callback(response);
                 }
 

@@ -16,8 +16,7 @@ const initModel = {
         name: 'jenkins',
         label: 'Jenkins',
         required: true,
-        placeholder: 'http://jenkins/CI/Server/URL',
-        value: 'http://jenkins/CI/Server/URL'
+        placeholder: 'http://jenkins/CI/Server/URL'
     },
     user: {
         name: 'user',

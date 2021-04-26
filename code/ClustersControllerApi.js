@@ -1,5 +1,8 @@
 const opendsu = require("opendsu");
 
+import ClusterInstallationQueueService from "./ClusterInstallationQueueService.js";
+
+
 export default class ClustersControllerApi {
 
     CLUSTER_PATH = "controlContainer";
@@ -20,9 +23,22 @@ export default class ClustersControllerApi {
     }
 
     loopUntilClusterIsInstalled(blockchainNetworkName, callback){
+
+        if (ClusterInstallationQueueService.canAdd(blockchainNetworkName))
+        {
+            ClusterInstallationQueueService.add(blockchainNetworkName);
+        }
+        else {
+            console.log('cluster already in queue ', blockchainNetworkName);
+            //status is already running
+            return;
+        }
+        console.log('loop for ', blockchainNetworkName);
+
         const checkStatus = function (clusterApi, blockchainNetworkName, callback){
             clusterApi.makeRequest('GET',clusterApi.CLUSTER_STATUS_PATH+'/'+blockchainNetworkName, {},(err, data) =>{
                 if (err) {
+                    ClusterInstallationQueueService.evict(blockchainNetworkName);
                     return callback(err,undefined);
                 }
                 if (data.status && data.status === 'Pending'){
@@ -33,6 +49,7 @@ export default class ClustersControllerApi {
                 } else {
                     //got result
                     console.log('Cluster status check finished : ', blockchainNetworkName, data);
+                    ClusterInstallationQueueService.evict(blockchainNetworkName);
                     return callback (undefined, data);
                 }
             })

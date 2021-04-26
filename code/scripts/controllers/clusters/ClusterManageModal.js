@@ -35,11 +35,11 @@ export default class ClusterManageModal extends ModalController {
         }
         this.model.clusterStatusInfo = "Cluster status : "+clusterInfo;
         this.model.installNetworkVisible = this.model.clusterStatus === 'None' || this.model.clusterStatus === 'Pending';
-        this.model.removeNetworkVisible = this.model.clusterStatus === 'Installed';
+        this.model.removeNetworkVisible = this.model.clusterStatus === 'Installed' || this.model.clusterStatus === 'Fail';
         this.model.updateNetworkVisible = this.model.clusterStatus === 'Installed';
         this.model.disableBlockchainName = true;
         this.model.disableAll = this.model.clusterStatus === 'Pending';
-        this.model.viewLogs = this.model.clusterStatus === 'Installed';
+        this.model.viewLogs = this.model.clusterStatus === 'Installed' || this.model.clusterStatus === 'Fail';
         this.model.disableLogs = true;
         this.model.logs.value = 'Loading blockchain network logs ....';
         const builds = [];

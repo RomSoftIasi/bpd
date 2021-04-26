@@ -6,6 +6,7 @@ import ClusterControllerApi from "../../../ClustersControllerApi.js";
 export default class ClustersController extends ContainerController {
 
     constructor(element, history) {
+        console.log('ClustersController ctor');
         super(element, history);
 
         this.OrganisationService = new OrganizationService(this.DSUStorage);
@@ -215,8 +216,13 @@ export default class ClustersController extends ContainerController {
                                     console.log(e, "Failed to install cluster!");
                                 }
                                 else {
-                                    console.log("Cluster installation was Initiated!");
-                                    response.clusterStatus = 'Installed';
+                                    console.log("Cluster installation was Finished!");
+                                    if (data.pipelinesStatus === 'ERROR')
+                                    {
+                                        response.clusterStatus = 'Fail';
+                                    } else {
+                                        response.clusterStatus = 'Installed';
+                                    }
                                     response.clusterInstallationInfo = data;
                                 }
                                 response.nameWithStatus = this.getClusterNameWithStatus(response);
@@ -263,8 +269,13 @@ export default class ClustersController extends ContainerController {
                 console.log(e, "Failed to install cluster!");
             }
             else {
-                console.log("Cluster installation was Initiated!");
-                clusterDetails.clusterStatus = 'Installed';
+                console.log("Cluster installation was Finished!");
+                if (data.pipelinesStatus === 'ERROR')
+                {
+                    clusterDetails.clusterStatus = 'Fail';
+                } else {
+                    clusterDetails.clusterStatus = 'Installed';
+                }
                 clusterDetails.clusterInstallationInfo = data;
             }
             clusterDetails.nameWithStatus = this.getClusterNameWithStatus(clusterDetails);

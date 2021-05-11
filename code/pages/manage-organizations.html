@@ -1,17 +1,17 @@
 <psk-page title="Blockchain Platforms Deployment">
-    <psk-container controller-name="organizations/OrganizationsController">
+    <webc-container controller="organizations/OrganizationsController">
 
         <psk-card class="bpd-header">
-            <psk-label label="Sign out"/>
+            <psk-label label="Sign out" />
         </psk-card>
         <psk-card class="bpd-dashboard">
 
-            <psk-label class="bpd-dashboard-title" label="Dashboard"/>
+            <psk-label class="bpd-dashboard-title" label="Dashboard" />
             <div class="bpd-create-organization">
                 <psk-button class="bpd-create-organization-button" event-name="org:create">
                     <psk-icon icon="plus" color="rgb(255, 255, 255)"></psk-icon>
                 </psk-button>
-                <psk-label class="bpd-create-organization-label" label="Create new organization"/>
+                <psk-label class="bpd-create-organization-label" label="Create new organization" />
             </div>
             <div class="bpd-organization-elements">
                 <psk-for-each data-view-model="organizations">
@@ -29,12 +29,12 @@
                                 <psk-icon icon="users" color="rgb(255, 255, 255)"></psk-icon>
                             </div>
                         </psk-card>
-                        <psk-label class="bpd-organization-card-label" label="@name"/>
+                        <psk-label class="bpd-organization-card-label" label="@name" />
                     </psk-card>
 
                 </psk-for-each>
             </div>
         </psk-card>
 
-    </psk-container>
+    </webc-container>
 </psk-page>

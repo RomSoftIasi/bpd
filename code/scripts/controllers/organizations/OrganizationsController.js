@@ -1,9 +1,9 @@
-import ContainerController from '../../../cardinal/controllers/base-controllers/ContainerController.js';
+const { WebcController } = WebCardinal.controllers;
 import OrganizationService from "../services/OrganizationService.js";
 import ClusterControllerApi from "../../../ClustersControllerApi.js";
 import deleteViewModel from "../../models/deleteViewModel.js";
 
-export default class OrganizationsController extends ContainerController {
+export default class OrganizationsController extends WebcController {
 
     constructor(element, history) {
         super(element, history);
@@ -155,7 +155,3 @@ export default class OrganizationsController extends ContainerController {
         });
     }
 }
-
-
-
-

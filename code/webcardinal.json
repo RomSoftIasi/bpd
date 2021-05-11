@@ -1,0 +1,55 @@
+{
+    "theme": "blue-fluorite-theme",
+    "pages": [{
+            "name": "Manage Organizations",
+            "path": "/manage-organizations",
+            "icon": "fa-home",
+            "tag": "manage-organizations",
+            "src": "manage-organizations.html"
+        },
+        {
+            "name": "Manage Clusters",
+            "path": "/cluster/manage-clusters",
+            "icon": "fa-cog",
+            "tag": "view-clusters",
+            "src": "clusters/manage-clusters.html",
+            "indexed": false
+        },
+        {
+            "name": "Governance",
+            "path": "/organizations/governance",
+            "icon": "fa-cog",
+            "tag": "governance",
+            "src": "organizations/governance.html",
+            "indexed": false
+        },
+        {
+            "name": "Voting",
+            "path": "/organizations/voting",
+            "icon": "fa-cog",
+            "tag": "voting",
+            "src": "organizations/voting.html",
+            "indexed": false
+        },
+        {
+            "name": "Monitoring",
+            "path": "/organizations/monitoring",
+            "icon": "fa-cog",
+            "tag": "monitoring",
+            "src": "organizations/monitoring.html",
+            "indexed": false
+        },
+        {
+            "name": "Ssapp Review",
+            "path": "/organizations/ssapp-review",
+            "icon": "fa-cog",
+            "tag": "ssapp-review",
+            "src": "organizations/ssapp-review.html",
+            "indexed": false
+        }
+    ],
+    "pagesFallback": {
+        "name": "404",
+        "src": "./manage-organizations.html"
+    }
+}

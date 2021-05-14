@@ -1,7 +1,9 @@
-import ModalController from '../../../cardinal/controllers/base-controllers/ModalController.js';
+const {WebcController} = WebCardinal.controllers;
 
-export default class ShareQRCodeController extends ModalController {
-    constructor(element, history) {
-        super(element, history);
+export default class ShareQRCodeController extends WebcController {
+    constructor(...props) {
+        super(...props);
+
+        this.model.title = `QR Code for ${this.model.name}`;
     }
 }

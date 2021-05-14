@@ -1,0 +1,50 @@
+.bpd-organization-card {
+    display: block;
+    margin-right: 30px;
+    margin-bottom: 20px;
+}
+
+.bpd-organization-box {
+    display: flex;
+    flex-direction: column;
+    padding: 0.25rem 0;
+}
+
+.bpd-organization-box,
+.bpd-organization-line {
+    background-color: #007bff;
+    border-radius: 10px;
+}
+
+.bpd-organization-box,
+.bpd-buttons-row .bpd-organization-card .bpd-organization-card-content {
+    width: 180px;
+    height: 120px;
+}
+
+.bpd-buttons-row.bpd-wide-cards .bpd-organization-card .bpd-organization-card-content {
+    width: 320px;
+    height: 120px;
+}
+
+.bpd-organization-card-header {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: -0.5rem;
+}
+
+.bpd-organization-card-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.bpd-organization-card-content psk-icon {
+    font-size: 60px;
+}
+
+.bpd-organization-card label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

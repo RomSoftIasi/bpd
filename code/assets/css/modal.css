@@ -1,0 +1,11 @@
+@import url("./main.css");
+
+.bpd-modal-title {
+    color: black !important;
+    font-size: 22px;
+    font-weight: bold;
+}
+
+.bpd-modal-content {
+    padding: 1rem;
+}

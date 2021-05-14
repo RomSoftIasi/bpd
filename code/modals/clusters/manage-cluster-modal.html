@@ -1,0 +1,67 @@
+<psk-container controller-name="clusters/ClusterManageModal">
+    <psk-modal id="manageClusterModal" class="bpd-modal" opened>
+
+        <psk-label slot="title" class="bpd-modal-title" label="@title"></psk-label>
+
+        <div class="content">
+            <psk-text-input class="bpd-input" view-model="@name" read-only="@disableBlockchainName"></psk-text-input>
+            <psk-label class="info" label="@clusterStatusInfo"></psk-label>
+            <psk-condition condition="@viewLogs">
+
+            <div class="content" style="width: 100%" slot="condition-true">
+                <psk-textarea class="bpd-log-text-area" view-model="logs" read-only="@disableLogs"></psk-textarea>
+            </div>
+
+            </psk-condition>
+
+            <psk-card class="bpd-translucent-buttons">
+                <psk-layout template-columns="1fr 1fr">
+                    <psk-button class="bpd-qr-code-with-text" event-name="cls:governance" event-data="@id"  disabled="@disableAll">
+                        Governance
+                    </psk-button>
+                    <psk-button class="bpd-qr-code-with-text" event-name="cls:monitoring" event-data="@id"  disabled="@disableAll">
+                        Monitoring
+                    </psk-button>
+                </psk-layout>
+
+                <psk-layout template-columns="1fr 1fr">
+                    <psk-button class="bpd-qr-code-with-text" event-name="cls:continuous-integration" event-data="@id"  disabled="@disableAll">
+                        Continuous Integration
+                    </psk-button>
+                    <psk-button class="bpd-qr-code-with-text" event-name="cls:performance-testing" event-data="@id"  disabled="@disableAll">
+                        Performance Testing
+                    </psk-button>
+                </psk-layout>
+            </psk-card>
+        </div>
+
+        <psk-card class="bpd-row bpd-creation-row bpd-three-buttons-row">
+
+            <psk-condition condition="@removeNetworkVisible">
+                <psk-button event-name="cls:cleancluster">
+                    <psk-icon icon="minus" color="rgb(255, 255, 255)"></psk-icon>
+                    Remove network
+                </psk-button>
+            </psk-condition>
+
+            <psk-condition condition="@updateNetworkVisible">
+                <psk-button event-name="cls:updatecluster">
+                    <psk-icon icon="cog" color="rgb(255, 255, 255)"></psk-icon>
+                    Update network
+                </psk-button>
+            </psk-condition>
+
+            <psk-condition condition="@installNetworkVisible">
+                <psk-button event-name="cls:installcluster"  disabled="@disableAll">
+                    <psk-icon icon="anchor" color="rgb(255, 255, 255)"></psk-icon>
+                    Install network
+                </psk-button>
+            </psk-condition>
+
+        </psk-card>
+        <psk-list-feedbacks>
+        </psk-list-feedbacks>
+
+    </psk-modal>
+
+</psk-container>

@@ -1,0 +1,21 @@
+<link href="/assets/css/modal.css" rel="stylesheet">
+
+<h2 clas="bpd-modal-title" slot="header">Edit organization</h2>
+
+<div class="bpd-modal-content">
+    <div class="form-group flex-column">
+        <label>{{@name.label}}</label>
+        <input class="form-control bpd-input" data-view-model="@name"/>
+    </div>
+
+    <div class="form-group flex-column">
+        <label>{{@jenkinsURL.label}}</label>
+        <input class="form-control bpd-input" data-view-model="@jenkinsURL"/>
+    </div>
+</div>
+
+<psk-list-feedbacks messages-to-display="5" time-alive="3000"></psk-list-feedbacks>
+
+<div class="bpd-row bpd-creation-row" slot="footer">
+    <button class="btn btn-primary" data-tag="org:update">Create</button>
+</div>

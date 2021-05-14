@@ -1,36 +1,40 @@
-import ModalController from "../../../cardinal/controllers/base-controllers/ModalController.js";
+const {WebcController} = WebCardinal.controllers;
 import OrganizationService from "../services/OrganizationService.js";
 
+export default class DeleteOrganizationController extends WebcController {
+    constructor(...props) {
+        super(...props);
 
-export default class DeleteOrganizationController extends ModalController {
-    constructor(element, history) {
-        super(element, history);
-        this._initListeners();
         this.OrganisationService = new OrganizationService(this.DSUStorage);
+
+        console.log(this.model);
+
+        this.handleDeleteConfirmed();
+        this.handleDeleteCanceled();
     }
 
-    _initListeners() {
-        this.on('delete', this._handleDeleteModalActions.bind(this));
-    };
+    handleDeleteConfirmed() {
+        this.onTagClick('delete:confirmed', (model, target, event) =>{
+            event.preventDefault();
+            event.stopImmediatePropagation();
 
-    _handleDeleteModalActions(event) {
-        event.stopImmediatePropagation();
-
-        if (event.data === 'confirm-delete') {
-            const uid = this.model.selectedItemName;
-            this.OrganisationService.unmountOrganization(uid, (err, result) => {
+            this.OrganisationService.unmountOrganization(this.model.uid, (err, result) => {
                 if (err) {
-                    console.log(err);
-                    this.responseCallback();
-                    return;
+                    return this.send("closed", err);
                 }
-                console.log('Removed organization with @uid', uid);
-                this.responseCallback(undefined, {
-                    success: true
-                });
+
+                console.log('Removed organization with @uid', this.model.uid);
+                this.send("confirmed", result);
             });
-        } else {
-            this.responseCallback();
-        }
+        });
+    }
+
+    handleDeleteCanceled() {
+        this.onTagClick('delete:canceled', (model, target, event) => {
+            event.preventDefault();
+            event.stopImmediatePropagation();
+
+            this.send("closed", undefined);
+        });
     }
 }

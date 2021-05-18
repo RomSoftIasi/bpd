@@ -131,6 +131,7 @@ export default class OrganizationsController extends WebcController {
             event.preventDefault();
             event.stopImmediatePropagation();
 
+            model.description = 'Scan the code above to get your organization data';
             const modalConfiguration = {
                 model: model,
                 controller: 'ShareQRCodeController',

@@ -1,17 +1,31 @@
-<psk-label slot="title" class="bpd-modal-title" label="@title"></psk-label>
+<h2 class="bpd-modal-title" slot="header">Initiate Network</h2>
 
-<div class="content">
-    <psk-text-input class="bpd-input" view-model="@name"  ></psk-text-input>
-    <psk-text-input class="bpd-input" view-model="@jenkins"  ></psk-text-input>
-    <psk-text-input class="bpd-input" view-model="@user" ></psk-text-input>
-    <psk-text-input class="bpd-input" view-model="@token"  ></psk-text-input>
-    <div class="content" style="width: 100%">
-        <psk-textarea class="bpd-text-area" view-model="config"></psk-textarea>
+<div class="bpd-modal-content">
+    <div class="form-group flex-column">
+        <label>{{@name.label}}</label>
+        <input class="form-control bpd-input" data-view-model="@name"/>
+    </div>
+    <div class="form-group flex-column">
+        <label>{{@jenkins.label}}</label>
+        <input class="form-control bpd-input" data-view-model="@jenkins"/>
+    </div>
+    <div class="form-group flex-column">
+        <label>{{@user.label}}</label>
+        <input class="form-control bpd-input" data-view-model="@user"/>
+    </div>
+    <div class="form-group flex-column">
+        <label>{{@token.label}}</label>
+        <input class="form-control bpd-input" data-view-model="@token"/>
+    </div>
+
+    <div class="form-group flex-column">
+        <label>{{@config.label}}</label>
+        <textarea class="form-control bpd-text-area" data-view-model="@config"></textarea>
     </div>
 </div>
 
-<psk-card class="bpd-row bpd-creation-row">
-    <psk-button event-name="cls:save"  >Save Network</psk-button>
-</psk-card>
+<div class="bpd-row bpd-creation-row" slot="footer">
+    <button class="btn btn-primary" data-tag="cls:save">Save Network</button>
+</div>
 
 <psk-list-feedbacks messages-to-display="5" time-alive="3000"></psk-list-feedbacks>

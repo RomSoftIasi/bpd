@@ -1,25 +1,20 @@
-<psk-page title="Monitoring">
-    <psk-container controller-name="organizations/MonitoringController">
+<webc-container controller="organizations/MonitoringController">
+    <link href="/assets/css/main.css" rel="stylesheet">
 
-        <psk-card class="bpd-header bpd-low-header">
-            <psk-label label="Sign out"/>
-        </psk-card>
+    <div class="bpd-header">
+        <label>Sign out</label>
+    </div>
 
-        <psk-card class="bpd-sub-header">
-            <div>
-                <psk-label label="@organization.name"/>
-            </div>
-            <div>
-                <psk-label label="@cluster.name"/>
-            </div>
-        </psk-card>
+    <psk-card class="bpd-sub-header">
+        <label>{{@organization.name}}</label>
+        <label>{{@cluster.name}}</label>
+    </psk-card>
 
-        <psk-card class="bpd-dashboard">
-            <psk-label class="bpd-dashboard-title" label="Monitoring"/>
-            <div class="bpd-buttons-row">
-                <psk-img src="../assets/images/monitoring_placeholder.png"></psk-img>
-            </div>
-        </psk-card>
+    <psk-card class="bpd-dashboard">
+        <label class="bpd-dashboard-title">Monitoring</label>
+        <div class="bpd-buttons-row">
+            <psk-img src="../assets/images/monitoring_placeholder.png"></psk-img>
+        </div>
+    </psk-card>
 
-    </psk-container>
-</psk-page>
+</webc-container>

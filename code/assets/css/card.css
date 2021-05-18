@@ -1,3 +1,8 @@
+.bpd-dashboard div.card-body,
+.bpd-sub-header div.card-body {
+    padding: 0;
+}
+
 .bpd-organization-card {
     display: block;
     margin-right: 30px;
@@ -16,6 +21,23 @@
     border-radius: 10px;
 }
 
+.bpd-organization-line {
+    width: 100%;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    padding: 0 20px;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.bpd-organization-line .bpd-hotspot-button {
+    width: 100%;
+    text-align: left;
+    padding: 0.25rem;
+}
+
 .bpd-organization-box,
 .bpd-buttons-row .bpd-organization-card .bpd-organization-card-content {
     width: 180px;
@@ -31,6 +53,11 @@
     display: flex;
     justify-content: flex-end;
     margin-bottom: -0.5rem;
+}
+
+.bpd-organization-line .bpd-hotspot-button label,
+.bpd-organization-line .bpd-organization-card-header {
+    margin: 0;
 }
 
 .bpd-organization-card-content {

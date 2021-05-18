@@ -9,3 +9,8 @@
 .bpd-modal-content {
     padding: 1rem;
 }
+
+.bpd-modal-content .code_canvas {
+    height: 200px;
+    margin: 1rem 0;
+}

@@ -1,37 +1,32 @@
-<psk-page title="Governance">
-    <psk-container controller-name="organizations/GovernanceController">
+<webc-container controller="organizations/GovernanceController">
+    <link href="/assets/css/main.css" rel="stylesheet">
 
-        <psk-card class="bpd-header">
-            <psk-label label="Sign out"/>
-        </psk-card>
+    <div class="bpd-header">
+        <label>Sign out</label>
+    </div>
 
-        <psk-card class="bpd-sub-header">
-            <div>
-                <psk-label label="@organization.name"/>
-            </div>
-            <div>
-                <psk-label label="@cluster.name"/>
-            </div>
-        </psk-card>
+    <psk-card class="bpd-sub-header">
+        <label>{{@organization.name}}</label>
+        <label>{{@cluster.name}}</label>
+    </psk-card>
 
-        <psk-card class="bpd-dashboard">
-            <psk-label class="bpd-dashboard-title" label="Governance"/>
-            <div class="bpd-buttons-row bpd-wide-cards">
-                <psk-button class="bpd-organization-card " event-name="gvn:contract-edit">
-                    <div class="bpd-organization-card-content">
-                        <psk-icon icon="pencil-square-o" color="rgb(255, 255, 255)"></psk-icon>
-                    </div>
-                    <psk-label class="bpd-organization-card-label" label="Smart Contract Edit"/>
-                </psk-button>
+    <psk-card class="bpd-dashboard">
+        <label class="bpd-dashboard-title">Governance</label>
+        <div class="bpd-buttons-row bpd-wide-cards">
+            <button class="btn btn-primary bpd-organization-card" data-tag="gvn:contract-edit">
+                <div class="bpd-organization-card-content">
+                    <psk-icon color="rgb(255, 255, 255)" icon="pencil-square-o"></psk-icon>
+                </div>
+                <label class="bpd-organization-card-label">Smart Contract Edit</label>
+            </button>
 
-                <psk-button class="bpd-organization-card" event-name="gvn:voting">
-                    <div class="bpd-organization-card-content">
-                        <psk-icon icon="users" color="rgb(255, 255, 255)"></psk-icon>
-                    </div>
-                    <psk-label class="bpd-organization-card-label" label="Voting"/>
-                </psk-button>
-            </div>
-        </psk-card>
+            <button class="btn btn-primary bpd-organization-card" data-tag="gvn:voting">
+                <div class="bpd-organization-card-content">
+                    <psk-icon color="rgb(255, 255, 255)" icon="users"></psk-icon>
+                </div>
+                <label class="bpd-organization-card-label">Voting</label>
+            </button>
+        </div>
+    </psk-card>
 
-    </psk-container>
-</psk-page>
+</webc-container>

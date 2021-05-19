@@ -219,26 +219,25 @@ export default class ClustersController extends WebcController {
             event.preventDefault();
             event.stopImmediatePropagation();
 
-            const clusterUid = e.data;
-            const clusterIndex = this.model.clusters.findIndex((cluster) => cluster.uid === clusterUid);
-            if (clusterIndex === -1) {
-                console.log('Cluster not found @uid', clusterUid, this.model.clusters);
-                return;
-            }
-
-            const clusterToEdit = this.model.clusters[clusterIndex];
+            const clusterIndex = this.model.clusters.findIndex((cluster) => cluster.uid === model.uid);
+            const clusterToEdit = JSON.parse(JSON.stringify(model));
             let toSendObject = {
                 organizationUid: this.model.organization.uid,
                 cluster: clusterToEdit
             };
 
-            this.showModal('manageClusterModal', toSendObject, (err, response) => {
-                if (err) {
-                    console.log(err);
-                    return;
-                }
+            const modalConfiguration = {
+                model: toSendObject,
+                controller: 'clusters/ClusterManageModal',
+                disableBackdropClosing: false,
+                disableFooter: true
+            };
+
+            this.showModalFromTemplate('clusters/manage-cluster-modal', (event) => {
+                const response = event.detail;
                 this.emitFeedback("Cluster installation was initiated ...", "alert-success");
                 console.log('install cluster data', response);
+
                 //todo : show spinner/loading stuff
                 if (response.delete) {
                     this.ClusterService.unmountCluster(this.model.organization.uid, clusterToEdit.uid, (err, result) => {
@@ -292,7 +291,7 @@ export default class ClustersController extends WebcController {
                         })
                     }
                 }
-            });
+            }, this.modalErrorHandler, modalConfiguration);
         });
     }
 

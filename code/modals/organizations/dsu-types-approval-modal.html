@@ -1,43 +1,38 @@
-<psk-container controller-name="organizations/DSUTypesApproveModal">
-    <psk-modal id="dsuTypesApproveModal" class="bpd-modal bpd-wide-modal" opened>
+<link href="/assets/css/modal.css" rel="stylesheet">
 
-        <psk-label slot="title" class="bpd-modal-title" label="@title"></psk-label>
+<h2 class="bpd-modal-title" slot="header">Manage DSU Types</h2>
 
-        <psk-card class="bpd-row">
-            <psk-for-each data-view-model="dsuTypes">
-                <div class="bpd-for-each-row">
-                    <psk-text-input view-model="name"></psk-text-input>
-                    <psk-text-input class="bpd-seed" view-model="seed"></psk-text-input>
+<div class="bpd-modal-content">
+    <div class="bpd-row" data-for="@dsuTypes">
+        <div class="bpd-for-each-row">
+            <input class="form-control" data-view-model="@name"/>
+            <input class="form-control bpd-seed" data-view-model="@seed"/>
 
-                    <psk-button event-name="dsu:review" event-data="@id.value"
-                                button-class="btn btn-sm btn-success" disabled="@reviewed">
-                        <psk-icon icon="wrench" color="rgb(255, 255, 255)"></psk-icon>
-                        Review
-                    </psk-button>
+            <button class="btn btn-sm btn-success" data-tag="dsu:review"
+                    disabled="@reviewed">
+                <psk-icon color="rgb(255, 255, 255)" icon="wrench"></psk-icon>
+                Review
+            </button>
 
-                    <psk-button event-name="dsu:open" event-data="@id.value"
-                                button-class="btn btn-sm btn-success" disabled="@reviewed">
-                        <psk-icon icon="eye" color="rgb(255, 255, 255)"></psk-icon>
-                        Open
-                    </psk-button>
+            <button class="btn btn-sm btn-success" data-tag="dsu:open"
+                    disabled="@reviewed" event-data="@id.value">
+                <psk-icon color="rgb(255, 255, 255)" icon="eye"></psk-icon>
+                Open
+            </button>
 
-                    <psk-button event-name="dsu:approve" event-data="@id.value"
-                                button-class="btn btn-sm btn-success" disabled="@approved">
-                        <psk-icon icon="check" color="rgb(255, 255, 255)"></psk-icon>
-                        Approve
-                    </psk-button>
-                </div>
-            </psk-for-each>
-        </psk-card>
+            <button class="btn btn-sm btn-success" data-tag="dsu:approve"
+                    disabled="@approved">
+                <psk-icon color="rgb(255, 255, 255)" icon="check"></psk-icon>
+                Approve
+            </button>
+        </div>
+    </div>
 
-        <psk-card class="bpd-row">
-            <psk-button label="Add DSU Type" event-name="dsu:add-dsuType-config"
-                        button-class="btn btn-info btn-sm"></psk-button>
-        </psk-card>
+    <div class="bpd-row d-flex justify-content-center">
+        <button class="btn btn-info btn-sm" data-tag="dsu:add-dsuType-config">Add DSU Type</button>
+    </div>
+</div>
 
-        <psk-card class="bpd-row bpd-creation-row">
-            <psk-button event-name="dsu:finish">Finish</psk-button>
-        </psk-card>
-
-    </psk-modal>
-</psk-container>
+<div class="bpd-row bpd-creation-row" slot="footer">
+    <button class="btn btn-primary" data-tag="dsu:finish">Finish</button>
+</div>

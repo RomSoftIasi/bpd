@@ -1,25 +1,15 @@
-import ModalController from '../../../cardinal/controllers/base-controllers/ModalController.js';
+const {WebcController} = WebCardinal.controllers;
 import ClusterControllerApi from "../../../ClustersControllerApi.js";
 
-const initModel = {
-    title: 'Manage Blockchain Network Deployment',
-    name: {
-        label: 'Blockchain name',
-        required: true,
-        options: []
-    }
+export default class ClusterManageModal extends WebcController {
+    constructor(...props) {
+        super(...props);
 
-}
-
-export default class ClusterManageModal extends ModalController {
-    constructor(element, history) {
-        super(element, history);
-
-        this.model = this.setModel(this._getParsedModel(this.model))
+        this.model = this.getParsedModel(this.model);
         this.ClusterControllerApi = new ClusterControllerApi();
-        console.log('Manage cluster ',this.model);
+        console.log('Manage cluster ', this.model);
         let clusterInfo;
-        switch(this.model.clusterStatus) {
+        switch (this.model.clusterStatus) {
             case "Pending" :
                 clusterInfo = "Blockchain Network installation pending ...";
                 break;
@@ -33,19 +23,16 @@ export default class ClusterManageModal extends ModalController {
                 clusterInfo = "Blockchain Network is ready to install.";
                 break;
         }
-        this.model.clusterStatusInfo = "Cluster status : "+clusterInfo;
+
+        this.model.clusterStatusInfo = "Cluster status : " + clusterInfo;
         this.model.installNetworkVisible = this.model.clusterStatus === 'None' || this.model.clusterStatus === 'Pending';
         this.model.removeNetworkVisible = this.model.clusterStatus === 'Installed' || this.model.clusterStatus === 'Fail';
         this.model.updateNetworkVisible = this.model.clusterStatus === 'Installed';
-        this.model.disableBlockchainName = true;
-        this.model.disableAll = this.model.clusterStatus === 'Pending';
+        this.model.disableAll.disabled = this.model.clusterStatus === 'Pending';
         this.model.viewLogs = this.model.clusterStatus === 'Installed' || this.model.clusterStatus === 'Fail';
-        this.model.disableLogs = true;
-        this.model.logs.value = 'Loading blockchain network logs ....';
         const builds = [];
         let log;
-        if (this.model.clusterInstallationInfo)
-        {
+        if (this.model.clusterInstallationInfo) {
             const pipelines = JSON.parse(this.model.clusterInstallationInfo.pipelines)
             pipelines.map(el => builds.push(
                 {
@@ -56,25 +43,21 @@ export default class ClusterManageModal extends ModalController {
             const getLogs = (jenkinsPipeline, buildNo) => {
                 this.ClusterControllerApi.getPipelineLog(jenkinsPipeline, buildNo, this.model, (err, data) => {
                     let pipeLog;
-                    if (err)
-                    {
+                    if (err) {
                         pipeLog = 'Failed to retrieve logs';
                         console.log(err);
                     } else {
                         pipeLog = data.message;
                     }
-                    if (!log)
-                    {
+                    if (!log) {
                         log = pipeLog;
                     } else {
                         log = log + '\n' + pipeLog;
                     }
-                    if (builds.length === 0)
-                    {
+                    if (builds.length === 0) {
                         this.model.logs.value = log;
-                        this.model.disableLogs = false;
-                    }
-                    else{
+                        this.model.logs.readonly = false;
+                    } else {
                         const cElem = builds.shift();
                         getLogs(cElem.pipeline, cElem.buildNo);
                     }
@@ -87,27 +70,33 @@ export default class ClusterManageModal extends ModalController {
 
         //this.quickTest();
 
-
-        this._attachHandlerMonitoringCluster();
-        this._attachHandlerDeleteCluster();
-        this._attachHandlerGovernanceCluster();
-        this._attachHandlerInstallCluster();
-        this._attachHandlerCICluster();
-        this._attachEventEmmiter();
+        this.attachHandlerMonitoringCluster();
+        this.attachHandlerDeleteCluster();
+        this.attachHandlerGovernanceCluster();
+        this.attachHandlerInstallCluster();
+        this.attachHandlerCICluster();
+        this.attachEventEmmiter();
     }
 
-
-    _getParsedModel(receivedModel) {
-        let model = JSON.parse(JSON.stringify(initModel));
+    getParsedModel(receivedModel) {
         let existingCluster = receivedModel.cluster;
-        model = {
-            organizationUid: receivedModel.organizationUid,
-            ...model,
-            clusterUid: existingCluster.uid,
+        let model = {
             name: {
-                ...model.name,
+                label: 'Blockchain name',
+                required: true,
+                options: [],
+                readonly: true,
                 value: existingCluster.name
             },
+            logs: {
+                value: 'Loading blockchain network logs ....',
+                readonly: true
+            },
+            disableAll: {
+                disabled: false
+            },
+            organizationUid: receivedModel.organizationUid,
+            clusterUid: existingCluster.uid,
             jenkins: existingCluster.jenkins,
             user: existingCluster.user,
             token: existingCluster.token,
@@ -115,16 +104,17 @@ export default class ClusterManageModal extends ModalController {
             clusterOperation: existingCluster.clusterOperation,
             config: existingCluster.config,
             clusterStatus: existingCluster.clusterStatus,
-            clusterInstallationInfo: existingCluster.clusterInstallationInfo,
-            logs :{
-                value: ''
-            }
-        }
+            clusterInstallationInfo: existingCluster.clusterInstallationInfo
+        };
+
         return model;
     }
 
-    _attachHandlerInstallCluster() {
-        this.on('cls:installcluster', (event) => {
+    attachHandlerInstallCluster() {
+        this.onTagClick('cls:installcluster', (model, target, event) => {
+            event.preventDefault();
+            event.stopImmediatePropagation();
+
             let toReturnObject = {
                 uid: this.model.clusterUid,
                 name: this.model.name.value,
@@ -136,94 +126,99 @@ export default class ClusterManageModal extends ModalController {
                 config: this.model.config,
                 clusterStatus: 'Pending',
                 clusterInstallationInfo: this.model.clusterInstallationInfo
-            }
-            this._emitFeedback(event, "Cluster installation was initiated ...", "alert-success");
+            };
+
+            this.emitFeedback("Cluster installation was initiated ...", "alert-success");
             setTimeout(() => {
-                this._finishProcess(event, toReturnObject)
+                this.send('confirmed', toReturnObject);
             }, 4500);
         });
     }
 
-    _attachHandlerMonitoringCluster() {
-        this.on('cls:monitoring', (event) => {
+    attachHandlerMonitoringCluster() {
+        this.onTagClick('cls:monitoring', (model, target, event) => {
+            event.preventDefault();
+            event.stopImmediatePropagation();
+
             let toSendObject = {
                 organizationUid: this.model.organizationUid,
                 clusterUid: this.model.clusterUid
             }
-            this.closeModal();
-            this.History.navigateToPageByTag('monitoring', toSendObject);
+
+            this.navigateToPageTag('monitoring', toSendObject);
         });
     }
 
-    _attachHandlerGovernanceCluster() {
-        this.on('cls:governance', (event) => {
+    attachHandlerGovernanceCluster() {
+        this.onTagClick('cls:governance', (model, target, event) => {
+            event.preventDefault();
+            event.stopImmediatePropagation();
+
             let toSendObject = {
                 organizationUid: this.model.organizationUid,
                 clusterUid: this.model.clusterUid
-            }
-            this.History.navigateToPageByTag('governance', toSendObject);
+            };
+
+            this.navigateToPageTag('governance', toSendObject);
         });
     }
 
+    attachHandlerDeleteCluster() {
+        this.on('cls:delete', (model, target, event) => {
+            event.preventDefault();
+            event.stopImmediatePropagation();
 
-    _attachHandlerDeleteCluster() {
-        this.on('cls:delete', (event) => {
-            this._finishProcess(event,
-                {
-                    delete: true
-                });
+            this.send('confirmed', {
+                delete: true
+            });
         });
     }
 
-    _attachHandlerCICluster() {
-        this.on('cls:continuous-integration', (event) => {
-           this.showTestReport();
+    attachHandlerCICluster() {
+        this.onTagClick('cls:continuous-integration', (model, target, event) => {
+            event.preventDefault();
+            event.stopImmediatePropagation();
+
+            this.showTestReport();
         });
     }
-    _emitFeedback(event, message, alertType) {
-        event.preventDefault();
-        event.stopImmediatePropagation();
+
+    emitFeedback(message, alertType) {
         if (typeof this.feedbackEmitter === 'function') {
             this.feedbackEmitter(message, "Info", alertType)
         }
     }
 
-    _attachEventEmmiter() {
+    attachEventEmmiter() {
         this.on('openFeedback', (evt) => {
             this.feedbackEmitter = evt.detail;
         });
     }
 
-    _finishProcess(event, response) {
-        event.stopImmediatePropagation();
-        this.responseCallback(undefined, response);
-    };
+    /*
+        quickTest(){
+            this.ClusterControllerApi.getTestReport('gov-tests', 51,'privatesky/testReport.html', this.model,(err, htmlContent) => {
+                if (err)
+                {
+                    return console.log(err);
+                }
 
-/*
-    quickTest(){
-        this.ClusterControllerApi.getTestReport('gov-tests', 51,'privatesky/testReport.html', this.model,(err, htmlContent) => {
-            if (err)
-            {
-                return console.log(err);
-            }
+                //const innerHtml = Buffer.from(htmlContent, 'base64').toString('ascii');
+                let myWindow = window.open("", "MsgWindow", "width=800,height=600");
+                myWindow.document.write(htmlContent);
+            })
+        }
+    */
 
-            //const innerHtml = Buffer.from(htmlContent, 'base64').toString('ascii');
-            let myWindow = window.open("", "MsgWindow", "width=800,height=600");
-            myWindow.document.write(htmlContent);
-        })
-    }
-*/
-
-    showTestReport(){
+    showTestReport() {
         let artefacts = [];
-        if (this.model.clusterInstallationInfo){
+        if (this.model.clusterInstallationInfo) {
             console.log('Gather artefacts ...')
             const pipelines = JSON.parse(this.model.clusterInstallationInfo.pipelines)
             console.log(pipelines);
-            pipelines.map(el =>{
+            pipelines.map(el => {
                 console.log(el);
-                if (el.artifacts && el.artifacts.length > 0)
-                {
+                if (el.artifacts && el.artifacts.length > 0) {
                     el.artifacts.map(art => artefacts.push({
                         buildNo: el.buildNo,
                         jenkinsPipeline: el.name,
@@ -232,13 +227,12 @@ export default class ClusterManageModal extends ModalController {
                 }
             })
             console.log(artefacts);
-            if (artefacts.length === 0){
+            if (artefacts.length === 0) {
                 return;
             }
             const artefact = artefacts[0];
-            this.ClusterControllerApi.getTestReport(artefact.jenkinsPipeline, artefact.buildNo,artefact.artefactName, this.model,(err, htmlContent) => {
-                if (err)
-                {
+            this.ClusterControllerApi.getTestReport(artefact.jenkinsPipeline, artefact.buildNo, artefact.artefactName, this.model, (err, htmlContent) => {
+                if (err) {
                     return console.log(err);
                 }
                 let myWindow = window.open("", "MsgWindow", "width=800,height=600");

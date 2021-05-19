@@ -1,67 +1,67 @@
-<psk-container controller-name="clusters/ClusterManageModal">
-    <psk-modal id="manageClusterModal" class="bpd-modal" opened>
+<link href="/assets/css/modal.css" rel="stylesheet">
 
-        <psk-label slot="title" class="bpd-modal-title" label="@title"></psk-label>
+<h2 class="bpd-modal-title" slot="header">Manage Blockchain Network Deployment</h2>
 
-        <div class="content">
-            <psk-text-input class="bpd-input" view-model="@name" read-only="@disableBlockchainName"></psk-text-input>
-            <psk-label class="info" label="@clusterStatusInfo"></psk-label>
-            <psk-condition condition="@viewLogs">
+<div class="bpd-modal-content">
+    <div class="form-group flex-column">
+        <label>{{@name.label}}</label>
+        <input class="form-control bpd-input" data-view-model="@name"/>
+    </div>
+    <label class="info">{{@clusterStatusInfo}}</label>
+    <div data-if="@viewLogs" style="width: 100%">
+        <div class="content" style="width: 100%">
+            <textarea class="bpd-log-text-area" data-view-model="@logs"></textarea>
+        </div>
+    </div>
 
-            <div class="content" style="width: 100%" slot="condition-true">
-                <psk-textarea class="bpd-log-text-area" view-model="logs" read-only="@disableLogs"></psk-textarea>
-            </div>
-
-            </psk-condition>
-
-            <psk-card class="bpd-translucent-buttons">
-                <psk-layout template-columns="1fr 1fr">
-                    <psk-button class="bpd-qr-code-with-text" event-name="cls:governance" event-data="@id"  disabled="@disableAll">
-                        Governance
-                    </psk-button>
-                    <psk-button class="bpd-qr-code-with-text" event-name="cls:monitoring" event-data="@id"  disabled="@disableAll">
-                        Monitoring
-                    </psk-button>
-                </psk-layout>
-
-                <psk-layout template-columns="1fr 1fr">
-                    <psk-button class="bpd-qr-code-with-text" event-name="cls:continuous-integration" event-data="@id"  disabled="@disableAll">
-                        Continuous Integration
-                    </psk-button>
-                    <psk-button class="bpd-qr-code-with-text" event-name="cls:performance-testing" event-data="@id"  disabled="@disableAll">
-                        Performance Testing
-                    </psk-button>
-                </psk-layout>
-            </psk-card>
+    <psk-card class="bpd-translucent-buttons">
+        <div class="bpd-grid-two-columns">
+            <button class="bpd-qr-code-with-text btn btn-primary" data-tag="cls:governance"
+                    data-view-model="@disableAll">
+                Governance
+            </button>
+            <button class="bpd-qr-code-with-text btn btn-primary" data-tag="cls:monitoring"
+                    data-view-model="@disableAll">
+                Monitoring
+            </button>
         </div>
 
-        <psk-card class="bpd-row bpd-creation-row bpd-three-buttons-row">
+        <div class="bpd-grid-two-columns">
+            <button class="bpd-qr-code-with-text btn btn-primary" data-tag="cls:continuous-integration"
+                    data-view-model="@disableAll">
+                Continuous Integration
+            </button>
+            <button class="bpd-qr-code-with-text btn btn-primary" data-tag="cls:performance-testing"
+                    data-view-model="@disableAll">
+                Performance Testing
+            </button>
+        </div>
+    </psk-card>
+</div>
 
-            <psk-condition condition="@removeNetworkVisible">
-                <psk-button event-name="cls:cleancluster">
-                    <psk-icon icon="minus" color="rgb(255, 255, 255)"></psk-icon>
-                    Remove network
-                </psk-button>
-            </psk-condition>
+<psk-list-feedbacks></psk-list-feedbacks>
 
-            <psk-condition condition="@updateNetworkVisible">
-                <psk-button event-name="cls:updatecluster">
-                    <psk-icon icon="cog" color="rgb(255, 255, 255)"></psk-icon>
-                    Update network
-                </psk-button>
-            </psk-condition>
+<div class="bpd-row bpd-creation-row bpd-three-buttons-row" slot="footer">
 
-            <psk-condition condition="@installNetworkVisible">
-                <psk-button event-name="cls:installcluster"  disabled="@disableAll">
-                    <psk-icon icon="anchor" color="rgb(255, 255, 255)"></psk-icon>
-                    Install network
-                </psk-button>
-            </psk-condition>
+    <div data-if="@removeNetworkVisible">
+        <button data-tag="cls:cleancluster">
+            <psk-icon color="rgb(255, 255, 255)" icon="minus"></psk-icon>
+            Remove network
+        </button>
+    </div>
 
-        </psk-card>
-        <psk-list-feedbacks>
-        </psk-list-feedbacks>
+    <div data-if="@updateNetworkVisible">
+        <button data-tag="cls:updatecluster">
+            <psk-icon color="rgb(255, 255, 255)" icon="cog"></psk-icon>
+            Update network
+        </button>
+    </div>
 
-    </psk-modal>
+    <div data-if="@installNetworkVisible">
+        <button data-tag="cls:installcluster" data-view-model="@disableAll">
+            <psk-icon color="rgb(255, 255, 255)" icon="anchor"></psk-icon>
+            Install network
+        </button>
+    </div>
 
-</psk-container>
+</div>

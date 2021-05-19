@@ -1,4 +1,4 @@
-import ContainerController from '../../../cardinal/controllers/base-controllers/ContainerController.js';
+const {WebcController} = WebCardinal.controllers;
 import OrganizationService from "../services/OrganizationService.js";
 import ClusterService from "../services/ClusterService.js";
 
@@ -35,9 +35,9 @@ const initModel = {
     questionCreationModel: JSON.parse(JSON.stringify(initialQuestionCreationModel))
 }
 
-export default class VotingController extends ContainerController {
-    constructor(element, history) {
-        super(element, history);
+export default class VotingController extends WebcController {
+    constructor(...props) {
+        super(...props);
 
         let receivedModel = this.History.getState();
         this.model = this.setModel({

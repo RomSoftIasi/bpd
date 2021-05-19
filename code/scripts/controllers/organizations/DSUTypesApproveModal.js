@@ -1,96 +1,71 @@
-import ModalController from '../../../cardinal/controllers/base-controllers/ModalController.js';
+const {WebcController} = WebCardinal.controllers;
 import ClusterService from "../services/ClusterService.js";
 
-const initModel = {
-    title: 'Manage DSU Types',
-    dsuTypes: []
-}
+export default class DSUTypesApproveModal extends WebcController {
+    constructor(...props) {
+        super(...props);
 
-export default class DSUTypesApproveModal extends ModalController {
-    constructor(element, history) {
-        super(element, history);
-        let receivedModel = this.History.getState();
-        this.model = this.setModel({
-            ...receivedModel,
-            ...this.getParsedModel(this.model)
-        })
+        // TODO: Replace this when a solution has been found
+        let receivedModel = this.history.win.history.state.state;
+        this.model = {
+            dsuTypes: [],
+            ...receivedModel
+        }
         this.ClusterService = new ClusterService(this.DSUStorage);
 
         this.ClusterService.getCluster(receivedModel.organizationUid, receivedModel.clusterUid, (err, cluster) => {
             if (err) {
-                console.log(err);
-                return;
+                return console.error(err);
             }
+
             this.model.cluster = cluster;
             this.model.dsuTypes = this.model.cluster.dsuTypes || [];
-        })
+        });
 
-        this._createNewDsuType();
-        this._attachHandlerCreateDSUType();
-        this._attachHandlerApproveDSUType();
-        this._attachHandlerOpenDSUType();
-        this._attachHandlerReviewDSUType();
-        this._attachHandlerFinishDSUType();
+        this.attachHandlerCreateDSUType();
+        this.attachHandlerApproveDSUType();
+        this.attachHandlerOpenDSUType();
+        this.attachHandlerReviewDSUType();
+        this.attachHandlerFinishDSUType();
     }
 
-    getParsedModel(receivedModel) {
-        let model = JSON.parse(JSON.stringify(initModel));
-        let existingOrganization = receivedModel.organization;
-        let createOrg = true;
-        if (existingOrganization) {
-            createOrg = false;
-            model = {
-                ...model,
-                title: 'Edit the organization',
-                dsuTypes: existingOrganization.dsuTypes
-            }
-        }
+    attachHandlerCreateDSUType() {
+        this.onTagClick('dsu:add-dsuType-config', (model, target, event) => {
+            event.preventDefault();
+            event.stopImmediatePropagation();
 
-        return {
-            ...model,
-            createOrg: createOrg,
-        };
-    }
-
-    _createNewDsuType() {
-        const id = (Date.now() + Math.random()).toString().replace('.', '');
-        this.model.dsuTypes.push({
-            id: {
-                value: id
-            },
-            approved: false,
-            reviewed: false,
-            seed: {
-                placeholder: 'Seed',
-                name: 'Seed',
-                readOnly: false
-            },
-            name: {
-                placeholder: 'Name',
-                name: 'Name',
-                readOnly: false
-            }
+            const id = (Date.now() + Math.random()).toString().replace('.', '');
+            this.model.dsuTypes.push({
+                id: {
+                    value: id
+                },
+                approved: false,
+                reviewed: false,
+                seed: {
+                    placeholder: 'Seed',
+                    name: 'Seed',
+                    readOnly: false
+                },
+                name: {
+                    placeholder: 'Name',
+                    name: 'Name',
+                    readOnly: false
+                }
+            });
         });
     }
 
-    _attachHandlerCreateDSUType() {
-        this.on('dsu:add-dsuType-config', (e) => {
-            e.preventDefault();
-            e.stopImmediatePropagation();
-            this._createNewDsuType();
-        });
-    }
-
-    _attachHandlerApproveDSUType() {
-        this.on('dsu:approve', (e) => {
-            e.preventDefault();
-            e.stopImmediatePropagation();
+    attachHandlerApproveDSUType() {
+        this.onTagClick('dsu:approve', (model, target, event) => {
+            event.preventDefault();
+            event.stopImmediatePropagation();
 
             let dsuTypes = this.model.dsuTypes;
-            let dsuTypeIndex = dsuTypes.findIndex(dsuType => dsuType.id.value === e.data)
+            let dsuTypeIndex = dsuTypes.findIndex(dsuType => dsuType.id.value === model.id.value);
             if (dsuTypeIndex === -1) {
-                return;
+                return console.error(`DSU Type with id:${model.id.value} not found!`);
             }
+
             dsuTypes[dsuTypeIndex].approved = true;
             dsuTypes[dsuTypeIndex].name.readOnly = true;
             dsuTypes[dsuTypeIndex].seed.readOnly = true;
@@ -98,63 +73,49 @@ export default class DSUTypesApproveModal extends ModalController {
         });
     }
 
-    _attachHandlerReviewDSUType() {
-        this.on('dsu:review', (e) => {
-            e.preventDefault();
-            e.stopImmediatePropagation();
+    attachHandlerReviewDSUType() {
+        this.onTagClick('dsu:review', (model, target, event) => {
+            event.preventDefault();
+            event.stopImmediatePropagation();
 
-            let dsuTypes = this.model.dsuTypes;
-            let dsuTypeIndex = dsuTypes.findIndex(dsuType => dsuType.id.value === e.data)
-            if (dsuTypeIndex === -1) {
-                return;
-            }
-            let toReturnObject = {
-                redirect: 'ssapp-review',
-                seed: dsuTypes[dsuTypeIndex].seed.value
-            }
             let toSendObject = {
                 organizationUid: this.model.organizationUid,
                 clusterUid: this.model.uid,
-                seed: dsuTypes[dsuTypeIndex].seed.value
+                seed: model.seed.value
             }
-            this.History.navigateToPageByTag('ssapp-review', toSendObject);
+
+            this.navigateToPageTag('ssapp-review', toSendObject);
         });
     }
 
-    _attachHandlerOpenDSUType() {
-        this.on('dsu:open', (e) => {
-            e.preventDefault();
-            e.stopImmediatePropagation();
+    attachHandlerOpenDSUType() {
+        this.onTagClick('dsu:open', (model, target, event) => {
+            event.preventDefault();
+            event.stopImmediatePropagation();
 
-            let dsuTypes = this.model.dsuTypes;
-            let dsuTypeIndex = dsuTypes.findIndex(dsuType => dsuType.id.value === e.data)
-            if (dsuTypeIndex === -1) {
-                return;
-            }
             let toSendObject = {
                 organizationUid: this.model.organizationUid,
                 clusterUid: this.model.uid,
-                seed: dsuTypes[dsuTypeIndex].seed.value
+                seed: model.seed.value
             }
-            this.History.navigateToPageByTag('ssapp-review', toSendObject);
+
+            this.navigateToPageTag('ssapp-review', toSendObject);
         });
     }
 
-    _attachHandlerFinishDSUType() {
-        this.on('dsu:finish', (event) => {
+    attachHandlerFinishDSUType() {
+        this.onTagClick('dsu:finish', (model, target, event) => {
+            event.preventDefault();
+            event.stopImmediatePropagation();
+
             this.model.cluster.dsuTypes = this.model.dsuTypes;
             this.ClusterService.updateCluster(this.model.organizationUid, this.model.cluster, (err, data) => {
                 if (err) {
-                    console.log(err);
-                    return;
+                    return console.error(err);
                 }
-            })
-            this._finishProcess(event, {})
+            });
+
+            this.send('confirmed', {});
         });
     }
-
-    _finishProcess(event, response) {
-        event.stopImmediatePropagation();
-        this.responseCallback(undefined, response);
-    };
 }

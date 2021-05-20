@@ -106,3 +106,7 @@
 .bpd-creation-row button.btn.btn-link:focus:active {
     text-decoration: none;
 }
+
+.bpd-row input.bpd-question-title {
+    width: 600px;
+}

@@ -193,7 +193,7 @@ export default class ClustersController extends WebcController {
 
             let toSendObject = {
                 organizationUid: this.model.organization.uid,
-                clusterUid: event.data
+                clusterUid: model.uid
             };
 
             this.navigateToPageTag('governance', toSendObject);
@@ -207,7 +207,7 @@ export default class ClustersController extends WebcController {
 
             let toSendObject = {
                 organizationUid: this.model.organization.uid,
-                clusterUid: event.data
+                clusterUid: model.uid
             };
 
             this.navigateToPageTag('monitoring', toSendObject);

@@ -84,7 +84,7 @@ export default class NetworkModal extends WebcController {
                 config: this.model.config.value,
                 clusterOperation: this.model.clusterOperation,
                 clusterStatus: this.model.clusterStatus
-            }
+            };
 
             this.send('confirmed', toReturnObject);
         });

@@ -78,7 +78,6 @@ export default class ClusterService {
     updateCluster(orgUid, data, callback) {
         this.DSUStorage.setObject(this._getClusterPath(orgUid, data.uid), data, (err) => {
             if (err) {
-                console.log(err);
                 console.log('Failed to update data :', data);
                 callback(err, undefined);
                 return;

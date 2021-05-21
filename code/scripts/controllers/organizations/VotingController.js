@@ -193,12 +193,12 @@ export default class VotingController extends WebcController {
 
                 this.model.cluster.responses[index] = responses;
                 this.calculateAnswerPercents(index);
+            });
 
-                this.ClusterService.updateCluster(this.model.organizationUid, this.model.cluster, (err, data) => {
-                    if (err) {
-                        console.error(err);
-                    }
-                });
+            this.ClusterService.updateCluster(this.model.organizationUid, this.model.cluster, (err, data) => {
+                if (err) {
+                    console.error(err);
+                }
             });
         });
     }

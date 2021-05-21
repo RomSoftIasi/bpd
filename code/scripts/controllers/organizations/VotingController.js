@@ -14,11 +14,7 @@ const initialQuestionCreationModel = {
         label: 'Question signature'
     },
     uniqueAnswers: {
-        checkboxLabel: "Unique Answer",
-        name: "unique-answer",
-        checkedValue: 1,
-        uncheckedValue: 0,
-        value: ''
+        checked: false
     },
     answers: []
 }
@@ -30,7 +26,7 @@ const initModel = {
         responses: []
     },
     hasQuestions: false,
-    questionCreationModel: JSON.parse(JSON.stringify(initialQuestionCreationModel))
+    questionCreationModel: JSON.parse(JSON.stringify(initialQuestionCreationModel)),
 }
 
 export default class VotingController extends WebcController {
@@ -83,30 +79,24 @@ export default class VotingController extends WebcController {
         });
     }
 
-    getRadiosAnswerFromQuestion(question) {
-        return {
-            options: question.answers.map(answer => {
-                return {
-                    label: answer.text,
-                    value: answer.id,
-                    name: answer.id + "_" + answer.text.replace(' ', '')
-                }
-            }),
-            value: ''
-        }
-    }
-
-    getCheckboxesAnswerFromQuestion(question) {
-        return question.answers.map(answer => {
+    getAnswersForQuestion(question) {
+        const answers = question.answers.map(({text, id}) => {
             return {
-                ...answer,
-                checkboxLabel: answer.text,
-                name: answer.id,
-                checkedValue: 1,
-                uncheckedValue: 0,
-                value: ''
-            }
+                id: parseInt(id) || 0,
+                label: {
+                    text: text,
+                    for: id
+                },
+                checkInput: {
+                    value: id,
+                    id: id,
+                    checked: false,
+                    name: question.id + "_" + question.title
+                }
+            };
         });
+
+        return answers;
     }
 
     findQuestionIndexByAnswerId(answerId) {
@@ -183,22 +173,22 @@ export default class VotingController extends WebcController {
 
             this.model.cluster.questions.forEach((question, index) => {
                 let responsesIds = [];
-                if (question.answerRadioGroup) {
-                    responsesIds = [question.answerRadioGroup.value]
+                if (question.uniqueAnswers) {
+                    const selectedAnswer = this.querySelector(`input[name^="${question.id}"]:checked`);
+                    if (selectedAnswer) {
+                        responsesIds = [parseInt(selectedAnswer.value)];
+                    }
                 } else {
-                    responsesIds = question.answers.map(answer => {
-                        return answer.value === "1" ? answer.id : "";
-                    });
+                    responsesIds = question.answers.filter((answer) => {
+                        return answer.checkInput.checked === true && (answer.id + "").length > 0;
+                    }).map(answer => parseInt(answer.id));
                 }
 
-                let finalResponses = responsesIds
-                    .filter(response => (response + "").length > 0)
-                    .map(response => parseInt(response));
-
+                console.log(responsesIds);
                 let responses = JSON.parse(JSON.stringify(this.model.cluster.responses[index]));
 
-                for (let i = 0; i < finalResponses.length; i++) {
-                    responses.answerIds.push(finalResponses[i])
+                for (let i = 0; i < responsesIds.length; i++) {
+                    responses.answerIds.push(responsesIds[i])
                 }
 
                 this.model.cluster.responses[index] = responses;
@@ -246,7 +236,7 @@ export default class VotingController extends WebcController {
             let questionModel = {
                 id: this.getRandomId(),
                 title: this.model.questionCreationModel.title.value,
-                uniqueAnswers: this.model.questionCreationModel.uniqueAnswers.value === "1",
+                uniqueAnswers: this.model.questionCreationModel.uniqueAnswers.checked === true,
                 answers: this.model.questionCreationModel.answers.map(answer => {
                     return {
                         id: answer.id,
@@ -256,12 +246,7 @@ export default class VotingController extends WebcController {
             }
 
             let index = this.model.cluster.questions.push(questionModel) - 1
-
-            if (questionModel.uniqueAnswers) {
-                this.model.cluster.questions[index].answerRadioGroup = this.getRadiosAnswerFromQuestion(questionModel);
-            } else {
-                this.model.cluster.questions[index].answers = this.getCheckboxesAnswerFromQuestion(questionModel)
-            }
+            this.model.cluster.questions[index].answers = this.getAnswersForQuestion(questionModel);
 
             this.model.cluster.responses.push({
                 question: this.model.cluster.questions[index],

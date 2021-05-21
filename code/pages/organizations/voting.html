@@ -43,7 +43,11 @@
                     </div>
 
                     <div class="bpd-for-each-row d-flex justify-content-center mb-3">
-                        <psk-checkbox view-model="@questionCreationModel.uniqueAnswers"></psk-checkbox>
+                        <div class="form-check">
+                            <input class="form-check-input" data-view-model="@questionCreationModel.uniqueAnswers"
+                                   id="uniqueAnswer" type="checkbox">
+                            <label class="form-check-label" for="uniqueAnswer">Unique answer</label>
+                        </div>
                         <button class="btn btn-primary" data-tag="question:create">Create question</button>
                     </div>
                 </div>
@@ -56,11 +60,21 @@
                             <label>{{@title}}</label>
                         </div>
                         <div class="bpd-for-each-row">
-                            <div data-if="@uniqueAnswers">
-                                <psk-radio-group data-view-model="@answerRadioGroup" slot="true"></psk-radio-group>
+                            <div data-if="@uniqueAnswers" style="width: 100%;">
+                                <fieldset class="form-group" data-for="@answers" id="@id" slot="true">
+                                    <div class="form-check">
+                                        <input class="form-check-input" data-view-model="@checkInput" type="radio">
+                                        <label class="form-check-label" data-view-model="@label">
+                                            {{@label.text}}
+                                        </label>
+                                    </div>
+                                </fieldset>
 
                                 <div data-for="@answers" slot="false">
-                                    <psk-checkbox data-view-model="@"></psk-checkbox>
+                                    <div class="form-check">
+                                        <input class="form-check-input" data-view-model="@checkInput" type="checkbox">
+                                        <label class="form-check-label" data-view-model="@label">{{@label.text}}</label>
+                                    </div>
                                 </div>
                             </div>
                         </div>

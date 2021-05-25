@@ -18,25 +18,23 @@
 
             <psk-tab title="Create">
                 <div class="bpd-row">
-                    <div class="d-flex flex-column justify-content-center mb-3">
+                    <div class="mb-3 question-wrapper">
                         <div class="form-group flex-column">
                             <label>{{@questionCreationModel.title.label}}</label>
-                            <input class="form-control bpd-input bpd-question-title"
+                            <input class="form-control bpd-input"
                                    data-view-model="@questionCreationModel.title"/>
                         </div>
 
                         <div class="form-group flex-column">
                             <label>{{@questionCreationModel.signature.label}}</label>
-                            <input class="form-control bpd-input bpd-question-title"
+                            <input class="form-control bpd-input"
                                    data-view-model="@questionCreationModel.signature"/>
                         </div>
                     </div>
 
-                    <div data-for="@questionCreationModel.answers">
-                        <div class="form-group flex-column">
-                            <label>{{@questionCreationModel.signature.label}}</label>
-                            <input class="form-control bpd-input" data-view-model="@"/>
-                        </div>
+                    <label class="bpd-dashboard-title my-2 d-flex justify-content-center">Answers</label>
+                    <div class="answers-wrapper" data-for="@questionCreationModel.answers">
+                        <input class="form-control bpd-input" data-view-model="@"/>
                     </div>
 
                     <div class="bpd-for-each-row my-3">
@@ -106,9 +104,9 @@
                             <div class="d-flex justify-content-center align-items-center" data-for="@answerResults">
                                 <div class="bpd-progress">
                                     <label class="bpd-dashboard-title">{{@label}}</label>
-                                    <div>
+                                    <div class="d-flex justify-content-center align-items-center">
                                         <label class="over-the-progress">{{@value}}%</label>
-                                        <progress data-color="@color" max="@max" value="@value"></progress>
+                                        <progress data-color="@color" max="100" value="@value"></progress>
                                     </div>
                                 </div>
                                 <label class="info" slot="no-data"

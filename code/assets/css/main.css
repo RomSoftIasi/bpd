@@ -111,10 +111,6 @@
     text-decoration: none;
 }
 
-.bpd-row input.bpd-question-title {
-    width: 600px;
-}
-
 .bpd-row .bpd-for-each-row {
     margin-bottom: 20px;
     display: flex;
@@ -142,6 +138,26 @@ label.info {
 
 label.error {
     color: #ff0000;
+}
+
+.question-wrapper {
+    display: grid;
+    grid-template-columns: 2fr 3fr;
+    column-gap: 2rem;
+    padding: 0 1rem;
+}
+
+.answers-wrapper {
+    display: flex;
+    row-gap: 1rem;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.answers-wrapper .bpd-input {
+    margin: 0;
+    max-width: 400px;
 }
 
 webc-modal::part(content) {

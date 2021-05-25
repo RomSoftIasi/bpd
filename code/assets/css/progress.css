@@ -1,5 +1,5 @@
 .bpd-progress {
-    padding: 0;
+    padding: 0 1rem;
 }
 
 .bpd-progress label {
@@ -13,13 +13,13 @@
     font-size: 18px;
 }
 
-progress {
+.bpd-progress progress {
     -webkit-appearance: none;
     -moz-appearance: none;
     appearance: none;
     border: none;
     background-size: auto;
-    height: 25px;
+    height: 30px;
 }
 
 progress[data-color="aliceblue"]::-webkit-progress-value {

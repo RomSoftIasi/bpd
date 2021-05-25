@@ -20,7 +20,7 @@ div.form-check > input[type="radio"]:checked {
 }
 
 div.form-check > input[type="radio"]:checked + label::before {
-    content: '\2713';
+    content: '';
     display: block;
     text-align: center;
     color: #e1e7f2;

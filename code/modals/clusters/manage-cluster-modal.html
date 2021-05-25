@@ -44,22 +44,22 @@
 <div class="bpd-row bpd-creation-row bpd-three-buttons-row" slot="footer">
 
     <div data-if="@removeNetworkVisible">
-        <button data-tag="cls:cleancluster">
-            <psk-icon color="rgb(255, 255, 255)" icon="minus"></psk-icon>
+        <button class="btn btn-primary" data-tag="cls:cleancluster">
+            <span class="icon fa fa-minus" style="color: rgb(255, 255, 255);"></span>
             Remove network
         </button>
     </div>
 
     <div data-if="@updateNetworkVisible">
-        <button data-tag="cls:updatecluster">
-            <psk-icon color="rgb(255, 255, 255)" icon="cog"></psk-icon>
+        <button class="btn btn-primary" data-tag="cls:updatecluster">
+            <span class="icon fa fa-cog" style="color: rgb(255, 255, 255);"></span>
             Update network
         </button>
     </div>
 
     <div data-if="@installNetworkVisible">
-        <button data-tag="cls:installcluster" data-view-model="@disableAll">
-            <psk-icon color="rgb(255, 255, 255)" icon="anchor"></psk-icon>
+        <button class="btn btn-primary" data-tag="cls:installcluster" data-view-model="@disableAll">
+            <span class="icon fa fa-anchor" style="color: rgb(255, 255, 255);"></span>
             Install network
         </button>
     </div>

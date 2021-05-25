@@ -16,3 +16,7 @@ div.form-check > label {
     margin-right: 1rem;
     padding-top: 0.25rem;
 }
+
+textarea.bpd-text-area {
+    height: 120px !important;
+}

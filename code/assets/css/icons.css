@@ -6,11 +6,19 @@
 }
 
 .bpd-modal-icon span.icon {
-    margin: 0;
+    margin: 0 0 1.5rem 0;
     padding: 1rem 1.1rem;
     border: 2px solid #8197bc;
     border-radius: 50%;
     height: 5rem;
     width: 5rem;
     font-size: 3rem;
+}
+
+span.icon.icon-big {
+    font-size: 4rem;
+}
+
+span.icon.icon-medium {
+    font-size: 1.5rem;
 }

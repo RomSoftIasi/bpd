@@ -1,5 +1,6 @@
 <webc-container controller="organizations/VotingController">
     <link href="/assets/css/main.css" rel="stylesheet">
+    <link href="/assets/css/progress.css" rel="stylesheet">
 
     <div class="bpd-header">
         <label>Sign out</label>
@@ -57,24 +58,24 @@
                 <div class="bpd-row">
                     <div data-for="@cluster.questions">
                         <div class="bpd-for-each-row">
-                            <label>{{@title}}</label>
+                            <label class="bpd-dashboard-title">{{@title}}</label>
                         </div>
-                        <div class="bpd-for-each-row">
-                            <div data-if="@uniqueAnswers" style="width: 100%;">
-                                <fieldset class="form-group" data-for="@answers" id="@id" slot="true">
-                                    <div class="form-check">
-                                        <input class="form-check-input" data-view-model="@checkInput" type="radio">
-                                        <label class="form-check-label" data-view-model="@label">
-                                            {{@label.text}}
-                                        </label>
-                                    </div>
-                                </fieldset>
+                        <div class="bpd-for-each-row" data-if="@uniqueAnswers">
+                            <fieldset class="form-group d-flex justify-content-center align-items-center"
+                                      data-for="@answers" id="@id" slot="true">
+                                <div class="form-check">
+                                    <input class="form-check-input" data-view-model="@checkInput" type="radio">
+                                    <label class="form-check-label" data-view-model="@label">
+                                        {{@label.text}}
+                                    </label>
+                                </div>
+                            </fieldset>
 
-                                <div data-for="@answers" slot="false">
-                                    <div class="form-check">
-                                        <input class="form-check-input" data-view-model="@checkInput" type="checkbox">
-                                        <label class="form-check-label" data-view-model="@label">{{@label.text}}</label>
-                                    </div>
+                            <div class="d-flex justify-content-center align-items-center" data-for="@answers"
+                                 slot="false">
+                                <div class="form-check">
+                                    <input class="form-check-input" data-view-model="@checkInput" type="checkbox">
+                                    <label class="form-check-label" data-view-model="@label">{{@label.text}}</label>
                                 </div>
                             </div>
                         </div>
@@ -95,17 +96,23 @@
             </psk-tab>
 
             <psk-tab title="Results">
-                <psk-card class="bpd-row">
+                <div class="bpd-row">
 
                     <div data-for="@cluster.responses">
                         <div class="bpd-for-each-row">
-                            <label>{{@question.title}}</label>
+                            <label class="bpd-dashboard-title">{{@question.title}}</label>
                         </div>
                         <div class="bpd-for-each-row">
-                            <div data-for="@answerResults">
-                                <psk-progress data-view-model="@"></psk-progress>
-                                <psk-card slot="no-data"
-                                          title="No responses were submitted for this question."></psk-card>
+                            <div class="d-flex justify-content-center align-items-center" data-for="@answerResults">
+                                <div class="bpd-progress">
+                                    <label class="bpd-dashboard-title">{{@label}}</label>
+                                    <div>
+                                        <label class="over-the-progress">{{@value}}%</label>
+                                        <progress data-color="@color" max="@max" value="@value"></progress>
+                                    </div>
+                                </div>
+                                <label class="info" slot="no-data"
+                                       title="No responses were submitted for this question."></label>
 
                             </div>
                         </div>
@@ -113,11 +120,10 @@
                             <button class="btn btn-primary" data-tag="result:apply">Apply to Smart Contract</button>
                         </div>
 
-                        <psk-card slot="no-data"
-                                  title="No questions were submitted."></psk-card>
+                        <label class="info" slot="no-data"
+                               title="No questions were submitted."></label>
                     </div>
-
-                </psk-card>
+                </div>
             </psk-tab>
         </psk-tab-navigator>
         <psk-list-feedbacks messages-to-display="5" time-alive="3000"></psk-list-feedbacks>

@@ -130,10 +130,13 @@ export default class VotingController extends WebcController {
             let randomItem = possibleColors[randomIndex];
             possibleColors.splice(randomIndex, 1);
 
+            const value = Math.round((((responsesOfThisType / totalResponses) * 100) + Number.EPSILON) * 100) / 100;
+            console.log("VALUE: ", value);
             return {
                 id: answer.id,
-                value: (responsesOfThisType / totalResponses) * 100,
-                label: answer.text,
+                label: answer.label.text,
+                value: value,
+                max: 100,
                 color: randomItem
             }
         });

@@ -56,7 +56,7 @@ export default class ClusterManageModal extends WebcController {
                     }
                     if (builds.length === 0) {
                         this.model.logs.value = log;
-                        this.model.logs.readonly = false;
+                        this.model.logs.readonly = null;
                     } else {
                         const cElem = builds.shift();
                         getLogs(cElem.pipeline, cElem.buildNo);
@@ -90,7 +90,7 @@ export default class ClusterManageModal extends WebcController {
             },
             logs: {
                 value: 'Loading blockchain network logs ....',
-                readonly: true
+                readonly: "readonly"
             },
             disableAll: {
                 disabled: false

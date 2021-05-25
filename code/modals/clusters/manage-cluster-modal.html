@@ -10,11 +10,11 @@
     <label class="info">{{@clusterStatusInfo}}</label>
     <div data-if="@viewLogs" style="width: 100%">
         <div class="content" style="width: 100%">
-            <textarea class="bpd-log-text-area" data-view-model="@logs"></textarea>
+            <textarea class="form-control bpd-log-text-area" data-view-model="@logs" readonly="@disableLogs"></textarea>
         </div>
     </div>
 
-    <psk-card class="bpd-translucent-buttons">
+    <div class="bpd-translucent-buttons">
         <div class="bpd-grid-two-columns">
             <button class="bpd-qr-code-with-text btn btn-primary" data-tag="cls:governance"
                     data-view-model="@disableAll">
@@ -36,7 +36,7 @@
                 Performance Testing
             </button>
         </div>
-    </psk-card>
+    </div>
 </div>
 
 <psk-list-feedbacks></psk-list-feedbacks>

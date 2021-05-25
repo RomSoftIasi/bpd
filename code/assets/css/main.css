@@ -86,14 +86,9 @@
 }
 
 .form-group label {
-    font-size: 20px;
+    font-size: 18px;
     color: #9d9d9d;
     line-height: 1.5rem;
-}
-
-.bpd-seed {
-    width: 340px;
-    margin-bottom: 5px;
 }
 
 .bpd-creation-row {
@@ -120,8 +115,45 @@
     width: 600px;
 }
 
+.bpd-row .bpd-for-each-row {
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    column-gap: 0.25rem;
+}
+
+.bpd-for-each-row.dsu-type-row {
+    display: grid;
+    grid-template-columns: 2fr 4fr 1fr 1fr 1fr;
+}
+
+label.info,
+label.error {
+    display: flex;
+    justify-content: center;
+    font-style: italic;
+    word-wrap: break-word;
+}
+
+label.info {
+    color: #572a57;
+}
+
+label.error {
+    color: #ff0000;
+}
+
+webc-modal::part(content) {
+    background-color: rgb(255, 255, 255);
+}
+
 @media (min-width: 500px) {
-    .webc-modal-dialog {
-        max-width: 500px;
+    webc-modal::part(dialog) {
+        max-width: 900px;
+    }
+
+    webc-modal::part(main) {
+        padding: 1rem 3rem;
     }
 }

@@ -20,3 +20,8 @@ div.form-check > label {
 textarea.bpd-text-area {
     height: 120px !important;
 }
+
+textarea.bpd-log-text-area {
+    height: 250px !important;
+    width: 100%;
+}

@@ -1,6 +1,5 @@
 .bpd-dashboard div.card-body,
-.bpd-sub-header div.card-body,
-.bpd-translucent-buttons div.card-body {
+.bpd-sub-header div.card-body {
     padding: 0;
 }
 
@@ -12,9 +11,10 @@
 
 .bpd-organization-box {
     display: flex;
-    flex-direction: column;
+    flex-direction: row-reverse;
     justify-content: center;
     padding: 0.25rem 0;
+    align-items: center;
 }
 
 .bpd-organization-box,
@@ -54,6 +54,9 @@
 .bpd-organization-card-header {
     display: flex;
     justify-content: flex-end;
+    position: absolute;
+    width: 10rem;
+    padding-bottom: 5rem;
 }
 
 .bpd-organization-line .bpd-hotspot-button label,

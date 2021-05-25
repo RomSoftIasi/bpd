@@ -16,8 +16,8 @@
 }
 
 .bpd-grid-two-columns {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
+    display: flex;
+    justify-content: space-around;
     column-gap: 0.5rem;
     row-gap: 0.5rem
 }
@@ -35,4 +35,11 @@
     border-color: white;
     width: 225px;
     margin-bottom: 20px;
+}
+
+.btn-sm {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    column-gap: 0.25rem;
 }

@@ -35,23 +35,8 @@ export default class DSUTypesApproveModal extends WebcController {
             event.stopImmediatePropagation();
 
             const id = (Date.now() + Math.random()).toString().replace('.', '');
-            this.model.dsuTypes.push({
-                id: {
-                    value: id
-                },
-                approved: false,
-                reviewed: false,
-                seed: {
-                    placeholder: 'Seed',
-                    name: 'Seed',
-                    readOnly: false
-                },
-                name: {
-                    placeholder: 'Name',
-                    name: 'Name',
-                    readOnly: false
-                }
-            });
+            const dsuTypeModel = this.getDsuTypeViewModel(id);
+            this.model.dsuTypes.push(dsuTypeModel);
         });
     }
 
@@ -117,5 +102,25 @@ export default class DSUTypesApproveModal extends WebcController {
 
             this.send('confirmed', {});
         });
+    }
+
+    getDsuTypeViewModel(id) {
+        return {
+            id: {
+                value: id
+            },
+            approved: false,
+            reviewed: false,
+            seed: {
+                placeholder: 'Seed',
+                name: 'Seed',
+                readOnly: false
+            },
+            name: {
+                placeholder: 'Name',
+                name: 'Name',
+                readOnly: false
+            }
+        };
     }
 }

@@ -9,25 +9,7 @@ export default class EditOrganizationModal extends WebcController {
             this.feedbackEmitter = evt.detail;
         });
 
-        this.model = this.getFormViewModel();
-    }
-
-    getFormViewModel() {
-        return {
-            name: {
-                name: 'name',
-                label: 'Organization name',
-                required: true,
-                placeholder: 'Organization name',
-                value: this.model.name
-            },
-            jenkinsURL: {
-                name: 'Jenkins CI server URL',
-                label: 'Jenkins CI server URL',
-                placeholder: 'Jenkins CI server URL',
-                value: this.model.jenkinsURL
-            }
-        }
+        this.model = this.getEditOrganizationViewModel();
     }
 
     onUpdateOrganization() {
@@ -63,6 +45,24 @@ export default class EditOrganizationModal extends WebcController {
     emitFeedback(event, message, alertType) {
         if (typeof this.feedbackEmitter === 'function') {
             this.feedbackEmitter(message, "Validation", alertType)
+        }
+    }
+
+    getEditOrganizationViewModel() {
+        return {
+            name: {
+                name: 'name',
+                label: 'Organization name',
+                required: true,
+                placeholder: 'Organization name',
+                value: this.model.name
+            },
+            jenkinsURL: {
+                name: 'Jenkins CI server URL',
+                label: 'Jenkins CI server URL',
+                placeholder: 'Jenkins CI server URL',
+                value: this.model.jenkinsURL
+            }
         }
     }
 }

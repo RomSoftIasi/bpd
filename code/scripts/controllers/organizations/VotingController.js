@@ -2,41 +2,16 @@ const {WebcController} = WebCardinal.controllers;
 import OrganizationService from "../services/OrganizationService.js";
 import ClusterService from "../services/ClusterService.js";
 
-const initialQuestionCreationModel = {
-    title: {
-        placeholder: 'Question',
-        name: 'Question',
-        label: 'Question'
-    },
-    signature: {
-        placeholder: 'e13664398bb18ca2f90c647ca940e4654ddc28f006a597bdf753dfb56d6f0e39',
-        name: 'Question signature',
-        label: 'Question signature'
-    },
-    uniqueAnswers: {
-        checked: false
-    },
-    answers: []
-}
-
-const initModel = {
-    organization: {},
-    cluster: {
-        questions: [],
-        responses: []
-    },
-    hasQuestions: false,
-    questionCreationModel: JSON.parse(JSON.stringify(initialQuestionCreationModel)),
-}
-
 export default class VotingController extends WebcController {
     constructor(...props) {
         super(...props);
 
         // TODO: Replace this when a solution has been found
         let receivedModel = this.history.win.history.state.state;
+
+        const initModel = this.getVotingViewModel();
         this.model = {
-            ...JSON.parse(JSON.stringify(initModel)),
+            ...initModel,
             ...receivedModel
         };
 
@@ -80,7 +55,7 @@ export default class VotingController extends WebcController {
     }
 
     getAnswersForQuestion(question) {
-        const answers = question.answers.map(({text, id}) => {
+        return question.answers.map(({text, id}) => {
             return {
                 id: parseInt(id) || 0,
                 label: {
@@ -95,8 +70,6 @@ export default class VotingController extends WebcController {
                 }
             };
         });
-
-        return answers;
     }
 
     findQuestionIndexByAnswerId(answerId) {
@@ -108,7 +81,7 @@ export default class VotingController extends WebcController {
                 }
             }
             return false;
-        })
+        });
     }
 
     attachHandlerClickAnswer() {
@@ -253,8 +226,7 @@ export default class VotingController extends WebcController {
                 answerIds: [],
                 answerResults: []
             });
-
-            this.model.questionCreationModel = JSON.parse(JSON.stringify(initialQuestionCreationModel));
+            this.model.questionCreationModel = this.getQuestionViewModel();
 
             this.ClusterService.updateCluster(this.model.organizationUid, this.model.cluster, (err, data) => {
                 if (err) {
@@ -279,7 +251,9 @@ export default class VotingController extends WebcController {
     }
 
     displayErrorForQuestion = () => {
-        if (this.model.questionCreationModel.title.value === undefined || this.model.questionCreationModel.title.value === null || this.model.questionCreationModel.title.value.length === 0) {
+        if (this.model.questionCreationModel.title.value === undefined
+            || this.model.questionCreationModel.title.value === null
+            || this.model.questionCreationModel.title.value.length === 0) {
             this.emitFeedback("Please complete the field question!", "alert-danger")
             return true;
         }
@@ -288,7 +262,9 @@ export default class VotingController extends WebcController {
     }
 
     displayErrorIfNoAnswers = () => {
-        if (!this.model.questionCreationModel.answers || !this.model.questionCreationModel.answers[0].value || this.model.questionCreationModel.answers[0].value.length === 0) {
+        if (!this.model.questionCreationModel.answers
+            || !this.model.questionCreationModel.answers[0].value
+            || this.model.questionCreationModel.answers[0].value.length === 0) {
             this.emitFeedback("Please add answers for question!", "alert-danger")
             return true;
         }
@@ -300,5 +276,40 @@ export default class VotingController extends WebcController {
         if (typeof this.feedbackEmitter === 'function') {
             this.feedbackEmitter(message, "Validation", alertType)
         }
+    }
+
+    getVotingViewModel() {
+        const questionViewModel = this.getQuestionViewModel();
+
+        return {
+            organization: {},
+            cluster: {
+                questions: [],
+                responses: []
+            },
+            hasQuestions: false,
+            questionCreationModel: questionViewModel
+        }
+    }
+
+    getQuestionViewModel() {
+        return {
+            title: {
+                placeholder: 'Question',
+                name: 'Question',
+                label: 'Question',
+                value: ''
+            },
+            signature: {
+                placeholder: 'e13664398bb18ca2f90c647ca940e4654ddc28f006a597bdf753dfb56d6f0e39',
+                name: 'Question signature',
+                label: 'Question signature',
+                value: ''
+            },
+            uniqueAnswers: {
+                checked: false
+            },
+            answers: []
+        };
     }
 }

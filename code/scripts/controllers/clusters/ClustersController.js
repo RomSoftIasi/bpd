@@ -113,7 +113,7 @@ export default class ClustersController extends WebcController {
             event.stopImmediatePropagation();
 
             const modalConfiguration = {
-                controller: 'clusters/NetworkModal',
+                controller: 'clusters/InitiateNetworkModal',
                 disableBackdropClosing: false
             };
 
@@ -144,7 +144,7 @@ export default class ClustersController extends WebcController {
 
             const modalConfiguration = {
                 model: model,
-                controller: 'clusters/NetworkModal',
+                controller: 'clusters/EditNetworkModal',
                 disableBackdropClosing: false
             };
 
@@ -229,8 +229,7 @@ export default class ClustersController extends WebcController {
             const modalConfiguration = {
                 model: toSendObject,
                 controller: 'clusters/ClusterManageModal',
-                disableBackdropClosing: false,
-                disableFooter: true
+                disableBackdropClosing: false
             };
 
             this.showModalFromTemplate('clusters/manage-cluster-modal', (event) => {

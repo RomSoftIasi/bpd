@@ -4,21 +4,7 @@ export default class CreateOrganizationModal extends WebcController {
     constructor(...props) {
         super(...props);
 
-        this.model = {
-            name: {
-                name: 'name',
-                label: 'Organization Name',
-                required: true,
-                placeholder: 'Organization name',
-                value: ''
-            },
-            jenkinsURL: {
-                name: 'Jenkins CI server URL',
-                label: 'Jenkins CI server URL',
-                placeholder: 'Jenkins CI server URL',
-                value: 'http://Jenkins/CI/Server/URL'
-            }
-        };
+        this.model = this.getCreateOrganizationViewModel();
 
         this.attachCreateOrganizationHandler();
         this.attachCreateWithQRCodeHandler();
@@ -74,6 +60,24 @@ export default class CreateOrganizationModal extends WebcController {
     emitFeedback(event, message, alertType) {
         if (typeof this.feedbackEmitter === 'function') {
             this.feedbackEmitter(message, "Validation", alertType)
+        }
+    }
+
+    getCreateOrganizationViewModel() {
+        return {
+            name: {
+                name: 'name',
+                label: 'Organization Name',
+                required: true,
+                placeholder: 'Organization name',
+                value: ''
+            },
+            jenkinsURL: {
+                name: 'Jenkins CI server URL',
+                label: 'Jenkins CI server URL',
+                placeholder: 'Jenkins CI server URL',
+                value: 'http://Jenkins/CI/Server/URL'
+            }
         }
     }
 }

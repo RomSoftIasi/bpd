@@ -1,9 +1,16 @@
-.bpd-dashboard div.card-body,
-.bpd-sub-header div.card-body {
-    padding: 0;
+.bpd-sub-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 35px 50px;
+    box-shadow: 0 0 13px -2px rgba(0,0,0,0.75);
+    border-radius: 8px;
+    padding: 20px 25px 20px 25px;
+    font-size: 22px;
+    font-weight: bold;
 }
 
-.bpd-organization-card {
+.bpd-organization-elements .bpd-organization-card {
     display: block;
     margin-right: 30px;
     margin-bottom: 20px;

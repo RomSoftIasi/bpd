@@ -1,16 +1,16 @@
 <webc-container controller="clusters/ClustersController">
-    <link href="/assets/css/main.css" rel="stylesheet">
+    <link href="/assets/css/pages/main.css" rel="stylesheet">
 
     <div class="bpd-header">
         <label>Sign out</label>
     </div>
 
-    <psk-card class="bpd-sub-header">
+    <div class="bpd-sub-header">
         <label>{{@organization.name}}</label>
         <psk-barcode-generator data="@organization.uid" size="8" type="qrcode"></psk-barcode-generator>
-    </psk-card>
+    </div>
 
-    <psk-card class="bpd-dashboard">
+    <div class="bpd-dashboard">
         <label class="bpd-dashboard-title">Blockchain Networks</label>
         <div class="bpd-create-organization">
             <button class="btn btn-primary bpd-create-organization-button" data-tag="cluster:initiatenetwork">
@@ -20,7 +20,7 @@
         </div>
         <div class="bpd-create-organization">
             <button class="btn btn-primary bpd-create-organization-button" data-tag="cluster:join">
-                <psk-icon color="rgb(255, 255, 255)" icon="sign-in"></psk-icon>
+                <span class="icon fa fa-sign-in" style="color: rgb(255, 255, 255);"></span>
             </button>
             <label class="bpd-create-organization-label">Join network</label>
         </div>
@@ -58,7 +58,7 @@
                 </psk-button-group>
             </div>
         </div>
-    </psk-card>
+    </div>
 
     <psk-list-feedbacks>
     </psk-list-feedbacks>

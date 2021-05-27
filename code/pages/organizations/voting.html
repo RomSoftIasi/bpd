@@ -1,17 +1,17 @@
 <webc-container controller="organizations/VotingController">
-    <link href="/assets/css/main.css" rel="stylesheet">
-    <link href="/assets/css/progress.css" rel="stylesheet">
+    <link href="/assets/css/pages/main.css" rel="stylesheet">
+    <link href="/assets/css/pages/progress.css" rel="stylesheet">
 
     <div class="bpd-header">
         <label>Sign out</label>
     </div>
 
-    <psk-card class="bpd-sub-header">
+    <div class="bpd-sub-header">
         <label>{{@organization.name}}</label>
         <label>{{@cluster.name}}</label>
-    </psk-card>
+    </div>
 
-    <psk-card class="bpd-dashboard bpd-tabs">
+    <div class="bpd-dashboard bpd-tabs">
         <label class="bpd-dashboard-title">Referendum</label>
 
         <psk-tab-navigator default="1">
@@ -123,5 +123,5 @@
             </psk-tab>
         </psk-tab-navigator>
         <psk-list-feedbacks messages-to-display="5" time-alive="3000"></psk-list-feedbacks>
-    </psk-card>
+    </div>
 </webc-container>

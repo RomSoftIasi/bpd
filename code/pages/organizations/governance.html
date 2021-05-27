@@ -1,18 +1,18 @@
 <webc-container controller="organizations/GovernanceController">
-    <link href="/assets/css/main.css" rel="stylesheet">
+    <link href="/assets/css/pages/main.css" rel="stylesheet">
 
     <div class="bpd-header">
         <label>Sign out</label>
     </div>
 
-    <psk-card class="bpd-sub-header">
+    <div class="bpd-sub-header">
         <label>{{@organization.name}}</label>
         <label>{{@cluster.name}}</label>
-    </psk-card>
+    </div>
 
-    <psk-card class="bpd-dashboard">
+    <div class="bpd-dashboard">
         <label class="bpd-dashboard-title">Governance</label>
-        <div class="bpd-buttons-row bpd-wide-cards">
+        <div class="bpd-buttons-row bpd-wide-cards bpd-buttons-row bpd-wide-cards d-flex justify-content-around my-3">
             <button class="btn btn-primary bpd-organization-card" data-tag="gvn:contract-edit">
                 <div class="bpd-organization-card-content">
                     <span class="icon fa fa-pencil-square-o icon-big" style="color: rgb(255, 255, 255);"></span>
@@ -27,6 +27,6 @@
                 <label class="bpd-organization-card-label">Voting</label>
             </button>
         </div>
-    </psk-card>
+    </div>
 
 </webc-container>

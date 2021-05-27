@@ -1,14 +1,14 @@
-import ContainerController from '../../../cardinal/controllers/base-controllers/ContainerController.js';
+const {WebcController} = WebCardinal.controllers;
 import OrganizationService from "../services/OrganizationService.js";
 import ClusterControllerApi from "../../../ClustersControllerApi.js";
-import deleteViewModel from "../../models/deleteViewModel.js";
 
-export default class OrganizationsController extends ContainerController {
+export default class OrganizationsController extends WebcController {
+    constructor(...props) {
+        super(...props);
 
-    constructor(element, history) {
-        super(element, history);
-
-        this.setModel({});
+        this.model = {
+            organizations: []
+        };
 
         this.OrganisationService = new OrganizationService(this.DSUStorage);
         this.OrganisationService.getOrganizationModel((err, data) => {
@@ -16,146 +16,171 @@ export default class OrganizationsController extends ContainerController {
                 console.log(err);
                 return;
             }
-            this.setModel(data);
+
+            this.model = JSON.parse(JSON.stringify(data));
         });
 
         this.ClusterControllerApi = new ClusterControllerApi();
 
-        this._attachHandlerCreateOrg();
-        this._attachHandlerEditOrg();
-        this._attachHandlerManageCluster();
-        this._attachHandlerQRCodeShare();
-        this._attachHandlerRemoveOrg();
+        this.attachHandlerCreateOrg();
+        this.attachHandlerEditOrg();
+        this.attachHandlerManageCluster();
+        this.attachHandlerQRCodeShare();
+        this.attachHandlerRemoveOrg();
     }
 
-    _attachHandlerCreateOrg() {
-        this.on('org:create', (e) => {
-            e.preventDefault();
-            e.stopImmediatePropagation();
-            this.showModal('addOrganizationModal', {}, (err, data) => {
-                if (err) {
-                    console.log(err);
-                    return;
-                }
+    modalErrorHandler = (event) => {
+        const error = event.detail || null
 
-                if (data.qrCodeImportRedirect) {
-                    this.showModal('qrCodeImportModal', {}, (err, keySSIModel) => {
-                        if (err) {
-                            console.log(err);
-                            return;
-                        }
-                        const keySSI = keySSIModel.value;
-                        this.OrganisationService.mountOrganization(keySSI, (err, org) => {
-                            if (err) {
-                                return console.log(err);
-                            }
-                            this.model.organizations.push(org);
-                        })
-                    });
-                } else {
+        if (error && error !== true) {
+            console.error(error);
+        }
+    }
+
+    attachHandlerCreateOrg() {
+        this.onTagClick('org:create', (model, target, event) => {
+            event.preventDefault();
+            event.stopImmediatePropagation();
+
+            const modalConfiguration = {
+                controller: 'organizations/CreateOrganizationModal',
+                disableBackdropClosing: false
+            };
+
+            this.showModalFromTemplate('organizations/add-organization-modal',
+                (event) => {
+                    const response = event.detail;
+                    console.log(response);
+
+                    if (response.qrCodeImportRedirect === true) {
+                        return this.openCreateWithQRCodeModal();
+                    }
+
                     //todo : show spinner/loading stuff
-                    this.OrganisationService.saveOrganization(data, (err, updatedOrg) => {
+                    this.OrganisationService.saveOrganization(response, (err, updatedOrg) => {
                         if (err) {
                             console.log(err);
                             return;
                         }
+
                         this.model.organizations.push(updatedOrg);
                     });
-                }
-            })
+                }, this.modalErrorHandler, modalConfiguration);
         })
     }
 
-    _attachHandlerEditOrg() {
-        this.on('org:edit', (e) => {
-            e.preventDefault();
-            e.stopImmediatePropagation();
-            const uid = e.data;
-            const orgIndex = this.model.organizations.findIndex((org) => org.uid === uid);
-            if (orgIndex === -1) {
-                console.log('org not found @uid', uid, this.model.organizations);
-                return;
-            }
+    openCreateWithQRCodeModal() {
+        const modalConfiguration = {
+            controller: 'QRCodeImportController',
+            disableBackdropClosing: false
+        };
 
-            const orgToEdit = this.model.organizations[orgIndex];
-            this.showModal('editOrganizationModal', orgToEdit, (err, data) => {
-                if (err) {
-                    console.log(err);
-                    return;
-                }
+        this.showModalFromTemplate('qrcode-import-modal',
+            (event) => {
+                const response = event.detail;
+                console.log(response);
+
                 //todo : show spinner/loading stuff
-                this.OrganisationService.updateOrganization(data, (err) => {
+                this.OrganisationService.mountOrganization(response.keySSI, (err, org) => {
                     if (err) {
-                        console.log(err);
-                        return;
+                        return console.log(err);
                     }
-                    this.model.organizations[orgIndex] = data;
-                });
-            })
-        })
+
+                    this.model.organizations.push(org);
+                })
+            }, this.modalErrorHandler, modalConfiguration);
     }
 
-    _attachHandlerManageCluster() {
-        this.on('org:manage-clusters', (e) => {
-            e.preventDefault();
-            e.stopImmediatePropagation();
-            const orgUid = e.data;
-            this.History.navigateToPageByTag('view-clusters', orgUid);
+    attachHandlerEditOrg() {
+        this.onTagClick('org:edit', (model, target, event) => {
+            event.preventDefault();
+            event.stopImmediatePropagation();
+
+            const modalConfiguration = {
+                model: model,
+                controller: 'organizations/EditOrganizationModal',
+                disableBackdropClosing: false
+            };
+
+            this.showModalFromTemplate('organizations/edit-organization-modal',
+                (event) => {
+                    const response = event.detail;
+                    console.log(response);
+
+                    //todo : show spinner/loading stuff
+                    model.name = response.name;
+                    model.jenkinsURL = response.jenkinsURL;
+                    this.OrganisationService.updateOrganization(model, (err) => {
+                        if (err) {
+                            return console.error(err);
+                        }
+
+                        const orgIndex = this.model.organizations.findIndex((org) => org.uid === model.uid);
+                        if (orgIndex === -1) {
+                            return console.error('Org not found @uid', model.uid);
+                        }
+
+                        this.model.organizations[orgIndex] = model;
+                    });
+                }, this.modalErrorHandler, modalConfiguration);
         });
     }
 
-    _attachHandlerQRCodeShare() {
-        this.on('org:getQRCode', (e) => {
-            e.preventDefault();
-            e.stopImmediatePropagation();
-            const uid = e.data;
-            const orgIndex = this.model.organizations.findIndex((org) => org.uid === uid);
-            if (orgIndex === -1) {
-                console.log('org not found @uid', uid, this.model.organizations);
-                return;
-            }
+    attachHandlerQRCodeShare() {
+        this.onTagClick('org:getQRCode', (model, target, event) => {
+            event.preventDefault();
+            event.stopImmediatePropagation();
 
-            const orgToShare = this.model.organizations[orgIndex];
+            model.description = 'Scan the code above to get your organization data';
+            const modalConfiguration = {
+                model: model,
+                controller: 'ShareQRCodeController',
+                disableBackdropClosing: false,
+                disableFooter: true
+            };
 
-            let qrCodeModalModel = {
-                title: `QRCode for ${orgToShare.name}`,
-                description: `Scan the code above to get your organization data`,
-                data: {
-                    identifier: orgToShare.uid
-                }
-            }
-            console.log('Org to share UID : ', orgToShare.uid);
-            this.showModal('shareQRCodeModal', qrCodeModalModel);
+            this.showModalFromTemplate('share-qrcode-modal',
+                (event) => {
+                    const response = event.detail;
+                    console.log(response);
+
+                }, this.modalErrorHandler, modalConfiguration);
         });
     }
 
-    _attachHandlerRemoveOrg() {
-        this.on('org:remove', (e) => {
-            e.preventDefault();
-            e.stopImmediatePropagation();
+    attachHandlerManageCluster() {
+        this.onTagClick('org:manage-clusters', (model, target, event) => {
+            event.preventDefault();
+            event.stopImmediatePropagation();
 
-            const uid = e.data;
-            deleteViewModel.selectedItemName = e.data;
+            const orgUid = model.uid;
+            this.navigateToPageTag('view-clusters', orgUid);
+        });
+    }
 
-            this.showModal('deleteOrganizationModal', deleteViewModel, (err, response) => {
-                if (err) {
-                    return this.feedbackEmitter(err, null, "an error occured");
-                }
+    attachHandlerRemoveOrg() {
+        this.onTagClick('org:remove', (model, target, event) => {
+            event.preventDefault();
+            event.stopImmediatePropagation();
 
-                if (response.success) {
-                    const orgIndex = this.model.organizations.findIndex((org) => org.uid === uid);
+            const modalConfiguration = {
+                model: model,
+                controller: 'organizations/DeleteOrganizationController',
+                disableBackdropClosing: false
+            };
+
+            this.showModalFromTemplate('organizations/delete-organization-modal',
+                (event) => {
+                    const response = event.detail;
+                    console.log(response);
+
+                    const orgIndex = this.model.organizations.findIndex((org) => org.uid === model.uid);
                     if (orgIndex === -1) {
-                        console.log('Org not found @uid', uid, this.model.organizations);
-                        return;
+                        return console.error('Org not found @uid', model.uid);
                     }
 
                     this.model.organizations.splice(orgIndex, 1);
-                }
-            });
+                }, this.modalErrorHandler, modalConfiguration);
         });
     }
 }
-
-
-
-

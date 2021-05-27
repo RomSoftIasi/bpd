@@ -1,81 +1,83 @@
-import ModalController from '../../../cardinal/controllers/base-controllers/ModalController.js';
+const {WebcController} = WebCardinal.controllers;
 
-const initModel = {
-    title: 'Add a new organization',
-    name: {
-        name: 'name',
-        label: 'Organization Name',
-        required: true,
-        placeholder: 'Organization name',
-        value: ''
-    },
-    jenkinsURL: {
-        name: 'Jenkins CI server URL',
-        label: 'Jenkins CI server URL',
-        placeholder: 'Jenkins CI server URL',
-        value: 'http://Jenkins/CI/Server/URL'
-    },
-    loadWithQR: "Load with QRCode"
-}
+export default class CreateOrganizationModal extends WebcController {
+    constructor(...props) {
+        super(...props);
 
-export default class CreateOrganizationModal extends ModalController {
-    constructor(element, history) {
-        super(element, history);
+        this.model = this.getCreateOrganizationViewModel();
 
-        this.setModel(JSON.parse(JSON.stringify(initModel)));
-        this._initListeners();
-    }
-
-    _initListeners = () => {
+        this.attachCreateOrganizationHandler();
+        this.attachCreateWithQRCodeHandler();
         this.on('openFeedback', (evt) => {
             this.feedbackEmitter = evt.detail;
         });
-
-        this.on('org:create', this._attachHandlerOrganizationCreate);
-        this.on('org:create-with-qrcode', this._attachHandlerOrganizationImport);
-    };
-
-    _attachHandlerOrganizationCreate = (event) => {
-        if (this.__displayErrorMessages(event)) {
-            return;
-        }
-
-        let toReturnObject = {
-            name: this.model.name.value,
-            jenkinsURL: this.model.jenkinsURL.value
-        }
-        this._finishProcess(event, toReturnObject)
     }
 
-    _attachHandlerOrganizationImport = (event) => {
-        this._finishProcess(event, {
-            qrCodeImportRedirect: true
-        })
+    attachCreateOrganizationHandler = () => {
+        this.onTagClick('org:create', (model, target, event) => {
+            event.preventDefault();
+            event.stopImmediatePropagation();
+
+            if (this.displayErrorMessages(event)) {
+                return;
+            }
+
+            let result = {
+                name: this.model.name.value,
+                jenkinsURL: this.model.jenkinsURL.value
+            };
+
+            this.send("confirmed", result);
+        });
     }
 
-    __displayErrorMessages = (event) => {
-        return this.__displayErrorRequiredField(event, 'Organization name', this.model.name.value)
+    attachCreateWithQRCodeHandler = () => {
+        this.onTagClick('org:create-with-qrcode', (model, target, event) => {
+            event.preventDefault();
+            event.stopImmediatePropagation();
+
+            let result = {
+                qrCodeImportRedirect: true
+            };
+
+            this.send("confirmed", result);
+        });
     }
 
-    __displayErrorRequiredField(event, fieldName, field) {
+    displayErrorMessages = (event) => {
+        return this.displayErrorRequiredField(event, this.model.name.label, this.model.name.value)
+    }
+
+    displayErrorRequiredField(event, fieldName, field) {
         if (field === undefined || field === null || field.length === 0) {
-            this._emitFeedback(event, fieldName.toUpperCase() + " field is required.", "alert-danger")
+            this.emitFeedback(event, fieldName.toUpperCase() + " field is required.", "alert-danger");
             return true;
         }
+
         return false;
     }
 
-    _emitFeedback(event, message, alertType) {
-        event.preventDefault();
-        event.stopImmediatePropagation();
-
+    emitFeedback(event, message, alertType) {
         if (typeof this.feedbackEmitter === 'function') {
             this.feedbackEmitter(message, "Validation", alertType)
         }
     }
 
-    _finishProcess(event, response) {
-        event.stopImmediatePropagation();
-        this.responseCallback(undefined, response);
-    };
+    getCreateOrganizationViewModel() {
+        return {
+            name: {
+                name: 'name',
+                label: 'Organization Name',
+                required: true,
+                placeholder: 'Organization name',
+                value: ''
+            },
+            jenkinsURL: {
+                name: 'Jenkins CI server URL',
+                label: 'Jenkins CI server URL',
+                placeholder: 'Jenkins CI server URL',
+                value: 'http://Jenkins/CI/Server/URL'
+            }
+        }
+    }
 }

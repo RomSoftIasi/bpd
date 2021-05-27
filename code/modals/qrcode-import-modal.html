@@ -1,0 +1,18 @@
+<link href="/assets/css/modal.css" rel="stylesheet">
+
+<h2 clas="bpd-modal-title" slot="header">Scan a QR Code or insert a KeySSI</h2>
+
+<div class="bpd-modal-content">
+    <div class="form-group flex-column">
+        <label>KeySSI</label>
+        <input class="form-control bpd-input" data-view-model="@keySSI"/>
+    </div>
+
+    <div class="container d-flex justify-content-center align-items-center">
+        <psk-barcode-scanner data="@keySSI.value"></psk-barcode-scanner>
+    </div>
+</div>
+
+<div class="bpd-row bpd-creation-row" slot="footer">
+    <button class="btn btn-primary" data-tag="import:send">Import organization</button>
+</div>

@@ -1,109 +1,127 @@
-<psk-page title="Voting">
-    <psk-container controller-name="organizations/VotingController">
+<webc-container controller="organizations/VotingController">
+    <link href="/assets/css/main.css" rel="stylesheet">
+    <link href="/assets/css/progress.css" rel="stylesheet">
 
-        <psk-card class="bpd-header">
-            <psk-label label="Sign out"/>
-        </psk-card>
+    <div class="bpd-header">
+        <label>Sign out</label>
+    </div>
 
-        <psk-card class="bpd-sub-header">
-            <div>
-                <psk-label label="@organization.name"/>
-            </div>
-            <div>
-                <psk-label label="@cluster.name"/>
-            </div>
-        </psk-card>
+    <psk-card class="bpd-sub-header">
+        <label>{{@organization.name}}</label>
+        <label>{{@cluster.name}}</label>
+    </psk-card>
 
-        <psk-card class="bpd-dashboard bpd-tabs">
-            <psk-label class="bpd-dashboard-title" label="Referendum"/>
+    <psk-card class="bpd-dashboard bpd-tabs">
+        <label class="bpd-dashboard-title">Referendum</label>
 
-            <psk-tab-navigator default="1">
+        <psk-tab-navigator default="1">
 
-                <psk-tab title="Create">
-                    <psk-card class="bpd-row">
-                        <psk-card class="bpd-question-for-each-row bpd-flex">
-                            <psk-text-input class="bpd-question-title" view-model="questionCreationModel.title"></psk-text-input>
-                            <psk-text-input class="bpd-input bpd-question-title" view-model="questionCreationModel.signature" ></psk-text-input>
-
-                        </psk-card>
-
-                        <psk-for-each data-view-model="questionCreationModel.answers">
-                            <div class="bpd-for-each-row">
-                                <psk-text-input class="bpd-seed"  view-model="@"></psk-text-input>
-                            </div>
-                        </psk-for-each>
-
-                        <psk-card class="bpd-for-each-row bpd-margin-north-south">
-                            <psk-button label="Add Answer" event-name="answer:create"
-                                        button-class="btn btn-info btn-sm"></psk-button>
-                        </psk-card>
-
-                        <psk-card class="bpd-for-each-row">
-                           <br>
-                        </psk-card>
-
-                        <psk-card class="bpd-for-each-row bpd-flex">
-                            <psk-checkbox view-model="@questionCreationModel.uniqueAnswers"></psk-checkbox>
-                            <psk-button event-name="question:create">Create question</psk-button>
-                        </psk-card>
-
-                    </psk-card>
-                </psk-tab>
-
-                <psk-tab title="Respond">
-                    <psk-card class="bpd-row">
-                        <psk-for-each data-view-model="cluster.questions">
-                            <div class="bpd-for-each-row">
-                                <psk-label label="@title"></psk-label>
-                            </div>
-                            <div class="bpd-for-each-row">
-                                <psk-condition condition="@uniqueAnswers">
-
-                                    <psk-radio-group slot="condition-true" view-model="answerRadioGroup"></psk-radio-group>
-
-                                    <psk-for-each slot="condition-false" data-view-model="@answers">
-                                        <psk-checkbox view-model="@"></psk-checkbox>
-                                    </psk-for-each>
-
-                                </psk-condition>
-                            </div>
-                        </psk-for-each>
-                        <psk-condition condition="hasQuestions">
-                        <div class="bpd-for-each-row">
-
-                            <psk-button event-name="voting:respond" button-class="btn btn-sm btn-success"  >
-                                <psk-icon icon="check" color="rgb(255, 255, 255)"></psk-icon>
-                                Finish
-                            </psk-button>
+            <psk-tab title="Create">
+                <div class="bpd-row">
+                    <div class="mb-3 question-wrapper">
+                        <div class="form-group flex-column">
+                            <label>{{@questionCreationModel.title.label}}</label>
+                            <input class="form-control bpd-input"
+                                   data-view-model="@questionCreationModel.title"/>
                         </div>
-                        </psk-condition>
-                    </psk-card>
-                </psk-tab>
 
-                <psk-tab title="Results">
-                    <psk-card class="bpd-row">
+                        <div class="form-group flex-column">
+                            <label>{{@questionCreationModel.signature.label}}</label>
+                            <input class="form-control bpd-input"
+                                   data-view-model="@questionCreationModel.signature"/>
+                        </div>
+                    </div>
 
-                        <psk-for-each data-view-model="cluster.responses">
-                            <div class="bpd-for-each-row">
-                                <psk-label label="@question.title"></psk-label>
+                    <label class="bpd-dashboard-title my-2 d-flex justify-content-center">Answers</label>
+                    <div class="answers-wrapper" data-for="@questionCreationModel.answers">
+                        <input class="form-control bpd-input" data-view-model="@"/>
+                    </div>
+
+                    <div class="bpd-for-each-row my-3">
+                        <button class="btn btn-info btn-sm" data-tag="answer:create">Add Answer</button>
+                    </div>
+
+                    <div class="bpd-for-each-row d-flex justify-content-center mb-3">
+                        <div class="form-check">
+                            <input class="form-check-input" data-view-model="@questionCreationModel.uniqueAnswers"
+                                   id="uniqueAnswer" type="checkbox">
+                            <label class="form-check-label" for="uniqueAnswer">Unique answer</label>
+                        </div>
+                        <button class="btn btn-primary" data-tag="question:create">Create question</button>
+                    </div>
+                </div>
+            </psk-tab>
+
+            <psk-tab title="Respond">
+                <div class="bpd-row">
+                    <div data-for="@cluster.questions">
+                        <div class="bpd-for-each-row">
+                            <label class="bpd-dashboard-title">{{@title}}</label>
+                        </div>
+                        <div class="bpd-for-each-row" data-if="@uniqueAnswers">
+                            <fieldset class="form-group d-flex justify-content-center align-items-center"
+                                      data-for="@answers" id="@id" slot="true">
+                                <div class="form-check">
+                                    <input class="form-check-input" data-view-model="@checkInput" type="radio">
+                                    <label class="form-check-label" data-view-model="@label">
+                                        {{@label.text}}
+                                    </label>
+                                </div>
+                            </fieldset>
+
+                            <div class="d-flex justify-content-center align-items-center" data-for="@answers"
+                                 slot="false">
+                                <div class="form-check">
+                                    <input class="form-check-input" data-view-model="@checkInput" type="checkbox">
+                                    <label class="form-check-label" data-view-model="@label">{{@label.text}}</label>
+                                </div>
                             </div>
-                            <div class="bpd-for-each-row">
-                                <psk-for-each data-view-model="@answerResults">
-                                    <psk-progress view-model="@"></psk-progress>
-                                    <psk-card slot="no-data" title="No responses were submitted for this question."></psk-card>
+                        </div>
 
-                                </psk-for-each>
-                            </div>
-                            <div class="bpd-for-each-row">
-                                <psk-button event-name="result:apply">Apply to Smart Contract</psk-button>
-                            </div>
-                            <hr>
-                        </psk-for-each>
+                        <label class="info" slot="no-data">No questions were submitted.</label>
+                    </div>
 
-                    </psk-card>
-                </psk-tab>
-            </psk-tab-navigator>
-            <psk-list-feedbacks messages-to-display="5" time-alive="3000"></psk-list-feedbacks>
-        </psk-card>
-    </psk-container>
-</psk-page>
+                    <div data-if="@hasQuestions">
+                        <div class="bpd-for-each-row">
+                            <button class="btn btn-sm btn-success" data-tag="voting:respond">
+                                <span class="icon fa fa-check" style="color: rgb(255, 255, 255);"></span>
+                                Finish
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </psk-tab>
+
+            <psk-tab title="Results">
+                <div class="bpd-row">
+
+                    <div data-for="@cluster.responses">
+                        <div class="bpd-for-each-row">
+                            <label class="bpd-dashboard-title">{{@question.title}}</label>
+                        </div>
+                        <div class="bpd-for-each-row">
+                            <div class="d-flex justify-content-center align-items-center" data-for="@answerResults">
+                                <div class="bpd-progress">
+                                    <label class="bpd-dashboard-title">{{@label}}</label>
+                                    <div class="d-flex justify-content-center align-items-center">
+                                        <label class="over-the-progress">{{@value}}%</label>
+                                        <progress data-color="@color" max="100" value="@value"></progress>
+                                    </div>
+                                </div>
+                                <label class="info" slot="no-data">No responses were submitted for this
+                                    question.</label>
+
+                            </div>
+                        </div>
+                        <div class="bpd-for-each-row">
+                            <button class="btn btn-primary" data-tag="result:apply">Apply to Smart Contract</button>
+                        </div>
+
+                        <label class="info" slot="no-data">No questions were submitted.</label>
+                    </div>
+                </div>
+            </psk-tab>
+        </psk-tab-navigator>
+        <psk-list-feedbacks messages-to-display="5" time-alive="3000"></psk-list-feedbacks>
+    </psk-card>
+</webc-container>

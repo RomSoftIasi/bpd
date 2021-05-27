@@ -1,10 +1,20 @@
 const {WebcController} = WebCardinal.controllers;
 
-export default class InitiateNetworkModal extends WebcController {
+export default class NetworkModal extends WebcController {
     constructor(...props) {
         super(...props);
 
-        this.model = this.getInitiateNetworkViewModel();
+        const initModel = this.getEditNetworkViewModel();
+        initModel.title = this.model.title || 'Initiate Network';
+        initModel.jenkins.value = this.model.jenkins;
+        initModel.user.value = this.model.user;
+        initModel.token.value = this.model.token;
+        initModel.name.value = this.model.name;
+        initModel.config.value = this.model.config;
+        initModel.clusterStatus = this.model.clusterStatus;
+        initModel.clusterOperation = this.model.clusterOperation;
+        initModel.disableAll = this.model.clusterStatus === 'Installed' || this.model.clusterStatus === 'Pending';
+        this.model = JSON.parse(JSON.stringify(initModel));
 
         this.attachHandlerSaveNetwork();
         this.on('openFeedback', (evt) => {
@@ -57,7 +67,7 @@ export default class InitiateNetworkModal extends WebcController {
         }
     }
 
-    getInitiateNetworkViewModel() {
+    getEditNetworkViewModel() {
         return {
             clusterOperation: 'initiateNetwork',
             clusterStatus: 'None',

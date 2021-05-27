@@ -1,33 +1,47 @@
-import ModalController from '../../../cardinal/controllers/base-controllers/ModalController.js';
+const {WebcController} = WebCardinal.controllers;
 
-export default class QRCodeImportController extends ModalController {
-    constructor(element, history) {
-        super(element, history);
-        this.setModel({
-            data: '',
-            importIsDisabled: true
-        })
+export default class QRCodeImportController extends WebcController {
+    constructor(...props) {
+        super(...props);
 
-        this.importSeedInputOnChange();
+        this.model = {
+            keySSI: {
+                placeholder: "KeySSI",
+                value: ""
+            }
+        };
+
         this.importOnClick();
-    }
-
-    importSeedInputOnChange() {
-        this.model.onChange("data", (value) => {
-            this.model.importIsDisabled = this.model.data.length <= 5;
-        })
-    }
-
-    importOnClick() {
-        this.on('import-on-click', (event) => {
-            this._finishProcess(event, {
-                value: this.model.data
-            });
+        this.on('openFeedback', (message) => {
+            this.feedbackEmitter = message;
         });
     }
 
-    _finishProcess(event, response) {
-        event.stopImmediatePropagation();
-        this.responseCallback(undefined, response);
-    };
+    importOnClick() {
+        this.onTagClick('import:send', (model, target, event) => {
+            event.preventDefault();
+            event.stopImmediatePropagation();
+
+            if (this.displayErrorRequiredField("KeySSI", this.model.keySSI.value)) {
+                return;
+            }
+
+            this.send("confirmed", {keySSI: this.model.keySSI.value});
+        });
+    }
+
+    displayErrorRequiredField(fieldName, field) {
+        if (field === undefined || field === null || field.length === 0) {
+            this.emitFeedback(fieldName + " field is required.", "alert-danger");
+            return true;
+        }
+
+        return false;
+    }
+
+    emitFeedback(message, alertType) {
+        if (typeof this.feedbackEmitter === 'function') {
+            this.feedbackEmitter(message, "Validation", alertType)
+        }
+    }
 }

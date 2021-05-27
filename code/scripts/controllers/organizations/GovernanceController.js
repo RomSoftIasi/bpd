@@ -1,72 +1,83 @@
-import ContainerController from '../../../cardinal/controllers/base-controllers/ContainerController.js';
+const {WebcController} = WebCardinal.controllers;
 import OrganizationService from "../services/OrganizationService.js";
 import ClusterService from "../services/ClusterService.js";
 
-const initModel = {
-    title: 'GovernanceModal',
-    questions: [],
-    organization: {
-        name: ''
-    },
-    cluster: {
-        name: ''
-    }
-}
-
-export default class GovernanceController extends ContainerController {
-    constructor(element, history) {
-        super(element, history);
+export default class GovernanceController extends WebcController {
+    constructor(...props) {
+        super(...props);
 
         this.OrganisationService = new OrganizationService(this.DSUStorage);
         this.ClusterService = new ClusterService(this.DSUStorage);
 
-        let receivedModel = this.History.getState();
-        this.model = this.setModel({
-            ...JSON.parse(JSON.stringify(initModel)),
+        // TODO: Replace this when a solution has been found
+        let receivedModel = this.history.win.history.state.state;
+        this.model = {
+            questions: [],
+            organization: {},
+            cluster: {},
             ...receivedModel
-        })
+        };
 
         this.OrganisationService.getOrganization(receivedModel.organizationUid, (err, organization) => {
             if (err) {
-                console.log(err);
-                return;
+                return console.error(err);
             }
+            
             this.model.organization = organization;
-        })
+        });
 
         this.ClusterService.getCluster(receivedModel.organizationUid, receivedModel.clusterUid, (err, cluster) => {
             if (err) {
-                console.log(err);
-                return;
+                return console.error(err);
             }
+            
             this.model.cluster = cluster;
-        })
+        });
 
-        this._attachHandlerEditContract();
-        this._attachHandlerVotingContract();
+        this.attachHandlerEditContract();
+        this.attachHandlerVotingContract();
     }
 
-    _attachHandlerEditContract() {
-        this.on('gvn:contract-edit', (event) => {
+    attachHandlerEditContract() {
+        this.onTagClick('gvn:contract-edit', (model, target,event) => {
+            event.preventDefault();
+            event.stopImmediatePropagation();
+
             let toSendObject = {
                 organizationUid: this.model.organizationUid,
                 clusterUid: this.model.clusterUid
-            }
-            this.showModal('dsuTypesApprovalModal', toSendObject, (err, response) => {
-                if (err) {
-                    return console.log(err);
+            };
+
+            const modalConfiguration = {
+                model: toSendObject,
+                controller: 'organizations/DSUTypesApproveModal',
+                disableBackdropClosing: false
+            };
+
+            this.showModalFromTemplate('organizations/dsu-types-approval-modal', (event) => {
+                const response = event.detail;
+                console.log(response);
+            }, (event) => {
+                const error = event.detail || null
+
+                if (error && error !== true) {
+                    console.error(error);
                 }
-            });
+            }, modalConfiguration);
         });
     }
 
-    _attachHandlerVotingContract() {
-        this.on('gvn:voting', (event) => {
+    attachHandlerVotingContract() {
+        this.onTagClick('gvn:voting', (model, target,event) => {
+            event.preventDefault();
+            event.stopImmediatePropagation();
+
             let toSendObject = {
                 organizationUid: this.model.organizationUid,
                 clusterUid: this.model.clusterUid
-            }
-            this.History.navigateToPageByTag('voting', toSendObject);
+            };
+
+            this.navigateToPageTag('voting', toSendObject);
         });
     }
 }

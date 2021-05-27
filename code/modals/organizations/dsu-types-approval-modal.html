@@ -1,0 +1,38 @@
+<link href="/assets/css/modal.css" rel="stylesheet">
+
+<h2 class="bpd-modal-title" slot="header">Manage DSU Types</h2>
+
+<div class="bpd-modal-content">
+    <div class="bpd-row" data-for="@dsuTypes">
+        <div class="bpd-for-each-row dsu-type-row">
+            <input class="form-control" data-view-model="@name"/>
+            <input class="form-control" data-view-model="@seed"/>
+
+            <button class="btn btn-sm btn-success" data-tag="dsu:review"
+                    disabled="@reviewed">
+                <span class="icon fa fa-wrench" style="color: rgb(255, 255, 255);"></span>
+                Review
+            </button>
+
+            <button class="btn btn-sm btn-success" data-tag="dsu:open"
+                    disabled="@reviewed" event-data="@id.value">
+                <span class="icon fa fa-eye" style="color: rgb(255, 255, 255);"></span>
+                Open
+            </button>
+
+            <button class="btn btn-sm btn-success" data-tag="dsu:approve"
+                    disabled="@approved">
+                <span class="icon fa fa-check" style="color: rgb(255, 255, 255);"></span>
+                Approve
+            </button>
+        </div>
+    </div>
+
+    <div class="bpd-row d-flex justify-content-center">
+        <button class="btn btn-info btn-sm" data-tag="dsu:add-dsuType-config">Add DSU Type</button>
+    </div>
+</div>
+
+<div class="bpd-row bpd-creation-row" slot="footer">
+    <button class="btn btn-primary" data-tag="dsu:finish">Finish</button>
+</div>

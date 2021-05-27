@@ -1,111 +1,74 @@
-import ContainerController from '../../../cardinal/controllers/base-controllers/ContainerController.js';
+const {WebcController} = WebCardinal.controllers;
 import OrganizationService from "../services/OrganizationService.js";
 import ClusterService from "../services/ClusterService.js";
 
-const initialQuestionCreationModel = {
-    title: {
-        placeholder: 'Question',
-        name: 'Question',
-        label: 'Question'
-    },
-    signature: {
-        placeholder: 'e13664398bb18ca2f90c647ca940e4654ddc28f006a597bdf753dfb56d6f0e39',
-        name: 'Question signature',
-        label: 'Question signature'
-    },
-    uniqueAnswers: {
-        checkboxLabel: "Unique Answer",
-        name: "unique-answer",
-        checkedValue: 1,
-        uncheckedValue: 0,
-        value: ''
-    },
-    answers: []
-}
+export default class VotingController extends WebcController {
+    constructor(...props) {
+        super(...props);
 
-const initModel = {
-    title: 'GovernanceModal',
-    organization: {
-        name: 'Organization A'
-    },
-    hasQuestions: false,
-    cluster: {
-        name: 'Network A'
-    },
-    questionCreationModel: JSON.parse(JSON.stringify(initialQuestionCreationModel))
-}
+        // TODO: Replace this when a solution has been found
+        let receivedModel = this.history.win.history.state.state;
 
-export default class VotingController extends ContainerController {
-    constructor(element, history) {
-        super(element, history);
-
-        let receivedModel = this.History.getState();
-        this.model = this.setModel({
-            ...JSON.parse(JSON.stringify(initModel)),
+        const initModel = this.getVotingViewModel();
+        this.model = {
+            ...initModel,
             ...receivedModel
-        })
+        };
 
         this.OrganisationService = new OrganizationService(this.DSUStorage);
         this.ClusterService = new ClusterService(this.DSUStorage);
         this.OrganisationService.getOrganization(receivedModel.organizationUid, (err, organization) => {
             if (err) {
-                console.log(err);
-                return;
+                return console.error(err);
             }
+
             this.model.organization = organization;
-        })
+        });
 
         this.ClusterService.getCluster(receivedModel.organizationUid, receivedModel.clusterUid, (err, cluster) => {
             if (err) {
-                console.log(err);
-                return;
+                return console.error(err);
             }
+
             this.model.cluster = cluster;
 
             if (!this.model.cluster.responses) {
                 this.model.cluster.responses = [];
             }
+
             if (!this.model.cluster.questions) {
                 this.model.cluster.questions = [];
                 this.model.hasQuestions = false;
             } else {
                 this.model.hasQuestions = true;
             }
-        })
+        });
 
-        this._attachHandlerClickAnswer();
-        this._attachHandlerClickResponse();
-        this._attachHandlerCreateAnswer();
-        this._attachHandlerCreateQuestion();
+        this.attachHandlerClickAnswer();
+        this.attachHandlerClickResponse();
+        this.attachHandlerCreateAnswer();
+        this.attachHandlerCreateQuestion();
 
         this.on('openFeedback', (evt) => {
             this.feedbackEmitter = evt.detail;
         });
     }
 
-    __getRadiosAnswerFromQuestion(question) {
-        return {
-            options: question.answers.map(answer => {
-                return {
-                    label: answer.text,
-                    value: answer.id,
-                    name: answer.id + "_" + answer.text.replace(' ', '')
-                }
-            }),
-            value: ''
-        }
-    }
-
-    __getCheckboxesAnswerFromQuestion(question) {
-        return question.answers.map(answer => {
+    getAnswersForQuestion(question) {
+        return question.answers.map(({text, id}) => {
             return {
-                ...answer,
-                checkboxLabel: answer.text,
-                name: answer.id,
-                checkedValue: 1,
-                uncheckedValue: 0,
-                value: ''
-            }
+                id: parseInt(id) || 0,
+                label: {
+                    text: text,
+                    for: id
+                },
+                checkInput: {
+                    value: id,
+                    id: id,
+                    checked: false,
+                    name: question.id + "_" + question.title
+                }
+            };
         });
     }
 
@@ -118,11 +81,14 @@ export default class VotingController extends ContainerController {
                 }
             }
             return false;
-        })
+        });
     }
 
-    _attachHandlerClickAnswer() {
-        this.on('answer:click', (event) => {
+    attachHandlerClickAnswer() {
+        this.onTagClick('answer:click', (model, target, event) => {
+            event.preventDefault();
+            event.stopImmediatePropagation();
+
             let answerId = event.data;
             let questionIndex = this.findQuestionIndexByAnswerId(answerId);
             if (questionIndex === -1) {
@@ -148,7 +114,7 @@ export default class VotingController extends ContainerController {
         });
     }
 
-    _calculateAnswerPercents(index) {
+    calculateAnswerPercents(index) {
         let possibleColors = ['red', 'blue', 'green', 'purple', 'black', 'orange', 'brown']
         let question = this.model.cluster.questions[index];
         let possibleAnswers = question.answers;
@@ -158,96 +124,95 @@ export default class VotingController extends ContainerController {
             return;
         }
         this.model.cluster.responses[index].answerResults = possibleAnswers.map(answer => {
-            let responsesOfThisType = responses.filter(res => res == answer.id).length;
+            let responsesOfThisType = responses.filter(res => res === answer.id).length;
 
             let randomIndex = Math.floor(Math.random() * possibleColors.length);
             let randomItem = possibleColors[randomIndex];
             possibleColors.splice(randomIndex, 1);
 
+            const value = Math.round((((responsesOfThisType / totalResponses) * 100) + Number.EPSILON) * 100) / 100;
+            console.log("VALUE: ", value);
             return {
                 id: answer.id,
-                value: (responsesOfThisType / totalResponses) * 100,
-                label: answer.text,
+                label: answer.label.text,
+                value: value,
+                max: 100,
                 color: randomItem
             }
         });
     }
 
-    _attachHandlerClickResponse() {
-        this.on('voting:respond', (event) => {
+    attachHandlerClickResponse() {
+        this.onTagClick('voting:respond', (model, target, event) => {
+            event.preventDefault();
+            event.stopImmediatePropagation();
+
             this.model.cluster.questions.forEach((question, index) => {
                 let responsesIds = [];
-                if (question.answerRadioGroup) {
-                    responsesIds = [question.answerRadioGroup.value]
+                if (question.uniqueAnswers) {
+                    const selectedAnswer = this.querySelector(`input[name^="${question.id}"]:checked`);
+                    if (selectedAnswer) {
+                        responsesIds = [parseInt(selectedAnswer.value)];
+                    }
                 } else {
-                    responsesIds = question.answers.map(answer => {
-                        return answer.value === "1" ? answer.id : "";
-                    })
+                    responsesIds = question.answers.filter((answer) => {
+                        return answer.checkInput.checked === true && (answer.id + "").length > 0;
+                    }).map(answer => parseInt(answer.id));
                 }
 
-                let finalResponses = responsesIds
-                    .filter(response => (response + "").length > 0)
-                    .map(response => parseInt(response));
-
+                console.log(responsesIds);
                 let responses = JSON.parse(JSON.stringify(this.model.cluster.responses[index]));
 
-                for (let i = 0; i < finalResponses.length; i++) {
-                    responses.answerIds.push(finalResponses[i])
+                for (let i = 0; i < responsesIds.length; i++) {
+                    responses.answerIds.push(responsesIds[i])
                 }
 
                 this.model.cluster.responses[index] = responses;
-                this._calculateAnswerPercents(index);
+                this.calculateAnswerPercents(index);
+            });
 
-                this.ClusterService.updateCluster(this.model.organizationUid, this.model.cluster, (err, data) => {
-                    if (err) {
-                        console.log(err);
-                        return;
-                    }
-
-                })
+            this.ClusterService.updateCluster(this.model.organizationUid, this.model.cluster, (err, data) => {
+                if (err) {
+                    console.error(err);
+                }
             });
         });
     }
 
-    _attachHandlerCreateAnswer() {
-        this.on('answer:create', (e) => {
-            e.preventDefault();
-            e.stopImmediatePropagation();
+    attachHandlerCreateAnswer() {
+        this.onTagClick('answer:create', (model, target, event) => {
+            event.preventDefault();
+            event.stopImmediatePropagation();
 
             if (this.model.questionCreationModel && this.model.questionCreationModel.answers) {
                 let size = this.model.questionCreationModel.answers.length;
                 if (size > 0) {
-
                     let lastAnswer = this.model.questionCreationModel.answers[size - 1];
                     if (!lastAnswer.value || lastAnswer.value.length < 1) {
-                        this._emitFeedback(e, "Please complete the field answer !", "alert-danger")
+                        this.emitFeedback("Please complete the field answer !", "alert-danger");
                         return;
                     }
                 }
             }
 
-            this._createAnswer();
+            this.createAnswer();
         });
     }
 
-    _attachHandlerCreateQuestion() {
-        this.on('question:create', (e) => {
-            if (this.__displayErrorForQuestion(e)) {
+    attachHandlerCreateQuestion() {
+        this.onTagClick('question:create', (model, target, event) => {
+            event.preventDefault();
+            event.stopImmediatePropagation();
+
+            if (this.displayErrorForQuestion() || this.displayErrorIfNoAnswers()) {
                 return;
             }
-
-            if (this.__displayErrorIfNoAnswers(e)) {
-                return;
-            }
-
-            e.preventDefault();
-            e.stopImmediatePropagation();
 
             this.model.hasQuestions = true;
             let questionModel = {
                 id: this.getRandomId(),
                 title: this.model.questionCreationModel.title.value,
-                uniqueAnswers: this.model.questionCreationModel.uniqueAnswers.value === "1",
+                uniqueAnswers: this.model.questionCreationModel.uniqueAnswers.checked === true,
                 answers: this.model.questionCreationModel.answers.map(answer => {
                     return {
                         id: answer.id,
@@ -257,28 +222,20 @@ export default class VotingController extends ContainerController {
             }
 
             let index = this.model.cluster.questions.push(questionModel) - 1
-
-            if (questionModel.uniqueAnswers) {
-                this.model.cluster.questions[index].answerRadioGroup = this.__getRadiosAnswerFromQuestion(questionModel);
-            } else {
-                this.model.cluster.questions[index].answers = this.__getCheckboxesAnswerFromQuestion(questionModel)
-            }
+            this.model.cluster.questions[index].answers = this.getAnswersForQuestion(questionModel);
 
             this.model.cluster.responses.push({
                 question: this.model.cluster.questions[index],
-                answerIds: []
+                answerIds: [],
+                answerResults: []
             });
-
-            this.model.questionCreationModel = JSON.parse(JSON.stringify(initialQuestionCreationModel));
+            this.model.questionCreationModel = this.getQuestionViewModel();
 
             this.ClusterService.updateCluster(this.model.organizationUid, this.model.cluster, (err, data) => {
                 if (err) {
-                    console.log(err);
-                    return;
+                    console.error(err);
                 }
-
-            })
-
+            });
         });
     }
 
@@ -286,7 +243,7 @@ export default class VotingController extends ContainerController {
         return (Date.now() + Math.random()).toString().replace('.', '');
     }
 
-    _createAnswer() {
+    createAnswer() {
         const id = this.getRandomId();
         this.model.questionCreationModel.answers.push({
             id: id,
@@ -296,27 +253,66 @@ export default class VotingController extends ContainerController {
         });
     }
 
-    __displayErrorForQuestion = (event) => {
-        if (this.model.questionCreationModel.title.value === undefined || this.model.questionCreationModel.title.value === null || this.model.questionCreationModel.title.value.length === 0) {
-            this._emitFeedback(event, "Please complete the field question!", "alert-danger")
+    displayErrorForQuestion = () => {
+        if (this.model.questionCreationModel.title.value === undefined
+            || this.model.questionCreationModel.title.value === null
+            || this.model.questionCreationModel.title.value.length === 0) {
+            this.emitFeedback("Please complete the field question!", "alert-danger")
             return true;
         }
+
         return false;
     }
 
-    __displayErrorIfNoAnswers = (event) => {
-        if (!this.model.questionCreationModel.answers || !this.model.questionCreationModel.answers[0].value || this.model.questionCreationModel.answers[0].value.length === 0) {
-            this._emitFeedback(event, "Please add answers for question!", "alert-danger")
+    displayErrorIfNoAnswers = () => {
+        if (!this.model.questionCreationModel.answers
+            || !this.model.questionCreationModel.answers[0].value
+            || this.model.questionCreationModel.answers[0].value.length === 0) {
+            this.emitFeedback("Please add answers for question!", "alert-danger")
             return true;
         }
+
         return false;
     }
 
-    _emitFeedback(event, message, alertType) {
-        event.preventDefault();
-        event.stopImmediatePropagation();
+    emitFeedback(message, alertType) {
         if (typeof this.feedbackEmitter === 'function') {
             this.feedbackEmitter(message, "Validation", alertType)
         }
+    }
+
+    getVotingViewModel() {
+        const questionViewModel = this.getQuestionViewModel();
+
+        return {
+            organization: {},
+            cluster: {
+                questions: [],
+                responses: []
+            },
+            hasQuestions: false,
+            questionCreationModel: questionViewModel
+        }
+    }
+
+    getQuestionViewModel() {
+        return {
+            title: {
+                placeholder: 'Question',
+                name: 'Question',
+                label: 'Question',
+                value: ''
+            },
+            signature: {
+                placeholder: 'e13664398bb18ca2f90c647ca940e4654ddc28f006a597bdf753dfb56d6f0e39',
+                name: 'Question signature',
+                label: 'Question signature',
+                value: ''
+            },
+            uniqueAnswers: {
+                checked: false
+            },
+            answers: []
+        };
     }
 }

@@ -1,74 +1,94 @@
-import ContainerController from '../../../cardinal/controllers/base-controllers/ContainerController.js';
+const {WebcController} = WebCardinal.controllers;
 import OrganizationService from "../services/OrganizationService.js";
 import ClusterService from "../services/ClusterService.js";
 import ClusterControllerApi from "../../../ClustersControllerApi.js";
 
-export default class ClustersController extends ContainerController {
+export default class ClustersController extends WebcController {
 
-    constructor(element, history) {
+    constructor(...props) {
         console.log('ClustersController ctor');
-        super(element, history);
+        super(...props);
 
         this.OrganisationService = new OrganizationService(this.DSUStorage);
         this.ClusterService = new ClusterService(this.DSUStorage);
         this.ClusterControllerApi = new ClusterControllerApi();
 
-        this.setModel({});
-        let orgUid = this.History.getState();
+        this.model = {
+            organization: {},
+            clusters: []
+        };
+
+        // TODO: Replace this when a solution has been found
+        let orgUid = this.history.win.history.state.state;
 
         this.OrganisationService.getOrganization(orgUid, (err, organization) => {
             if (err) {
-                console.log(err);
-                return;
+                return console.error(err);
             }
+
             this.model.organization = organization;
-        })
+            console.log(this.model.toObject("organization"));
+        });
 
         this.ClusterService.getClustersModel(orgUid, (err, data) => {
             if (err) {
-                console.log(err);
-                return;
+                return console.error(err);
             }
-            this.model.clusters = data.clusters;
-            this.model.clusters.map(el => el.nameWithStatus = this.getClusterNameWithStatus(el));
+
+            this.model.clusters = data.clusters.map(el => {
+                el.nameWithStatus = this.getClusterNameWithStatus(el);
+                return el;
+            });
+
+            console.log(this.model.toObject("clusters"));
             /*
             this.model.clusters.forEach(el => {
                 el.clusterStatus = 'Installed';
                 const clusterIndex = this.model.clusters.findIndex((cluster) => cluster.uid === el.uid);
-                this._saveClusterInfo(this.model.organization.uid,el,clusterIndex,(err, data)=>{
+                this.saveClusterInfo(this.model.organization.uid,el,clusterIndex,(err, data)=>{
                   if (err) {
-                      return console.log('_saveClusterInfo error: ',err, el);
+                      return console.log('saveClusterInfo error: ',err, el);
                   }
-                  console.log('_saveClusterInfo done :',data);
+                  console.log('saveClusterInfo done :',data);
                 });
             })
             */
 
             this.model.clusters.forEach(cluster => {
-                if (cluster.clusterStatus === 'Pending')
-                {
-                    this._reconnectAndWaitForClusterInstallationToFinish(cluster);
+                if (cluster.clusterStatus === 'Pending') {
+                    this.reconnectAndWaitForClusterInstallationToFinish(cluster);
                 }
-            })
-        })
+            });
+        });
 
-        this._attachHandlerInitiateNetworkOnCluster();
-        this._attachHandlerEditCluster();
-        this._attachHandlerShareCluster();
-        this._attachHandlerManageCluster();
-        this._attachHandlerGovernanceCluster();
-        this._attachHandlerMonitoringCluster();
-        this._attachEventEmmiter();
+        this.attachHandlerInitiateNetworkOnCluster();
+        this.attachHandlerEditCluster();
+        this.attachHandlerShareCluster();
+        this.attachHandlerManageCluster();
+        this.attachHandlerGovernanceCluster();
+        this.attachHandlerMonitoringCluster();
+        this.attachEventEmmiter();
     }
-    getClusterNameWithStatus(clusterModel){
-        return clusterModel.name +' - '+ this.ClusterService.getClusterUIStatus(clusterModel.clusterStatus)
+
+    getClusterNameWithStatus(clusterModel) {
+        return clusterModel.name + ' - ' + this.ClusterService.getClusterUIStatus(clusterModel.clusterStatus);
     }
-    _attachEventEmmiter() {
+
+    attachEventEmmiter() {
         this.on('openFeedback', (evt) => {
             this.feedbackEmitter = evt.detail;
         });
     }
 
+    modalErrorHandler = (event) => {
+        const error = event.detail || null
+
+        if (error && error !== true) {
+            console.error(error);
+        }
+    }
+
+    // TODO: Check with Bogdan to understand the use-case of redirect
     _showModal(modalName, existingData, callback) {
         this.showModal(modalName, existingData, (err, response) => {
             if (err) {
@@ -87,108 +107,136 @@ export default class ClustersController extends ContainerController {
         });
     }
 
-    _attachHandlerInitiateNetworkOnCluster() {
-        this.on('cluster:initiatenetwork', (e) => {
-            this._showModal('initiateNetworkModal', {title:'Initiate Network'}, (err, data) => {
-                if (err) {
-                    console.log(err);
-                    return;
-                }
-                console.log(data);
-                this.ClusterService.saveCluster(this.model.organization.uid, data, (err, updatedCluster) => {
+    attachHandlerInitiateNetworkOnCluster() {
+        this.onTagClick('cluster:initiatenetwork', (model, target, event) => {
+            event.preventDefault();
+            event.stopImmediatePropagation();
+
+            const modalConfiguration = {
+                controller: 'clusters/InitiateNetworkModal',
+                disableBackdropClosing: false
+            };
+
+            this.showModalFromTemplate('clusters/operations/initiate-network', (event) => {
+                const clusterInformation = event.detail;
+                console.log(clusterInformation);
+                this.ClusterService.saveCluster(this.model.organization.uid, clusterInformation, (err, updatedCluster) => {
                     if (err) {
-                        console.log(err);
-                        return;
+                        return console.error(err);
                     }
+
                     updatedCluster.nameWithStatus = this.getClusterNameWithStatus(updatedCluster);
                     this.model.clusters.push(updatedCluster);
                 });
-            })
+            }, this.modalErrorHandler, modalConfiguration);
         });
     }
 
-    _attachHandlerShareCluster() {
-        this.on('cluster:share', (e) => {
-            e.preventDefault();
-            e.stopImmediatePropagation();
+    attachHandlerEditCluster() {
+        this.onTagClick('cluster:edit', (model, target, event) => {
+            event.preventDefault();
+            event.stopImmediatePropagation();
 
-            const uid = e.data;
-            const clusterIndex = this.model.clusters.findIndex((cluster) => cluster.uid === uid);
-            if (clusterIndex === -1) {
-                console.log('Cluster not found @uid', uid, this.model.clusters);
+            // Enable edit only if cluster operation is initiateNetwork
+            if (model.clusterOperation !== 'initiateNetwork') {
                 return;
             }
 
-            const clusterToShare = this.model.clusters[clusterIndex];
-            let qrCodeModalModel = {
-                title: `QRCode for ${clusterToShare.name}`,
-                description: `Scan the code above to get your cluster data`,
-                data: {
-                    identifier: clusterToShare.uid
-                }
-            }
-            this.showModal('shareQRCodeModal', qrCodeModalModel);
+            const modalConfiguration = {
+                model: model,
+                controller: 'clusters/EditNetworkModal',
+                disableBackdropClosing: false
+            };
+
+            this.showModalFromTemplate('clusters/operations/initiate-edit-network', (event) => {
+                const clusterData = event.detail;
+                console.log(clusterData);
+
+                const clusterIndex = this.model.clusters.findIndex((cluster) => cluster.uid === model.uid);
+                this.saveClusterInfo(this.model.organization.uid, clusterData, clusterIndex, (err) => {
+                    if (err) {
+                        return console.log("Failed to save cluster details!");
+                    }
+
+                    clusterData.nameWithStatus = this.getClusterNameWithStatus(clusterData);
+                });
+            }, this.modalErrorHandler, modalConfiguration);
+        });
+    }
+
+    attachHandlerShareCluster() {
+        this.onTagClick('cluster:share', (model, target, event) => {
+            event.preventDefault();
+            event.stopImmediatePropagation();
+
+            model.description = 'Scan the code above to get your cluster data';
+            const modalConfiguration = {
+                model: model,
+                controller: 'ShareQRCodeController',
+                disableBackdropClosing: false,
+                disableFooter: true
+            };
+
+            this.showModalFromTemplate('share-qrcode-modal',
+                (event) => {
+                    const response = event.detail;
+                    console.log(response);
+
+                }, this.modalErrorHandler, modalConfiguration);
         })
     }
 
-    _attachHandlerEditCluster() {
-        this.on('cluster:edit', (e) => {
-            const clusterUid = e.data;
-            const clusterIndex = this.model.clusters.findIndex((cluster) => cluster.uid === clusterUid);
-            if (clusterIndex === -1) {
-                console.log('Cluster not found @uid', clusterUid, this.model.clusters);
-                return;
-            }
+    attachHandlerGovernanceCluster() {
+        this.onTagClick('cluster:governance', (model, target, event) => {
+            event.preventDefault();
+            event.stopImmediatePropagation();
 
-            const clusterToEdit = this.model.clusters[clusterIndex];
+            let toSendObject = {
+                organizationUid: this.model.organization.uid,
+                clusterUid: model.uid
+            };
 
-            if (clusterToEdit.clusterOperation === 'initiateNetwork')
-            {
-                let toSendObject = {
-                    ...clusterToEdit,
-                    readOnlyMode: true,
-                    title: 'Initiate Network parameters'
-                }
-                this._showModal('initiateEditNetworkModal', toSendObject, (err, clusterData) => {
-                    if (err) {
-                        console.log(err);
-                        return;
-                    }
-                    this._saveClusterInfo(this.model.organization.uid, clusterData, clusterIndex, (err) => {
-                        if (err) {
-                            return console.log("Failed to save cluster details!");
-                        }
-                        clusterData.nameWithStatus = this.getClusterNameWithStatus(clusterData);
-                        return;
-                    })
-                })
-            }
-
+            this.navigateToPageTag('governance', toSendObject);
         });
     }
 
-    _attachHandlerManageCluster() {
-        this.on('cluster:manage', (e) => {
-            const clusterUid = e.data;
-            const clusterIndex = this.model.clusters.findIndex((cluster) => cluster.uid === clusterUid);
-            if (clusterIndex === -1) {
-                console.log('Cluster not found @uid', clusterUid, this.model.clusters);
-                return;
-            }
+    attachHandlerMonitoringCluster() {
+        this.onTagClick('cluster:monitoring', (model, target, event) => {
+            event.preventDefault();
+            event.stopImmediatePropagation();
 
-            const clusterToEdit = this.model.clusters[clusterIndex];
+            let toSendObject = {
+                organizationUid: this.model.organization.uid,
+                clusterUid: model.uid
+            };
+
+            this.navigateToPageTag('monitoring', toSendObject);
+        });
+    }
+
+    attachHandlerManageCluster() {
+        this.onTagClick('cluster:manage', (model, target, event) => {
+            event.preventDefault();
+            event.stopImmediatePropagation();
+
+            const clusterIndex = this.model.clusters.findIndex((cluster) => cluster.uid === model.uid);
+            const clusterToEdit = JSON.parse(JSON.stringify(model));
             let toSendObject = {
                 organizationUid: this.model.organization.uid,
                 cluster: clusterToEdit
             };
 
-            this.showModal('manageClusterModal', toSendObject, (err, response) => {
-                if (err) {
-                    console.log(err);
-                    return;
-                }
-                this._emitFeedback(e, "Cluster installation was initiated ...", "alert-success");
-                console.log('install cluster data',response);
+            const modalConfiguration = {
+                model: toSendObject,
+                controller: 'clusters/ClusterManageModal',
+                disableBackdropClosing: false
+            };
+
+            this.showModalFromTemplate('clusters/manage-cluster-modal', (event) => {
+                const response = event.detail;
+                this.emitFeedback("Cluster installation was initiated ...", "alert-success");
+                console.log('install cluster data', response);
+
                 //todo : show spinner/loading stuff
                 if (response.delete) {
                     this.ClusterService.unmountCluster(this.model.organization.uid, clusterToEdit.uid, (err, result) => {
@@ -200,25 +248,23 @@ export default class ClustersController extends ContainerController {
                         this.model.clusters.splice(clusterIndex, 1);
                     });
                 } else {
-                    if (response.clusterOperation === "initiateNetwork" ) {
+                    if (response.clusterOperation === "initiateNetwork") {
                         console.log("Initiate Network was started ...", response.name);
                         console.log(response);
                         //todo : define pipeline based on scenario
-                        this._saveClusterInfo(this.model.organization.uid, response, clusterIndex, (err) => {
+                        this.saveClusterInfo(this.model.organization.uid, response, clusterIndex, (err) => {
                             if (err) {
                                 return console.log("Failed to save cluster details!");
                             }
                             response.nameWithStatus = this.getClusterNameWithStatus(response);
-                            this._initiateAndWaitToInstallCluster(response, (err, data) => {
+                            this.initiateAndWaitToInstallCluster(response, (err, data) => {
                                 if (err) {
                                     response.clusterStatus = 'Fail';
                                     response.clusterInstallationInfo = err;
                                     console.log(e, "Failed to install cluster!");
-                                }
-                                else {
+                                } else {
                                     console.log("Cluster installation was Finished!");
-                                    if (data.pipelinesStatus === 'ERROR')
-                                    {
+                                    if (data.pipelinesStatus === 'ERROR') {
                                         response.clusterStatus = 'Fail';
                                     } else {
                                         response.clusterStatus = 'Installed';
@@ -226,7 +272,7 @@ export default class ClustersController extends ContainerController {
                                     response.clusterInstallationInfo = data;
                                 }
                                 response.nameWithStatus = this.getClusterNameWithStatus(response);
-                                this._saveClusterInfo(this.model.organization.uid, response, clusterIndex, (err) => {
+                                this.saveClusterInfo(this.model.organization.uid, response, clusterIndex, (err) => {
                                     if (err) {
                                         return console.log("Failed to save cluster details!");
                                     }
@@ -235,20 +281,20 @@ export default class ClustersController extends ContainerController {
                             })
                         })
                     } else {
-                        this._saveClusterInfo(this.model.organization.uid, response, clusterIndex, (err) => {
+                        this.saveClusterInfo(this.model.organization.uid, response, clusterIndex, (err) => {
                             if (err) {
                                 return console.log("Failed to save cluster details!");
                             }
                             response.nameWithStatus = this.getClusterNameWithStatus(response);
-                            return;
+
                         })
                     }
                 }
-            });
+            }, this.modalErrorHandler, modalConfiguration);
         });
     }
 
-    _saveClusterInfo(orguid, clusterDetails, clusterIndex, callback) {
+    saveClusterInfo(orguid, clusterDetails, clusterIndex, callback) {
         this.ClusterService.updateCluster(orguid, clusterDetails, (err, updatedCluster) => {
             if (err) {
                 console.log(err);
@@ -260,18 +306,16 @@ export default class ClustersController extends ContainerController {
         });
     }
 
-    _reconnectAndWaitForClusterInstallationToFinish(clusterDetails){
+    reconnectAndWaitForClusterInstallationToFinish(clusterDetails) {
         const clusterIndex = this.model.clusters.findIndex((cluster) => cluster.uid === clusterDetails.uid);
-        this._waitForClusterInstallationToFinish(clusterDetails.name, (err, data) => {
+        this.waitForClusterInstallationToFinish(clusterDetails.name, (err, data) => {
             if (err) {
                 clusterDetails.clusterStatus = 'Fail';
                 clusterDetails.clusterInstallationInfo = err;
                 console.log(e, "Failed to install cluster!");
-            }
-            else {
+            } else {
                 console.log("Cluster installation was Finished!");
-                if (data.pipelinesStatus === 'ERROR')
-                {
+                if (data.pipelinesStatus === 'ERROR') {
                     clusterDetails.clusterStatus = 'Fail';
                 } else {
                     clusterDetails.clusterStatus = 'Installed';
@@ -279,7 +323,7 @@ export default class ClustersController extends ContainerController {
                 clusterDetails.clusterInstallationInfo = data;
             }
             clusterDetails.nameWithStatus = this.getClusterNameWithStatus(clusterDetails);
-            this._saveClusterInfo(this.model.organization.uid, clusterDetails, clusterIndex, (err) => {
+            this.saveClusterInfo(this.model.organization.uid, clusterDetails, clusterIndex, (err) => {
                 if (err) {
                     return console.log("Failed to save cluster details!");
                 }
@@ -288,16 +332,15 @@ export default class ClustersController extends ContainerController {
         })
     }
 
-    _initiateAndWaitToInstallCluster(clusterDetails, callback)
-    {
+    initiateAndWaitToInstallCluster(clusterDetails, callback) {
         //initiate cluster installation and check from time to time to check if the installation is done
 
-        this._initiateInstallCluster(clusterDetails, (err, data) => {
-            if (err){
+        this.initiateInstallCluster(clusterDetails, (err, data) => {
+            if (err) {
                 return callback(err, undefined);
             }
-            this._waitForClusterInstallationToFinish(clusterDetails.name, (err, data) => {
-                if (err){
+            this.waitForClusterInstallationToFinish(clusterDetails.name, (err, data) => {
+                if (err) {
                     return callback(err, undefined);
                 }
                 return callback(undefined, data);
@@ -305,11 +348,11 @@ export default class ClustersController extends ContainerController {
         })
     }
 
-    _waitForClusterInstallationToFinish(blockchainNetworkName, callback){
+    waitForClusterInstallationToFinish(blockchainNetworkName, callback) {
         this.ClusterControllerApi.loopUntilClusterIsInstalled(blockchainNetworkName, callback);
     }
 
-    _initiateInstallCluster(clusterDetails, callback) {
+    initiateInstallCluster(clusterDetails, callback) {
         let installClusterInfo = {
             blockchainNetwork: clusterDetails.name,
             user: clusterDetails.user,
@@ -331,31 +374,7 @@ export default class ClustersController extends ContainerController {
         });
     }
 
-    _attachHandlerGovernanceCluster() {
-        this.on('cluster:governance', (event) => {
-            let toSendObject = {
-                organizationUid: this.model.organization.uid,
-                clusterUid: event.data
-            }
-
-            this.History.navigateToPageByTag('governance', toSendObject);
-        });
-    }
-
-    _attachHandlerMonitoringCluster() {
-        this.on('cluster:monitoring', (event) => {
-            let toSendObject = {
-                organizationUid: this.model.organization.uid,
-                clusterUid: event.data
-            }
-
-            this.History.navigateToPageByTag('monitoring', toSendObject);
-        });
-    }
-
-    _emitFeedback(event, message, alertType) {
-        event.preventDefault();
-        event.stopImmediatePropagation();
+    emitFeedback(message, alertType) {
         if (typeof this.feedbackEmitter === 'function') {
             this.feedbackEmitter(message, "Info", alertType)
         }

@@ -1,3 +1,4 @@
+const {loader} = WebCardinal;
 const {WebcController} = WebCardinal.controllers;
 import OrganizationService from "../services/OrganizationService.js";
 import ClusterControllerApi from "../../../ClustersControllerApi.js";
@@ -11,7 +12,10 @@ export default class OrganizationsController extends WebcController {
         };
 
         this.OrganisationService = new OrganizationService(this.DSUStorage);
+
+        loader.hidden = false;
         this.OrganisationService.getOrganizationModel((err, data) => {
+            loader.hidden = true;
             if (err) {
                 console.log(err);
                 return;
@@ -56,8 +60,9 @@ export default class OrganizationsController extends WebcController {
                         return this.openCreateWithQRCodeModal();
                     }
 
-                    //todo : show spinner/loading stuff
+                    loader.hidden = false;
                     this.OrganisationService.saveOrganization(response, (err, updatedOrg) => {
+                        loader.hidden = true;
                         if (err) {
                             console.log(err);
                             return;
@@ -80,8 +85,9 @@ export default class OrganizationsController extends WebcController {
                 const response = event.detail;
                 console.log(response);
 
-                //todo : show spinner/loading stuff
+                loader.hidden = false;
                 this.OrganisationService.mountOrganization(response.keySSI, (err, org) => {
+                    loader.hidden = true;
                     if (err) {
                         return console.log(err);
                     }
@@ -107,10 +113,11 @@ export default class OrganizationsController extends WebcController {
                     const response = event.detail;
                     console.log(response);
 
-                    //todo : show spinner/loading stuff
+                    loader.hidden = false;
                     model.name = response.name;
                     model.jenkinsURL = response.jenkinsURL;
                     this.OrganisationService.updateOrganization(model, (err) => {
+                        loader.hidden = true;
                         if (err) {
                             return console.error(err);
                         }

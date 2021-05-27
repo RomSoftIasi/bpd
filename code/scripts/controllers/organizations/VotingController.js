@@ -1,3 +1,4 @@
+const {loader} = WebCardinal;
 const {WebcController} = WebCardinal.controllers;
 import OrganizationService from "../services/OrganizationService.js";
 import ClusterService from "../services/ClusterService.js";
@@ -17,31 +18,35 @@ export default class VotingController extends WebcController {
 
         this.OrganisationService = new OrganizationService(this.DSUStorage);
         this.ClusterService = new ClusterService(this.DSUStorage);
+
+        loader.hidden = false;
         this.OrganisationService.getOrganization(receivedModel.organizationUid, (err, organization) => {
             if (err) {
+                loader.hidden = true;
                 return console.error(err);
             }
 
             this.model.organization = organization;
-        });
 
-        this.ClusterService.getCluster(receivedModel.organizationUid, receivedModel.clusterUid, (err, cluster) => {
-            if (err) {
-                return console.error(err);
-            }
+            this.ClusterService.getCluster(receivedModel.organizationUid, receivedModel.clusterUid, (err, cluster) => {
+                loader.hidden = true;
+                if (err) {
+                    return console.error(err);
+                }
 
-            this.model.cluster = cluster;
+                this.model.cluster = cluster;
 
-            if (!this.model.cluster.responses) {
-                this.model.cluster.responses = [];
-            }
+                if (!this.model.cluster.responses) {
+                    this.model.cluster.responses = [];
+                }
 
-            if (!this.model.cluster.questions) {
-                this.model.cluster.questions = [];
-                this.model.hasQuestions = false;
-            } else {
-                this.model.hasQuestions = true;
-            }
+                if (!this.model.cluster.questions) {
+                    this.model.cluster.questions = [];
+                    this.model.hasQuestions = false;
+                } else {
+                    this.model.hasQuestions = true;
+                }
+            });
         });
 
         this.attachHandlerClickAnswer();
@@ -171,7 +176,9 @@ export default class VotingController extends WebcController {
                 this.calculateAnswerPercents(index);
             });
 
+            loader.hidden = false;
             this.ClusterService.updateCluster(this.model.organizationUid, this.model.cluster, (err, data) => {
+                loader.hidden = true;
                 if (err) {
                     console.error(err);
                 }
@@ -231,7 +238,9 @@ export default class VotingController extends WebcController {
             });
             this.model.questionCreationModel = this.getQuestionViewModel();
 
+            loader.hidden = false;
             this.ClusterService.updateCluster(this.model.organizationUid, this.model.cluster, (err, data) => {
+                loader.hidden = true;
                 if (err) {
                     console.error(err);
                 }

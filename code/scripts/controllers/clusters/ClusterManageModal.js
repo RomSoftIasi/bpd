@@ -1,5 +1,6 @@
 const {WebcController} = WebCardinal.controllers;
 import ClusterControllerApi from "../../../ClustersControllerApi.js";
+import * as Loader from "../WebcSpinnerController.js";
 
 export default class ClusterManageModal extends WebcController {
     constructor(...props) {
@@ -41,7 +42,9 @@ export default class ClusterManageModal extends WebcController {
                 }))
 
             const getLogs = (jenkinsPipeline, buildNo) => {
+                Loader.displayLoader();
                 this.ClusterControllerApi.getPipelineLog(jenkinsPipeline, buildNo, this.model, (err, data) => {
+                    Loader.hideLoader();
                     let pipeLog;
                     if (err) {
                         pipeLog = 'Failed to retrieve logs';
@@ -231,7 +234,10 @@ export default class ClusterManageModal extends WebcController {
                 return;
             }
             const artefact = artefacts[0];
+
+            Loader.displayLoader();
             this.ClusterControllerApi.getTestReport(artefact.jenkinsPipeline, artefact.buildNo, artefact.artefactName, this.model, (err, htmlContent) => {
+                Loader.hideLoader();
                 if (err) {
                     return console.log(err);
                 }

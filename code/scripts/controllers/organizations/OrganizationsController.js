@@ -1,7 +1,7 @@
-const {loader} = WebCardinal;
 const {WebcController} = WebCardinal.controllers;
 import OrganizationService from "../services/OrganizationService.js";
 import ClusterControllerApi from "../../../ClustersControllerApi.js";
+import * as Loader from "../WebcSpinnerController.js"; 
 
 export default class OrganizationsController extends WebcController {
     constructor(...props) {
@@ -13,9 +13,9 @@ export default class OrganizationsController extends WebcController {
 
         this.OrganisationService = new OrganizationService(this.DSUStorage);
 
-        loader.hidden = false;
+        Loader.displayLoader();
         this.OrganisationService.getOrganizationModel((err, data) => {
-            loader.hidden = true;
+            Loader.hideLoader();
             if (err) {
                 console.log(err);
                 return;
@@ -60,9 +60,9 @@ export default class OrganizationsController extends WebcController {
                         return this.openCreateWithQRCodeModal();
                     }
 
-                    loader.hidden = false;
+                    Loader.displayLoader();
                     this.OrganisationService.saveOrganization(response, (err, updatedOrg) => {
-                        loader.hidden = true;
+                        Loader.hideLoader();
                         if (err) {
                             console.log(err);
                             return;
@@ -85,9 +85,9 @@ export default class OrganizationsController extends WebcController {
                 const response = event.detail;
                 console.log(response);
 
-                loader.hidden = false;
+                Loader.displayLoader();
                 this.OrganisationService.mountOrganization(response.keySSI, (err, org) => {
-                    loader.hidden = true;
+                    Loader.hideLoader();
                     if (err) {
                         return console.log(err);
                     }
@@ -113,11 +113,11 @@ export default class OrganizationsController extends WebcController {
                     const response = event.detail;
                     console.log(response);
 
-                    loader.hidden = false;
+                    Loader.displayLoader();
                     model.name = response.name;
                     model.jenkinsURL = response.jenkinsURL;
                     this.OrganisationService.updateOrganization(model, (err) => {
-                        loader.hidden = true;
+                        Loader.hideLoader();
                         if (err) {
                             return console.error(err);
                         }

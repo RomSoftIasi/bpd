@@ -1,5 +1,6 @@
 const {WebcController} = WebCardinal.controllers;
 import OrganizationService from "../services/OrganizationService.js";
+import * as Loader from "../WebcSpinnerController.js";
 
 export default class DeleteOrganizationController extends WebcController {
     constructor(...props) {
@@ -18,7 +19,9 @@ export default class DeleteOrganizationController extends WebcController {
             event.preventDefault();
             event.stopImmediatePropagation();
 
+            Loader.displayLoader();
             this.OrganisationService.unmountOrganization(this.model.uid, (err, result) => {
+                Loader.hideLoader();
                 if (err) {
                     return this.send("closed", err);
                 }

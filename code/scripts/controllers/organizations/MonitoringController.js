@@ -1,6 +1,7 @@
 const {WebcController} = WebCardinal.controllers;
 import OrganizationService from "../services/OrganizationService.js";
 import ClusterService from "../services/ClusterService.js";
+import * as Loader from "../WebcSpinnerController.js";
 
 export default class MonitoringController extends WebcController {
     constructor(...props) {
@@ -17,20 +18,23 @@ export default class MonitoringController extends WebcController {
             cluster: {}
         };
 
+        Loader.displayLoader();
         this.OrganisationService.getOrganization(receivedModel.organizationUid, (err, organization) => {
             if (err) {
+                Loader.hideLoader();
                 return console.error(err);
             }
 
             this.model.organization = organization;
-        });
 
-        this.ClusterService.getCluster(receivedModel.organizationUid, receivedModel.clusterUid, (err, data) => {
-            if (err) {
-                return console.error(err);
-            }
+            this.ClusterService.getCluster(receivedModel.organizationUid, receivedModel.clusterUid, (err, data) => {
+                Loader.hideLoader();
+                if (err) {
+                    return console.error(err);
+                }
 
-            this.model.cluster = data;
+                this.model.cluster = data;
+            });
         });
     }
 }

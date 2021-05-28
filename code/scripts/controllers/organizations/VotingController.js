@@ -1,7 +1,7 @@
-const {loader} = WebCardinal;
 const {WebcController} = WebCardinal.controllers;
 import OrganizationService from "../services/OrganizationService.js";
 import ClusterService from "../services/ClusterService.js";
+import * as Loader from "../WebcSpinnerController.js";
 
 export default class VotingController extends WebcController {
     constructor(...props) {
@@ -19,17 +19,17 @@ export default class VotingController extends WebcController {
         this.OrganisationService = new OrganizationService(this.DSUStorage);
         this.ClusterService = new ClusterService(this.DSUStorage);
 
-        loader.hidden = false;
+        Loader.displayLoader();
         this.OrganisationService.getOrganization(receivedModel.organizationUid, (err, organization) => {
             if (err) {
-                loader.hidden = true;
+                Loader.hideLoader();
                 return console.error(err);
             }
 
             this.model.organization = organization;
 
             this.ClusterService.getCluster(receivedModel.organizationUid, receivedModel.clusterUid, (err, cluster) => {
-                loader.hidden = true;
+                Loader.hideLoader();
                 if (err) {
                     return console.error(err);
                 }
@@ -176,9 +176,9 @@ export default class VotingController extends WebcController {
                 this.calculateAnswerPercents(index);
             });
 
-            loader.hidden = false;
+            Loader.displayLoader();
             this.ClusterService.updateCluster(this.model.organizationUid, this.model.cluster, (err, data) => {
-                loader.hidden = true;
+                Loader.hideLoader();
                 if (err) {
                     console.error(err);
                 }
@@ -238,9 +238,9 @@ export default class VotingController extends WebcController {
             });
             this.model.questionCreationModel = this.getQuestionViewModel();
 
-            loader.hidden = false;
+            Loader.displayLoader();
             this.ClusterService.updateCluster(this.model.organizationUid, this.model.cluster, (err, data) => {
-                loader.hidden = true;
+                Loader.hideLoader();
                 if (err) {
                     console.error(err);
                 }

@@ -2,6 +2,7 @@ const {WebcController} = WebCardinal.controllers;
 import OrganizationService from "../services/OrganizationService.js";
 import ClusterService from "../services/ClusterService.js";
 import ClusterControllerApi from "../../../ClustersControllerApi.js";
+import * as Loader from "../WebcSpinnerController.js";
 
 export default class ClustersController extends WebcController {
 
@@ -21,43 +22,33 @@ export default class ClustersController extends WebcController {
         // TODO: Replace this when a solution has been found
         let orgUid = this.history.win.history.state.state;
 
+        Loader.displayLoader();
         this.OrganisationService.getOrganization(orgUid, (err, organization) => {
             if (err) {
+                Loader.hideLoader();
                 return console.error(err);
             }
 
             this.model.organization = organization;
             console.log(this.model.toObject("organization"));
-        });
 
-        this.ClusterService.getClustersModel(orgUid, (err, data) => {
-            if (err) {
-                return console.error(err);
-            }
-
-            this.model.clusters = data.clusters.map(el => {
-                el.nameWithStatus = this.getClusterNameWithStatus(el);
-                return el;
-            });
-
-            console.log(this.model.toObject("clusters"));
-            /*
-            this.model.clusters.forEach(el => {
-                el.clusterStatus = 'Installed';
-                const clusterIndex = this.model.clusters.findIndex((cluster) => cluster.uid === el.uid);
-                this.saveClusterInfo(this.model.organization.uid,el,clusterIndex,(err, data)=>{
-                  if (err) {
-                      return console.log('saveClusterInfo error: ',err, el);
-                  }
-                  console.log('saveClusterInfo done :',data);
-                });
-            })
-            */
-
-            this.model.clusters.forEach(cluster => {
-                if (cluster.clusterStatus === 'Pending') {
-                    this.reconnectAndWaitForClusterInstallationToFinish(cluster);
+            this.ClusterService.getClustersModel(orgUid, (err, data) => {
+                Loader.hideLoader();
+                if (err) {
+                    return console.error(err);
                 }
+
+                this.model.clusters = data.clusters.map(el => {
+                    el.nameWithStatus = this.getClusterNameWithStatus(el);
+                    return el;
+                });
+
+                console.log(this.model.toObject("clusters"));
+                this.model.clusters.forEach(cluster => {
+                    if (cluster.clusterStatus === 'Pending') {
+                        this.reconnectAndWaitForClusterInstallationToFinish(cluster);
+                    }
+                });
             });
         });
 
@@ -120,7 +111,9 @@ export default class ClustersController extends WebcController {
             this.showModalFromTemplate('clusters/operations/initiate-network', (event) => {
                 const clusterInformation = event.detail;
                 console.log(clusterInformation);
+                Loader.displayLoader();
                 this.ClusterService.saveCluster(this.model.organization.uid, clusterInformation, (err, updatedCluster) => {
+                    Loader.hideLoader();
                     if (err) {
                         return console.error(err);
                     }
@@ -153,7 +146,9 @@ export default class ClustersController extends WebcController {
                 console.log(clusterData);
 
                 const clusterIndex = this.model.clusters.findIndex((cluster) => cluster.uid === model.uid);
+                Loader.displayLoader();
                 this.saveClusterInfo(this.model.organization.uid, clusterData, clusterIndex, (err) => {
+                    Loader.hideLoader();
                     if (err) {
                         return console.log("Failed to save cluster details!");
                     }
@@ -237,9 +232,10 @@ export default class ClustersController extends WebcController {
                 this.emitFeedback("Cluster installation was initiated ...", "alert-success");
                 console.log('install cluster data', response);
 
-                //todo : show spinner/loading stuff
                 if (response.delete) {
+                    Loader.displayLoader();
                     this.ClusterService.unmountCluster(this.model.organization.uid, clusterToEdit.uid, (err, result) => {
+                        Loader.hideLoader();
                         if (err) {
                             console.log(err);
                             return;
@@ -252,13 +248,16 @@ export default class ClustersController extends WebcController {
                         console.log("Initiate Network was started ...", response.name);
                         console.log(response);
                         //todo : define pipeline based on scenario
+                        Loader.displayLoader();
                         this.saveClusterInfo(this.model.organization.uid, response, clusterIndex, (err) => {
                             if (err) {
+                                Loader.hideLoader();
                                 return console.log("Failed to save cluster details!");
                             }
                             response.nameWithStatus = this.getClusterNameWithStatus(response);
                             this.initiateAndWaitToInstallCluster(response, (err, data) => {
                                 if (err) {
+                                    Loader.hideLoader();
                                     response.clusterStatus = 'Fail';
                                     response.clusterInstallationInfo = err;
                                     console.log(e, "Failed to install cluster!");
@@ -273,6 +272,7 @@ export default class ClustersController extends WebcController {
                                 }
                                 response.nameWithStatus = this.getClusterNameWithStatus(response);
                                 this.saveClusterInfo(this.model.organization.uid, response, clusterIndex, (err) => {
+                                    Loader.hideLoader();
                                     if (err) {
                                         return console.log("Failed to save cluster details!");
                                     }
@@ -281,7 +281,9 @@ export default class ClustersController extends WebcController {
                             })
                         })
                     } else {
+                        Loader.displayLoader();
                         this.saveClusterInfo(this.model.organization.uid, response, clusterIndex, (err) => {
+                            Loader.hideLoader();
                             if (err) {
                                 return console.log("Failed to save cluster details!");
                             }
@@ -295,7 +297,9 @@ export default class ClustersController extends WebcController {
     }
 
     saveClusterInfo(orguid, clusterDetails, clusterIndex, callback) {
+        Loader.displayLoader();
         this.ClusterService.updateCluster(orguid, clusterDetails, (err, updatedCluster) => {
+            Loader.hideLoader();
             if (err) {
                 console.log(err);
                 return callback(err);
@@ -307,9 +311,11 @@ export default class ClustersController extends WebcController {
     }
 
     reconnectAndWaitForClusterInstallationToFinish(clusterDetails) {
+        Loader.displayLoader();
         const clusterIndex = this.model.clusters.findIndex((cluster) => cluster.uid === clusterDetails.uid);
         this.waitForClusterInstallationToFinish(clusterDetails.name, (err, data) => {
             if (err) {
+                Loader.hideLoader();
                 clusterDetails.clusterStatus = 'Fail';
                 clusterDetails.clusterInstallationInfo = err;
                 console.log(e, "Failed to install cluster!");
@@ -324,6 +330,7 @@ export default class ClustersController extends WebcController {
             }
             clusterDetails.nameWithStatus = this.getClusterNameWithStatus(clusterDetails);
             this.saveClusterInfo(this.model.organization.uid, clusterDetails, clusterIndex, (err) => {
+                Loader.hideLoader();
                 if (err) {
                     return console.log("Failed to save cluster details!");
                 }
@@ -334,7 +341,6 @@ export default class ClustersController extends WebcController {
 
     initiateAndWaitToInstallCluster(clusterDetails, callback) {
         //initiate cluster installation and check from time to time to check if the installation is done
-
         this.initiateInstallCluster(clusterDetails, (err, data) => {
             if (err) {
                 return callback(err, undefined);

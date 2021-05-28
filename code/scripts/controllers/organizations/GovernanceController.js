@@ -1,6 +1,7 @@
 const {WebcController} = WebCardinal.controllers;
 import OrganizationService from "../services/OrganizationService.js";
 import ClusterService from "../services/ClusterService.js";
+import * as Loader from "../WebcSpinnerController.js";
 
 export default class GovernanceController extends WebcController {
     constructor(...props) {
@@ -18,20 +19,23 @@ export default class GovernanceController extends WebcController {
             ...receivedModel
         };
 
+        Loader.displayLoader();
         this.OrganisationService.getOrganization(receivedModel.organizationUid, (err, organization) => {
             if (err) {
+                Loader.hideLoader();
                 return console.error(err);
             }
             
             this.model.organization = organization;
-        });
 
-        this.ClusterService.getCluster(receivedModel.organizationUid, receivedModel.clusterUid, (err, cluster) => {
-            if (err) {
-                return console.error(err);
-            }
-            
-            this.model.cluster = cluster;
+            this.ClusterService.getCluster(receivedModel.organizationUid, receivedModel.clusterUid, (err, cluster) => {
+                Loader.hideLoader();
+                if (err) {
+                    return console.error(err);
+                }
+
+                this.model.cluster = cluster;
+            });
         });
 
         this.attachHandlerEditContract();

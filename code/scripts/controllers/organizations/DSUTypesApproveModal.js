@@ -1,5 +1,6 @@
 const {WebcController} = WebCardinal.controllers;
 import ClusterService from "../services/ClusterService.js";
+import * as Loader from "../WebcSpinnerController.js";
 
 export default class DSUTypesApproveModal extends WebcController {
     constructor(...props) {
@@ -13,7 +14,9 @@ export default class DSUTypesApproveModal extends WebcController {
         }
         this.ClusterService = new ClusterService(this.DSUStorage);
 
+        Loader.displayLoader();
         this.ClusterService.getCluster(receivedModel.organizationUid, receivedModel.clusterUid, (err, cluster) => {
+            Loader.hideLoader();
             if (err) {
                 return console.error(err);
             }
@@ -93,8 +96,10 @@ export default class DSUTypesApproveModal extends WebcController {
             event.preventDefault();
             event.stopImmediatePropagation();
 
+            Loader.displayLoader();
             this.model.cluster.dsuTypes = this.model.dsuTypes;
             this.ClusterService.updateCluster(this.model.organizationUid, this.model.cluster, (err, data) => {
+                Loader.hideLoader();
                 if (err) {
                     return console.error(err);
                 }

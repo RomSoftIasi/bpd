@@ -297,9 +297,7 @@ export default class ClustersController extends WebcController {
     }
 
     saveClusterInfo(orguid, clusterDetails, clusterIndex, callback) {
-        Loader.displayLoader();
         this.ClusterService.updateCluster(orguid, clusterDetails, (err, updatedCluster) => {
-            Loader.hideLoader();
             if (err) {
                 console.log(err);
                 return callback(err);

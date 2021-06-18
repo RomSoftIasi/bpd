@@ -1,0 +1,37 @@
+.container.main-container {
+    display: grid;
+    grid-template-rows: 1fr 4fr 1fr;
+    height: 100%;
+}
+
+webc-app-container {
+    --background: #FFFFFF;
+}
+
+webc-app-container .container {
+    width: 100%;
+}
+
+@media (min-width: 576px) {
+    webc-app-container .container {
+        max-width: 540px;
+    }
+}
+
+@media (min-width: 768px) {
+    webc-app-container .container {
+        max-width: 720px;
+    }
+}
+
+@media (min-width: 992px) {
+    webc-app-container .container {
+        max-width: 960px;
+    }
+}
+
+@media (min-width: 1200px) {
+    webc-app-container .container {
+        max-width: 1300px;
+    }
+}

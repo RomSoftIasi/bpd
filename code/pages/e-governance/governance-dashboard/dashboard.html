@@ -1,0 +1,33 @@
+<webc-container controller="e-governance/GovernanceDashboardController">
+    <link href="/assets/css/pages/e-governance/main.css" rel="stylesheet">
+
+    <div class="container main-container">
+        <h1>eGovernance News</h1>
+
+        <div class="container">
+            <header>
+                <div class="news">
+                    <label>News</label>
+                    <label>Type</label>
+                    <label>Date</label>
+                    <label>Status</label>
+                    <label>Options</label>
+                </div>
+            </header>
+
+            <main data-for="@news">
+                <div class="news">
+                    <label title="@title">{{@title}}</label>
+                    <label>{{@type}}</label>
+                    <label>{{@date}}</label>
+                    <label data-status="@status">{{@status}}</label>
+                    <button class="link" data-tag="options">{{@options.label}}</button>
+                </div>
+            </main>
+        </div>
+
+        <footer class="right-align">
+            <button class="wide" data-tag="voting-dashboard">Voting</button>
+        </footer>
+    </div>
+</webc-container>

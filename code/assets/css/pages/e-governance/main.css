@@ -1,0 +1,70 @@
+@import url("container.css");
+
+h1 {
+    color: rgba(0, 52, 91, 1);
+    font-size: 64px;
+    margin-bottom: 2rem;
+    padding: 2rem 0;
+    text-align: center;
+}
+
+button, label, span {
+    font-size: 18px;
+    font-weight: 500;
+}
+
+label, span {
+    margin: 0;
+    padding: 0.5rem 0;
+}
+
+.news {
+    display: grid;
+    grid-template-columns: 5fr 2fr 2fr 2fr 2fr;
+    text-align: center;
+    margin: 0.5rem 0;
+    padding: 0 0.75rem;
+}
+
+header .news {
+    border-top: 1px solid #000000;
+    border-bottom: 1px solid #000000;
+}
+
+main .news label:first-child {
+    display: inline-block;
+    max-width: 90%;
+    overflow: hidden;
+    text-align: left;
+    text-overflow: ellipsis;
+    vertical-align: middle;
+    white-space: nowrap;
+}
+
+main .news:nth-child(odd) {
+    background-color: rgba(0, 135, 152, 0.19);
+}
+
+main .news:nth-child(even) {
+    background-color: rgba(0, 52, 91, 0.3);
+}
+
+.news label {
+    padding: 0.5rem 0;
+}
+
+.news label[data-status="Concluded"] {
+    color: rgba(57, 203, 71, 1);
+}
+
+button.link {
+    background-color: transparent;
+    border: none;
+    color: rgba(47, 128, 237, 1);
+}
+
+button.link:focus,
+button.link:hover,
+button.link:active {
+    text-decoration: underline;
+}

@@ -1,7 +1,13 @@
 .container.main-container {
     display: grid;
-    grid-template-rows: 1fr 4fr 1fr;
+    grid-template-rows: auto 1fr auto;
     height: 100%;
+}
+
+.container.main-container footer {
+    display: flex;
+    column-gap: 1rem;
+    padding: 1rem 0;
 }
 
 webc-app-container {

@@ -55,6 +55,30 @@
       "tag": "voting-dashboard",
       "src": "/e-governance/voting-dashboard/dashboard.html",
       "indexed": false
+    },{
+      "name": "New Voting Session",
+      "path": "/e-governance/voting-dashboard/new-voting-session",
+      "tag": "new-voting-session",
+      "src": "/e-governance/voting-dashboard/new-voting-session.html",
+      "indexed": false
+    },{
+      "name": "New Voting Session Consultation",
+      "path": "/e-governance/voting-dashboard/new-voting-session-consultation",
+      "tag": "new-voting-session-consultation",
+      "src": "/e-governance/voting-dashboard/new-voting-session-consultation.html",
+      "indexed": false
+    },{
+      "name": "New Voting Session Generic",
+      "path": "/e-governance/voting-dashboard/new-voting-session-generic",
+      "tag": "new-voting-session-generic",
+      "src": "/e-governance/voting-dashboard/new-voting-session-generic.html",
+      "indexed": false
+    },{
+      "name": "New Voting Session Fixed Structure",
+      "path": "/e-governance/voting-dashboard/new-voting-session-fixed-structure",
+      "tag": "new-voting-session-fixed-structure",
+      "src": "/e-governance/voting-dashboard/new-voting-session-fixed-structure.html",
+      "indexed": false
     },
     {
       "name": "Organizations",

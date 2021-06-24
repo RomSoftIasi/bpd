@@ -21,105 +21,36 @@ export default class GovernanceDashboardController extends WebcController {
 
             this.navigateToPageTag("voting-dashboard");
         });
+
+        this.onTagClick("options", (model, target, event) => {
+            event.preventDefault();
+            event.stopImmediatePropagation();
+
+            console.log(model);
+        });
     }
 
     displayNewsList() {
         Loader.displayLoader();
-        this.GovernanceService.listNews((err, newsList) => {
+        this.GovernanceService.listVoteSessions((err, newsList) => {
             if (err) {
                 Loader.hideLoader();
                 return console.error(err);
             }
 
             newsList = newsList.map(news => {
-                news.date = getFormattedDate(news.date);
+                const isConcluded = Date.now() > news.deadline;
+                news.concluded = isConcluded ? "true" : "";
+                news.status = isConcluded ? "Concluded" : "In progress";
+                news.options = isConcluded ? "View results" : "";
+                news.type = isConcluded ? `${news.votingAction} - Fixed` : news.votingAction;
+                news.date = getFormattedDate(news.deadline);
+
                 return news;
             });
 
-            this.model.news = this.getTemplateTestNews();
+            this.model.news = newsList;
             Loader.hideLoader();
         });
-    }
-
-    // TODO: Remove after real data exists
-    getTemplateTestNews() {
-        return [
-            {
-                title: "Novartis Enrolled in IOT use case",
-                type: "Enroll",
-                date: getFormattedDate(),
-                status: "In progress",
-                options: {}
-            },
-            {
-                title: "Do we allow the enrollment of Novartis into the IOT use case?",
-                type: "Voting - Fixed",
-                date: getFormattedDate(),
-                status: "Concluded",
-                options: {
-                    label: "View results"
-                }
-            }, {
-                title: "Novartis Enrolled in IOT use case",
-                type: "Enroll",
-                date: getFormattedDate(),
-                status: "In progress",
-                options: {}
-            },
-            {
-                title: "Do we allow the enrollment of Novartis into the IOT use case?",
-                type: "Voting - Fixed",
-                date: getFormattedDate(),
-                status: "Concluded",
-                options: {
-                    label: "View results"
-                }
-            }, {
-                title: "Novartis Enrolled in IOT use case",
-                type: "Enroll",
-                date: getFormattedDate(),
-                status: "In progress",
-                options: {}
-            },
-            {
-                title: "Do we allow the enrollment of Novartis into the IOT use case?",
-                type: "Voting - Fixed",
-                date: getFormattedDate(),
-                status: "Concluded",
-                options: {
-                    label: "View results"
-                }
-            }, {
-                title: "Novartis Enrolled in IOT use case",
-                type: "Enroll",
-                date: getFormattedDate(),
-                status: "In progress",
-                options: {}
-            },
-            {
-                title: "Do we allow the enrollment of Novartis into the IOT use case?",
-                type: "Voting - Fixed",
-                date: getFormattedDate(),
-                status: "Concluded",
-                options: {
-                    label: "View results"
-                }
-            }, {
-                title: "Novartis Enrolled in IOT use case",
-                type: "Enroll",
-                date: getFormattedDate(),
-                status: "In progress",
-                options: {}
-            },
-            {
-                title: "Do we allow the enrollment of Novartis into the IOT use case?",
-                type: "Voting - Fixed",
-                date: getFormattedDate(),
-                status: "Concluded",
-                options: {
-                    label: "View results"
-                }
-            }
-        ]
     }
 }

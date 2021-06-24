@@ -1,4 +1,7 @@
+@import url("button.css");
 @import url("container.css");
+@import url("form.css");
+@import url("label.css");
 
 h1 {
     color: rgba(0, 52, 91, 1);
@@ -8,30 +11,29 @@ h1 {
     text-align: center;
 }
 
-button, label, span {
-    font-size: 18px;
-    font-weight: 500;
-}
-
-label, span {
-    margin: 0;
-    padding: 0.5rem 0;
-}
-
-.news {
+.row-wrapper {
+    column-gap: 0.5rem;
     display: grid;
-    grid-template-columns: 5fr 2fr 2fr 2fr 2fr;
+    grid-template-columns: minmax(40%, auto) repeat(auto-fill, [col-start] minmax(120px, 2fr) [col-end]);
     text-align: center;
     margin: 0.5rem 0;
     padding: 0 0.75rem;
 }
 
-header .news {
+.inner-wrapper {
+    display: flex;
+    row-gap: 0.5rem;
+    flex-direction: column;
+    justify-content: center;
+    align-items: baseline;
+}
+
+header .row-wrapper {
     border-top: 1px solid #000000;
     border-bottom: 1px solid #000000;
 }
 
-main .news label:first-child {
+main .row-wrapper label:first-child {
     display: inline-block;
     max-width: 90%;
     overflow: hidden;
@@ -41,30 +43,30 @@ main .news label:first-child {
     white-space: nowrap;
 }
 
-main .news:nth-child(odd) {
+main .row-wrapper:nth-child(odd) {
     background-color: rgba(0, 135, 152, 0.19);
 }
 
-main .news:nth-child(even) {
+main .row-wrapper:nth-child(even) {
     background-color: rgba(0, 52, 91, 0.3);
 }
 
-.news label {
-    padding: 0.5rem 0;
+.left-align,
+.right-align,
+.center-align {
+    align-items: center;
+    display: flex;
+    width: 100%;
 }
 
-.news label[data-status="Concluded"] {
-    color: rgba(57, 203, 71, 1);
+.left-align {
+    justify-content: flex-start;
 }
 
-button.link {
-    background-color: transparent;
-    border: none;
-    color: rgba(47, 128, 237, 1);
+.right-align {
+    justify-content: flex-end;
 }
 
-button.link:focus,
-button.link:hover,
-button.link:active {
-    text-decoration: underline;
+.center-align {
+    justify-content: center;
 }

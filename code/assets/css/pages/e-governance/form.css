@@ -1,0 +1,53 @@
+.form-wrapper {
+    display: flex;
+    flex-direction: column;
+    row-gap: 1rem;
+}
+
+.form-wrapper > label {
+    font-size: 20px;
+}
+
+.form-wrapper > fieldset {
+    padding: 1rem 2rem;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+}
+
+.form-row-wrapper {
+    display: grid;
+    grid-template-columns: 1fr 4fr;
+    padding: 0 5.5rem;
+}
+
+.form-check {
+    display: flex;
+    align-items: center;
+}
+
+.form-check-input {
+    margin-top: 0;
+}
+
+input.wide {
+    height: 100px;
+}
+
+.file-input-wrapper label {
+    cursor: pointer;
+    padding: 0.5rem 1rem;
+    background: rgba(0, 135, 152, 1);
+    border: none;
+    border-radius: 0.5rem;
+    color: #FFFFFF;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.file-input-wrapper input {
+    opacity: 0;
+    position: absolute;
+    z-index: -1;
+}

@@ -147,7 +147,7 @@ label.error {
     padding: 0 1rem;
 }
 
-.answers-wrapper {
+.inner-wrapper {
     display: flex;
     row-gap: 1rem;
     flex-direction: column;
@@ -155,7 +155,7 @@ label.error {
     align-items: center;
 }
 
-.answers-wrapper .bpd-input {
+.inner-wrapper .bpd-input {
     margin: 0;
     max-width: 400px;
 }

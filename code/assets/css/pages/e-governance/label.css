@@ -1,0 +1,37 @@
+button, label, span {
+    font-size: 18px;
+    font-weight: 500;
+}
+
+label, span {
+    margin: 0;
+    padding: 0.5rem 0;
+}
+
+.link {
+    background-color: transparent;
+    border: none;
+    box-shadow: none;
+    color: rgba(47, 128, 237, 1);
+}
+
+.link:focus,
+.link:hover,
+.link:active {
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+.row-wrapper label {
+    padding: 0.5rem 0;
+}
+
+label[data-status="true"] {
+    color: rgba(57, 203, 71, 1);
+}
+
+label[data-status="false"] {
+    color: rgba(210, 13, 13, 1);
+    cursor: pointer;
+    text-decoration: underline;
+}

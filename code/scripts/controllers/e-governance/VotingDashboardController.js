@@ -21,6 +21,15 @@ export default class VotingDashboardController extends WebcController {
 
             this.navigateToPageTag("new-voting-session");
         });
+
+        this.onTagClick("vote-now", (model, target, event) => {
+            event.preventDefault();
+            event.stopImmediatePropagation();
+
+            if (!model.isConcluded && !model.hasVoted) {
+                this.navigateToPageTag("perform-vote");
+            }
+        });
     }
 
     displayVotingSessions() {
@@ -33,10 +42,12 @@ export default class VotingDashboardController extends WebcController {
 
             votingSessions = votingSessions.map(votingSession => {
                 const hasVoted = votingSession.hasVoted || false;
-                votingSession.voted = hasVoted ? "true" : "false";
-                votingSession.status = hasVoted ? "Voted" : "Vote Now";
-
                 const isConcluded = Date.now() > votingSession.deadline;
+                votingSession.hasVoted = hasVoted;
+                votingSession.isConcluded = isConcluded;
+
+                votingSession.voted = hasVoted ? "true" : (isConcluded ? "" : "false");
+                votingSession.status = hasVoted ? "Voted" : (isConcluded ? "Ended" : "Vote Now");
                 votingSession.concluded = isConcluded ? "true" : "";
                 votingSession.overallStatus = isConcluded ? "Concluded" : "In progress";
                 votingSession.options = isConcluded ? "View results" : "";

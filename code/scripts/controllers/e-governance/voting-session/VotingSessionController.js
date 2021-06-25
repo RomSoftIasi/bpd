@@ -48,4 +48,33 @@ export default class VotingSessionController extends WebcController {
             hasVoted: false
         }
     }
+
+    getPossibleAnswers(answers) {
+        let possibleAnswers = [];
+        const checkedDefaultAnswers = this.querySelector("#default-answers input[type='checkbox']:checked");
+        if (checkedDefaultAnswers) {
+            for (let index = 0; index < checkedDefaultAnswers.length; ++index) {
+                possibleAnswers.push(checkedDefaultAnswers[index].value);
+            }
+        }
+
+        possibleAnswers.push(answers.map(answer => answer.value));
+        return possibleAnswers;
+    }
+
+    submitVoteSession(votingSession) {
+        votingSession.possibleResponses = this.getPossibleAnswers(votingSession.answers);
+        const votingSessionModel = this.createVotingSessionModel(votingSession);
+
+        console.log(votingSessionModel);
+
+        this.publishVotingSession(votingSessionModel, (err, data) => {
+            if (err) {
+                return console.error(err);
+            }
+
+            console.log(data);
+            this.navigateToPageTag("voting-dashboard");
+        });
+    }
 }

@@ -23,7 +23,9 @@ export default class ConsultationVotingController extends VotingSessionControlle
             event.preventDefault();
             event.stopImmediatePropagation();
 
-            this.submitVoteSession();
+            const votingSession = this.model.toObject();
+            votingSession.votingType = "Opinion";
+            this.submitVoteSession(votingSession);
         });
 
         this.onTagClick("add-answer", (model, target, event) => {
@@ -31,24 +33,6 @@ export default class ConsultationVotingController extends VotingSessionControlle
             event.stopImmediatePropagation();
 
             this.model.answers.push(this.getAnswerViewModel());
-        });
-    }
-
-    submitVoteSession() {
-        const votingSession = this.model.toObject();
-        votingSession.votingType = "Opinion";
-        votingSession.possibleResponses = votingSession.answers.map(answer => answer.value);
-        const votingSessionModel = this.createVotingSessionModel(votingSession);
-
-        console.log(votingSessionModel);
-
-        this.publishVotingSession(votingSessionModel, (err, data) => {
-            if (err) {
-                return console.error(err);
-            }
-
-            console.log(data);
-            this.navigateToPageTag("voting-dashboard");
         });
     }
 

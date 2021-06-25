@@ -23,7 +23,16 @@ export default class FixedStructureVotingController extends VotingSessionControl
             event.preventDefault();
             event.stopImmediatePropagation();
 
-            const documentation = this.querySelector("#upload-documentation").files;
+
+            const votingSession = this.model.toObject();
+            votingSession.votingType = "Fixed - Structure";
+
+            const documentation = this.querySelector("#upload-documentation");
+            if (documentation) {
+                votingSession.candidateDocumentation = documentation.files[0];
+            }
+
+            this.submitVoteSession(votingSession);
         });
 
         this.onTagClick("add-answer", (model, target, event) => {
@@ -31,23 +40,6 @@ export default class FixedStructureVotingController extends VotingSessionControl
             event.stopImmediatePropagation();
 
             this.model.answers.push(this.getAnswerViewModel());
-        });
-    }
-
-    submitVoteSession() {
-        const votingSession = this.model.toObject();
-        votingSession.votingType = "Fixed - Structure";
-        const votingSessionModel = this.createVotingSessionModel(votingSession);
-
-        console.log(votingSessionModel);
-
-        this.publishVotingSession(votingSessionModel, (err, data) => {
-            if (err) {
-                return console.error(err);
-            }
-
-            console.log(data);
-            this.navigateToPageTag("voting-dashboard");
         });
     }
 

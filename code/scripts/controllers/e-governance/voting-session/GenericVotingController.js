@@ -23,7 +23,9 @@ export default class GenericVotingController extends VotingSessionController {
             event.preventDefault();
             event.stopImmediatePropagation();
 
-            console.log(JSON.stringify(this.model), this.querySelector("#unique:checked"));
+            const votingSession = this.model.toObject();
+            votingSession.votingType = "Generic";
+            this.submitVoteSession(votingSession);
         });
 
         this.onTagClick("add-answer", (model, target, event) => {
@@ -31,23 +33,6 @@ export default class GenericVotingController extends VotingSessionController {
             event.stopImmediatePropagation();
 
             this.model.answers.push(this.getAnswerViewModel());
-        });
-    }
-
-    submitVoteSession() {
-        const votingSession = this.model.toObject();
-        votingSession.votingType = "Generic";
-        const votingSessionModel = this.createVotingSessionModel(votingSession);
-
-        console.log(votingSessionModel);
-
-        this.publishVotingSession(votingSessionModel, (err, data) => {
-            if (err) {
-                return console.error(err);
-            }
-
-            console.log(data);
-            this.navigateToPageTag("voting-dashboard");
         });
     }
 

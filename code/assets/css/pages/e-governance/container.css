@@ -1,13 +1,21 @@
 .container.main-container {
-    display: grid;
-    grid-template-rows: auto 1fr auto;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
     height: 100%;
+    row-gap: 1rem;
+}
+
+.container.main-container .container:last-child {
+    border-top: 1px solid #000000;
+    padding-top: 2rem;
 }
 
 .container.main-container footer {
     column-gap: 1rem;
     display: flex;
     padding: 1rem 0;
+    row-gap: 0.5rem;
 }
 
 webc-app-container {
@@ -38,6 +46,6 @@ webc-app-container .container {
 
 @media (min-width: 1200px) {
     webc-app-container .container {
-        max-width: 1100px;
+        max-width: 95%;
     }
 }

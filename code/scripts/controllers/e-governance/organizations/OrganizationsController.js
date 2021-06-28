@@ -18,14 +18,28 @@ export default class OrganizationsController extends WebcController {
             event.preventDefault();
             event.stopImmediatePropagation();
 
-            this.navigateToPageTag("add-organization");
+            this.navigateToPageTag("manage-organizations");
         });
 
-        this.onTagClick("manage", (model, target, event) => {
+        this.onTagClick("edit-organization", (model, target, event) => {
             event.preventDefault();
             event.stopImmediatePropagation();
 
-            this.navigateToPageTag("manage-blockchain-domain");
+            this.navigateToPageTag("edit-organization", model.uid);
+        });
+
+        this.onTagClick("view-organization", (model, target, event) => {
+            event.preventDefault();
+            event.stopImmediatePropagation();
+
+            this.navigateToPageTag("view-organization", model.uid);
+        });
+
+        this.onTagClick("manage-blockchain-domains", (model, target, event) => {
+            event.preventDefault();
+            event.stopImmediatePropagation();
+
+            this.navigateToPageTag("blockchain-domains-dashboard", model.uid);
         });
     }
 
@@ -37,8 +51,21 @@ export default class OrganizationsController extends WebcController {
                 return console.error(err);
             }
 
-            this.model.organizations = organizationsList;
+            this.model.organizations = organizationsList.map(organization => {
+                organization.options = this.getOptionsViewModel();
+                return organization;
+            });
             Loader.hideLoader();
         });
+    }
+
+    getOptionsViewModel() {
+        return [{
+            tag: "view",
+            name: "View"
+        }, {
+            tag: "edit",
+            name: "Edit"
+        }];
     }
 }

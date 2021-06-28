@@ -35,3 +35,37 @@ label[data-status="false"] {
     cursor: pointer;
     text-decoration: underline;
 }
+
+.left-align,
+.right-align,
+.center-align {
+    align-items: center;
+    display: flex;
+    width: 100%;
+}
+
+.left-align {
+    justify-content: flex-start !important;
+}
+
+.right-align {
+    justify-content: flex-end !important;
+}
+
+.center-align {
+    justify-content: center !important;
+}
+
+.bold {
+    font-weight: bold !important;
+}
+
+label.option {
+    padding: 0 0.5rem 0 0;
+    margin: 0.5rem 0 0.5rem 0.5rem;
+    border-right: 1px solid;
+}
+
+label.option:last-child {
+    border: none;
+}

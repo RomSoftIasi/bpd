@@ -36,8 +36,9 @@ h1 {
 }
 
 header .row-wrapper {
-    border-top: 1px solid #000000;
-    border-bottom: 1px solid #000000;
+    border-top: 1px solid #00345B;
+    border-bottom: 1px solid #00345B;
+    transform: rotate(-0.06deg);
 }
 
 main .row-wrapper label:first-child {
@@ -50,34 +51,14 @@ main .row-wrapper label:first-child {
     white-space: nowrap;
 }
 
+main .row-wrapper.grid-equal label:first-child {
+    text-align: center;
+}
+
 main .row-wrapper:nth-child(odd) {
     background-color: rgba(0, 135, 152, 0.19);
 }
 
 main .row-wrapper:nth-child(even) {
     background-color: rgba(0, 52, 91, 0.3);
-}
-
-.left-align,
-.right-align,
-.center-align {
-    align-items: center;
-    display: flex;
-    width: 100%;
-}
-
-.left-align {
-    justify-content: flex-start !important;
-}
-
-.right-align {
-    justify-content: flex-end !important;
-}
-
-.center-align {
-    justify-content: center !important;
-}
-
-.bold {
-    font-weight: bold !important;
 }

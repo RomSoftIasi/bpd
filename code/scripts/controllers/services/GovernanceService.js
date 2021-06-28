@@ -5,6 +5,7 @@ export default class GovernanceService {
     NEWS_PATH = "/news";
     VOTING_PATH = "/voting";
     ORGANIZATION_PATH = "/organizations";
+    BLOCKCHAIN_DOMAINS_PATH = "/blockchain-domains";
 
     constructor(DSUStorage) {
         this.DSUStorage = DSUStorage;
@@ -135,10 +136,6 @@ export default class GovernanceService {
         });
     }
 
-    getOrganizationsDataPath(identifier) {
-        return `${this.ORGANIZATION_PATH}/${identifier}/data.json`;
-    }
-
     listNews(callback) {
         this.DSUStorage.call('listDSUs', this.NEWS_PATH, (err, newsIdentifierList) => {
             if (err) {
@@ -189,5 +186,104 @@ export default class GovernanceService {
                 callback(err, response);
             });
         });
+    }
+
+    createBlockchainDomain(organizationUid, blockchainDomainData, callback) {
+        const blockchainDomainsPath = this.getBlockchainDomainsPath(organizationUid);
+        this.DSUStorage.call('createSSIAndMount', blockchainDomainsPath, (err, keySSI) => {
+            if (err) {
+                callback(err, undefined);
+                return;
+            }
+
+            blockchainDomainData.keySSI = keySSI;
+            blockchainDomainData.uid = keySSI;
+            this.updateOrganizationData(organizationUid, blockchainDomainData, callback);
+        });
+    }
+
+    updateBlockchainDomainData(organizationUid, blockchainDomainData, callback) {
+        const blockchainDomainDataPath = this.getBlockchainDomainDataPath(organizationUid, blockchainDomainData.uid);
+        this.DSUStorage.setObject(blockchainDomainDataPath, blockchainDomainData, (err) => {
+            callback(err, blockchainDomainData);
+        });
+    }
+
+    listBlockchainDomains(organizationUid, callback) {
+        const blockchainDomainsPath = this.getBlockchainDomainsPath(organizationUid);
+        this.DSUStorage.call('listDSUs', blockchainDomainsPath, (err, blockchainDomainsIdentifierList) => {
+            if (err) {
+                return callback(err);
+            }
+
+            const blockchainDomainsList = [];
+            const getBlockchainDomainDSU = (blockchainDomainsIdentifierList) => {
+                if (!blockchainDomainsIdentifierList.length) {
+                    return callback(undefined, blockchainDomainsList);
+                }
+
+                const id = blockchainDomainsIdentifierList.pop();
+                this.getBlockchainDomainData(organizationUid, id.identifier, (err, blockchainDomainData) => {
+                    if (err) {
+                        return callback(err);
+                    }
+
+                    blockchainDomainsList.push(blockchainDomainData);
+                    getBlockchainDomainDSU(blockchainDomainsIdentifierList);
+                });
+            };
+
+            getBlockchainDomainDSU(blockchainDomainsIdentifierList);
+        });
+    }
+
+    getBlockchainDomainData(organizationUid, blockchainDomainUid, callback) {
+        const blockchainDomainDataPath = this.getBlockchainDomainDataPath(organizationUid, blockchainDomainUid);
+        this.DSUStorage.getItem(blockchainDomainDataPath, (err, content) => {
+            if (err) {
+                return callback(err);
+            }
+
+            const textDecoder = new TextDecoder("utf-8");
+            const blockchainDomainData = JSON.parse(textDecoder.decode(content));
+            callback(undefined, blockchainDomainData);
+        });
+    }
+
+    getBlockchainDomainsPath(uid) {
+        return `${this.ORGANIZATION_PATH}/${uid}${this.BLOCKCHAIN_DOMAINS_PATH}`;
+    }
+
+    getBlockchainDomainDataPath(organizationUid, blockchainDomainUid) {
+        return `${this.getBlockchainDomainsPath(organizationUid)}/${blockchainDomainUid}/data.json`;
+    }
+
+    createOrganization(organizationName, callback) {
+        this.DSUStorage.call('createSSIAndMount', this.ORGANIZATION_PATH, (err, keySSI) => {
+            if (err) {
+                callback(err, undefined);
+                return;
+            }
+
+            const organizationData = {
+                name: organizationName,
+                keySSI: keySSI,
+                uid: keySSI,
+                numberOfClusters: 0,
+                isOwner: true,
+                type: "Owner"
+            };
+            this.updateOrganizationData(organizationData, callback);
+        });
+    }
+
+    updateOrganizationData(organizationData, callback) {
+        this.DSUStorage.setObject(this.getOrganizationsDataPath(organizationData.uid), organizationData, (err) => {
+            callback(err, organizationData);
+        });
+    }
+
+    getOrganizationsDataPath(identifier) {
+        return `${this.ORGANIZATION_PATH}/${identifier}/data.json`;
     }
 }

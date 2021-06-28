@@ -1,0 +1,36 @@
+<webc-container controller="e-governance/organizations/BlockchainDomainsController">
+    <link href="/assets/css/pages/e-governance/main.css" rel="stylesheet">
+
+    <div class="container main-container">
+        <h1>Blockchain Domains</h1>
+
+        <div class="container">
+            <header>
+                <div class="row-wrapper grid-equal">
+                    <label>Main Domain</label>
+                    <label>Type</label>
+                    <label>Status</label>
+                    <label>Operation</label>
+                    <label>Options</label>
+                </div>
+            </header>
+
+            <main data-for="@blockchainDomains">
+                <div class="row-wrapper grid-equal">
+                    <label>{{@mainDomain}}</label>
+                    <label>{{@type}}</label>
+                    <label class="blockchain-status" data-status="@status">{{@status}}</label>
+                    <label class="link" data-if="@isOwner" data-tag="manage-blockchain-domain">Manage</label>
+                    <div class="d-flex justify-content-center align-items-center" data-for="@options">
+                        <label class="link option" data-tag="tag">{{@name}}</label>
+                    </div>
+                </div>
+            </main>
+        </div>
+
+        <footer class="left-align flex-column align-items-start">
+            <button data-tag="initiate-blockchain-network">Initiate Network</button>
+            <button data-tag="join-blockchain-network">Join Network</button>
+        </footer>
+    </div>
+</webc-container>

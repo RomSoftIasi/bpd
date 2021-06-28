@@ -39,6 +39,8 @@ export default class GovernanceDashboardController extends WebcController {
             }
 
             newsList = newsList.map(news => {
+                // TODO: Come back and redefine logic
+
                 const isConcluded = Date.now() > news.deadline;
                 news.concluded = isConcluded ? "true" : "";
                 news.status = isConcluded ? "Concluded" : "In progress";

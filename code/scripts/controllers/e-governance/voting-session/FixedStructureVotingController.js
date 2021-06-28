@@ -28,8 +28,9 @@ export default class FixedStructureVotingController extends VotingSessionControl
             votingSession.votingType = "Fixed - Structure";
 
             const documentation = this.querySelector("#upload-documentation");
-            if (documentation) {
+            if (documentation && documentation.files.length) {
                 votingSession.candidateDocumentation = documentation.files[0];
+                votingSession.candidateDocumentationName = votingSession.candidateDocumentation.name;
             }
 
             this.submitVoteSession(votingSession);

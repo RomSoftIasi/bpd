@@ -1,0 +1,24 @@
+.answers-container {
+    border-bottom: 1px solid black;
+    border-top: 1px solid black;
+    padding: 0.5rem 0;
+}
+
+.answers-wrapper {
+    align-items: center;
+    background: rgba(0, 135, 152, 0.19);
+    column-gap: 5rem;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 1rem 0;
+    row-gap: 1rem;
+}
+
+.answers-wrapper label {
+    background: #ffffff;
+    border: 1px solid black;
+    outline: none;
+    padding: 0 1rem;
+    text-decoration: none;
+}

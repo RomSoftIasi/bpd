@@ -79,6 +79,12 @@
       "tag": "new-voting-session-fixed-structure",
       "src": "/e-governance/voting-dashboard/new-voting-session-fixed-structure.html",
       "indexed": false
+    },{
+      "name": "Perform Vote",
+      "path": "/e-governance/voting-dashboard/perform-vote",
+      "tag": "perform-vote",
+      "src": "/e-governance/voting-dashboard/perform-vote.html",
+      "indexed": false
     },
     {
       "name": "Organizations",

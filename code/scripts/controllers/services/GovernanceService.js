@@ -1,3 +1,5 @@
+import {downloadFile} from "../../utils/fileDownloader.js";
+
 export default class GovernanceService {
 
     NEWS_PATH = "/news";
@@ -81,12 +83,56 @@ export default class GovernanceService {
         });
     }
 
+    downloadCandidateDocumentation(uid, documentName) {
+        const downloadPath = `${this.VOTING_PATH}/${uid}`;
+        downloadFile(downloadPath, documentName);
+    }
+
     getNewsDataPath(identifier) {
         return `${this.NEWS_PATH}/${identifier}/data.json`;
     }
 
     getVotingDataPath(identifier) {
         return `${this.VOTING_PATH}/${identifier}/data.json`;
+    }
+
+    listOrganizations(callback) {
+        this.DSUStorage.call('listDSUs', this.ORGANIZATION_PATH, (err, organizationsIdentifierList) => {
+            if (err) {
+                return callback(err);
+            }
+
+            const organizationsDataList = [];
+            const getOrganizationDSU = (organizationsIdentifierList) => {
+                if (!organizationsIdentifierList.length) {
+                    return callback(undefined, organizationsDataList);
+                }
+
+                const id = organizationsIdentifierList.pop();
+                this.getOrganizationData(id.identifier, (err, organizationData) => {
+                    if (err) {
+                        return callback(err);
+                    }
+
+                    organizationsDataList.push(organizationData);
+                    getOrganizationDSU(organizationsIdentifierList);
+                });
+            };
+
+            getOrganizationDSU(organizationsIdentifierList);
+        });
+    }
+
+    getOrganizationData(identifier, callback) {
+        this.DSUStorage.getItem(this.getOrganizationsDataPath(identifier), (err, content) => {
+            if (err) {
+                return callback(err);
+            }
+
+            const textDecoder = new TextDecoder("utf-8");
+            const organizationData = JSON.parse(textDecoder.decode(content));
+            callback(undefined, organizationData);
+        });
     }
 
     getOrganizationsDataPath(identifier) {
@@ -129,6 +175,19 @@ export default class GovernanceService {
             const textDecoder = new TextDecoder("utf-8");
             const newsData = JSON.parse(textDecoder.decode(content));
             callback(undefined, newsData);
+        });
+    }
+
+    submitVotes(uid, existingVotes, callback) {
+        this.getVoteData(uid, (err, voteData) => {
+            if (err) {
+                return callback(err);
+            }
+
+            voteData.votes = existingVotes;
+            this.updateVotingSessionData(voteData, (err, response) => {
+                callback(err, response);
+            });
         });
     }
 }

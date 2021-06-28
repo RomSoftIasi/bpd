@@ -1,0 +1,35 @@
+<webc-container controller="e-governance/organizations/OrganizationsController">
+    <link href="/assets/css/pages/e-governance/main.css" rel="stylesheet">
+
+    <div class="container main-container">
+        <h1>Organizations</h1>
+
+        <div class="container">
+            <header>
+                <div class="row-wrapper grid-equal">
+                    <label>Organization</label>
+                    <label>Type</label>
+                    <label>Clusters</label>
+                    <label>Blockchain domains</label>
+                    <label>Options</label>
+                </div>
+            </header>
+
+            <main data-for="@organizations">
+                <div class="row-wrapper grid-equal">
+                    <label title="@name">{{@name}}</label>
+                    <label>{{@type}}</label>
+                    <label>{{@numberOfClusters}}</label>
+                    <label class="link" data-tag="manage">Manage</label>
+                    <div class="d-flex justify-content-center align-items-center" data-for="@options">
+                        <label class="link" data-tag="tag">{{@name}}</label>
+                    </div>
+                </div>
+            </main>
+        </div>
+
+        <footer class="left-align">
+            <button data-tag="add-organization">Add New Organization</button>
+        </footer>
+    </div>
+</webc-container>

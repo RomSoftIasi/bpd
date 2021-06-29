@@ -1,5 +1,5 @@
 const {WebcController} = WebCardinal.controllers;
-import GovernanceService from "../services/GovernanceService.js";
+import VotingSessionService from "../services/e-governance/VotingSessionService.js";
 import * as Loader from "../WebcSpinnerController.js";
 import {getFormattedDate} from "../../utils/utils.js";
 
@@ -8,13 +8,17 @@ export default class VotingDashboardController extends WebcController {
         super(...props);
 
         this.model = {votingSessions: []};
-        this.GovernanceService = new GovernanceService(this.DSUStorage);
+        this.VotingSessionService = new VotingSessionService(this.DSUStorage);
 
         this.initNavigationListeners();
         this.displayVotingSessions();
     }
 
     initNavigationListeners() {
+        this.onTagClick("back", () => {
+            this.history.goBack();
+        });
+
         this.onTagClick("new-voting-session", (model, target, event) => {
             event.preventDefault();
             event.stopImmediatePropagation();
@@ -34,7 +38,7 @@ export default class VotingDashboardController extends WebcController {
 
     displayVotingSessions() {
         Loader.displayLoader();
-        this.GovernanceService.listVoteSessions((err, votingSessions) => {
+        this.VotingSessionService.listVoteSessions((err, votingSessions) => {
             console.log(votingSessions);
 
             if (err) {

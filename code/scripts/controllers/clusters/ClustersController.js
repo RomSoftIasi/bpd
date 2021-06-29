@@ -19,8 +19,7 @@ export default class ClustersController extends WebcController {
             clusters: []
         };
 
-        // TODO: Replace this when a solution has been found
-        let orgUid = this.history.win.history.state.state;
+        let orgUid = this.getState();
 
         Loader.displayLoader();
         this.OrganisationService.getOrganization(orgUid, (err, organization) => {

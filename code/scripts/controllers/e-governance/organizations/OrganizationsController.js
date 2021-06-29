@@ -1,5 +1,6 @@
 const {WebcController} = WebCardinal.controllers;
-import GovernanceService from "../../services/GovernanceService.js";
+import OrganizationService from "../../services/e-governance/OrganizationService.js";
+import BlockchainDomainService from "../../services/e-governance/BlockchainDomainService.js";
 import * as Loader from "../../WebcSpinnerController.js";
 
 export default class OrganizationsController extends WebcController {
@@ -7,55 +8,68 @@ export default class OrganizationsController extends WebcController {
         super(...props);
 
         this.model = {organizations: []};
-        this.GovernanceService = new GovernanceService(this.DSUStorage);
+        this.OrganizationService = new OrganizationService(this.DSUStorage);
+        this.BlockchainDomainService = new BlockchainDomainService(this.DSUStorage);
 
         this.initNavigationListeners();
         this.displayOrganizationsList();
     }
 
     initNavigationListeners() {
-        this.onTagClick("add-organization", (model, target, event) => {
-            event.preventDefault();
-            event.stopImmediatePropagation();
-
+        this.onTagClick("add-organization", () => {
             this.navigateToPageTag("manage-organizations");
         });
 
-        this.onTagClick("edit-organization", (model, target, event) => {
-            event.preventDefault();
-            event.stopImmediatePropagation();
-
-            this.navigateToPageTag("edit-organization", model.uid);
+        this.onTagClick("edit-organization", (model) => {
+            this.navigateToPageTag("edit-organization", {
+                organizationUid: model.uid
+            });
         });
 
-        this.onTagClick("view-organization", (model, target, event) => {
-            event.preventDefault();
-            event.stopImmediatePropagation();
-
-            this.navigateToPageTag("view-organization", model.uid);
+        this.onTagClick("view-organization", (model) => {
+            this.navigateToPageTag("view-organization", {
+                organizationUid: model.uid
+            });
         });
 
-        this.onTagClick("manage-blockchain-domains", (model, target, event) => {
-            event.preventDefault();
-            event.stopImmediatePropagation();
-
-            this.navigateToPageTag("blockchain-domains-dashboard", model.uid);
+        this.onTagClick("manage-blockchain-domains", (model) => {
+            this.navigateToPageTag("blockchain-domains-dashboard", {
+                organizationUid: model.uid
+            });
         });
     }
 
     displayOrganizationsList() {
         Loader.displayLoader();
-        this.GovernanceService.listOrganizations((err, organizationsList) => {
+        this.OrganizationService.listOrganizations((err, organizationsList) => {
             if (err) {
                 Loader.hideLoader();
                 return console.error(err);
             }
 
-            this.model.organizations = organizationsList.map(organization => {
+            const updatedOrganizationsModel = []
+            const updateModel = (organizationsList) => {
+                if (!organizationsList.length) {
+                    this.model.organizations = [...updatedOrganizationsModel];
+                    return Loader.hideLoader();
+                }
+
+                const organization = organizationsList.pop();
                 organization.options = this.getOptionsViewModel();
-                return organization;
-            });
-            Loader.hideLoader();
+
+                this.BlockchainDomainService.listBlockchainDomains(organization.uid, (err, blockchainDomainsList) => {
+                    if (err) {
+                        console.error(err);
+                    } else {
+                        organization.numberOfClusters = blockchainDomainsList.length;
+                    }
+
+                    updatedOrganizationsModel.push(organization);
+                    updateModel(organizationsList);
+                });
+            };
+
+            updateModel(organizationsList);
         });
     }
 

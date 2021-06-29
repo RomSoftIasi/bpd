@@ -1,28 +1,19 @@
 const {WebcController} = WebCardinal.controllers;
-import GovernanceService from "../../services/GovernanceService.js";
+import VotingSessionService from "../../services/e-governance/VotingSessionService.js";
 import * as Loader from "../../WebcSpinnerController.js";
 
 export default class VotingSessionController extends WebcController {
     constructor(...props) {
         super(...props);
 
-        this.GovernanceService = new GovernanceService(this.DSUStorage);
+        this.VotingSessionService = new VotingSessionService(this.DSUStorage);
 
         this.initNavigationListeners();
     }
 
-    initNavigationListeners() {
-        this.onTagClick("back", (model, target, event) => {
-            event.preventDefault();
-            event.stopImmediatePropagation();
-
-            window.history.back();
-        });
-    }
-
     publishVotingSession(votingSessionData, callback) {
         Loader.displayLoader();
-        this.GovernanceService.registerVotingSession(votingSessionData, (err, result) => {
+        this.VotingSessionService.registerVotingSession(votingSessionData, (err, result) => {
             if (err) {
                 Loader.hideLoader();
                 return callback(err);

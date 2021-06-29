@@ -7,8 +7,7 @@ export default class VotingController extends WebcController {
     constructor(...props) {
         super(...props);
 
-        // TODO: Replace this when a solution has been found
-        let receivedModel = this.history.win.history.state.state;
+        let receivedModel = this.getState();
 
         const initModel = this.getVotingViewModel();
         this.model = {

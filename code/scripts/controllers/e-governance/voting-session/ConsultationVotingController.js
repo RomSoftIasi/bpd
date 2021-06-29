@@ -1,22 +1,26 @@
 import VotingSessionController from "./VotingSessionController.js"
-import GovernanceService from "../../services/GovernanceService.js";
+import VotingSessionService from "../../services/e-governance/VotingSessionService.js";
 
 export default class ConsultationVotingController extends VotingSessionController {
     constructor(...props) {
         super(...props);
 
         this.model = this.getDefaultViewModel();
-        this.GovernanceService = new GovernanceService(this.DSUStorage);
+        this.VotingSessionService = new VotingSessionService(this.DSUStorage);
 
         this.initNavigationListeners();
     }
 
     initNavigationListeners() {
-        this.onTagClick("back", (model, target, event) => {
+        this.onTagClick("back", () => {
+            this.history.goBack();
+        });
+
+        this.onTagClick("add-answer", (model, target, event) => {
             event.preventDefault();
             event.stopImmediatePropagation();
 
-            window.history.back();
+            this.model.answers.push(this.getAnswerViewModel());
         });
 
         this.onTagClick("finish", (model, target, event) => {
@@ -26,13 +30,6 @@ export default class ConsultationVotingController extends VotingSessionControlle
             const votingSession = this.model.toObject();
             votingSession.votingType = "Opinion";
             this.submitVoteSession(votingSession);
-        });
-
-        this.onTagClick("add-answer", (model, target, event) => {
-            event.preventDefault();
-            event.stopImmediatePropagation();
-
-            this.model.answers.push(this.getAnswerViewModel());
         });
     }
 

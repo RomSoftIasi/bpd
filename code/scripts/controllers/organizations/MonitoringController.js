@@ -7,8 +7,7 @@ export default class MonitoringController extends WebcController {
     constructor(...props) {
         super(...props);
 
-        // TODO: Replace this when a solution has been found
-        let receivedModel = this.history.win.history.state.state;
+        let receivedModel = this.getState();
 
         this.OrganisationService = new OrganizationService(this.DSUStorage);
         this.ClusterService = new ClusterService(this.DSUStorage);

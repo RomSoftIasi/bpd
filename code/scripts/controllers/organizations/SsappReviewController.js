@@ -6,8 +6,7 @@ export default class SsappReviewController extends WebcController {
 
         this.model = {}
 
-        // TODO: Replace this when a solution has been found
-        const receivedModel = this.history.win.history.state.state;
+        const receivedModel = this.getState();
         if (receivedModel) {
             this.model.params = receivedModel.params;
             this.model.keySSI = receivedModel.seed;

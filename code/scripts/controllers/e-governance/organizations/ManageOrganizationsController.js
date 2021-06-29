@@ -1,5 +1,5 @@
 const {WebcController} = WebCardinal.controllers;
-import GovernanceService from "../../services/GovernanceService.js";
+import OrganizationService from "../../services/e-governance/OrganizationService.js";
 import * as Loader from "../../WebcSpinnerController.js";
 
 export default class ManageOrganizationsController extends WebcController {
@@ -7,17 +7,14 @@ export default class ManageOrganizationsController extends WebcController {
         super(...props);
 
         this.model = this.getFormViewModel();
-        this.GovernanceService = new GovernanceService(this.DSUStorage);
+        this.OrganizationService = new OrganizationService(this.DSUStorage);
 
         this.initNavigationListeners();
     }
 
     initNavigationListeners() {
-        this.onTagClick("back", (model, target, event) =>{
-            event.preventDefault();
-            event.stopImmediatePropagation();
-
-            window.history.back();
+        this.onTagClick("back", () => {
+            this.history.goBack();
         });
 
         this.onTagClick("create-organization", (model, target, event) => {
@@ -41,7 +38,7 @@ export default class ManageOrganizationsController extends WebcController {
         }
 
         Loader.displayLoader();
-        this.GovernanceService.createOrganization(this.model.newOrganization.value, (err, result) => {
+        this.OrganizationService.createOrganization(this.model.newOrganization.value, (err, result) => {
             Loader.hideLoader();
             if (err) {
                 return console.error(err);

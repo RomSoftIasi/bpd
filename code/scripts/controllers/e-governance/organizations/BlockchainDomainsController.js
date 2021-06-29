@@ -1,76 +1,84 @@
 const {WebcController} = WebCardinal.controllers;
-import GovernanceService from "../../services/GovernanceService.js";
+import BlockchainDomainService from "../../services/e-governance/BlockchainDomainService.js";
 import * as Loader from "../../WebcSpinnerController.js";
 
 export default class BlockchainDomainsController extends WebcController {
     constructor(...props) {
         super(...props);
 
-        const uid = this.history.win.history.state.state;
+        const {organizationUid} = this.getState();
         this.model = {
-            uid: uid,
+            organizationUid: organizationUid,
             blockchainDomains: []
         };
-        this.GovernanceService = new GovernanceService(this.DSUStorage);
+        this.BlockchainDomainService = new BlockchainDomainService(this.DSUStorage);
 
         this.initNavigationListeners();
         this.displayBlockchainDomainsList();
     }
 
     initNavigationListeners() {
-        this.onTagClick("back", (model, target, event) =>{
-            event.preventDefault();
-            event.stopImmediatePropagation();
-
-            window.history.back();
+        this.onTagClick("back", () => {
+            this.history.goBack();
         });
 
-        this.onTagClick("initiate-blockchain-network", (model, target, event) => {
-            event.preventDefault();
-            event.stopImmediatePropagation();
-
-            this.navigateToPageTag("initiate-blockchain-network");
+        this.onTagClick("initiate-blockchain-network", () => {
+            this.navigateToPageTag("initiate-blockchain-network", {
+                organizationUid: this.model.organizationUid
+            });
         });
 
-        this.onTagClick("join-blockchain-network", (model, target, event) => {
-            event.preventDefault();
-            event.stopImmediatePropagation();
-
-            this.navigateToPageTag("join-blockchain-network");
+        this.onTagClick("join-blockchain-network", () => {
+            this.navigateToPageTag("join-blockchain-network", {
+                organizationUid: this.model.organizationUid
+            });
         });
 
-        this.onTagClick("edit-blockchain-network", (model, target, event) => {
-            event.preventDefault();
-            event.stopImmediatePropagation();
-
-            this.navigateToPageTag("edit-blockchain-network", model.uid);
+        this.onTagClick("edit-blockchain-network", (model) => {
+            this.navigateToPageTag("edit-blockchain-network", {
+                organizationUid: this.model.organizationUid,
+                blockchainDomainUid: model.uid
+            });
         });
 
-        this.onTagClick("view-blockchain-network", (model, target, event) => {
-            event.preventDefault();
-            event.stopImmediatePropagation();
-
-            this.navigateToPageTag("view-blockchain-network", model.uid);
+        this.onTagClick("view-blockchain-network", (model) => {
+            this.navigateToPageTag("view-blockchain-network", {
+                organizationUid: this.model.organizationUid,
+                blockchainDomainUid: model.uid
+            });
         });
 
-        this.onTagClick("manage-blockchain-network", (model, target, event) => {
-            event.preventDefault();
-            event.stopImmediatePropagation();
-
-            this.navigateToPageTag("manage-blockchain-network", model.uid);
+        this.onTagClick("manage-blockchain-network", (model) => {
+            this.navigateToPageTag("manage-blockchain-network", {
+                organizationUid: this.model.organizationUid,
+                blockchainDomainUid: model.uid
+            });
         });
     }
 
     displayBlockchainDomainsList() {
         Loader.displayLoader();
-        this.GovernanceService.listBlockchainDomains(this.model.uid, (err, blockchainDomains) => {
+        this.BlockchainDomainService.listBlockchainDomains(this.model.organizationUid, (err, blockchainDomains) => {
             if (err) {
                 Loader.hideLoader();
                 return console.error(err);
             }
 
-            this.model.blockchainDomains = blockchainDomains;
+            this.model.blockchainDomains = blockchainDomains.map(domain => {
+                domain.options = this.getOptionsViewModel();
+                return domain;
+            });
             Loader.hideLoader();
         });
+    }
+
+    getOptionsViewModel() {
+        return [{
+            tag: "view",
+            name: "View"
+        }, {
+            tag: "edit",
+            name: "Edit"
+        }];
     }
 }

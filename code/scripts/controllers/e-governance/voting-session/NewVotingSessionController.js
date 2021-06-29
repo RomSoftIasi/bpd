@@ -8,11 +8,8 @@ export default class NewVotingSessionController extends WebcController {
     }
 
     initNavigationListeners() {
-        this.onTagClick("back", (model, target, event) =>{
-            event.preventDefault();
-            event.stopImmediatePropagation();
-
-            window.history.back();
+        this.onTagClick("back", () => {
+            this.history.goBack();
         });
 
         this.onTagClick("next", (model, target, event) => {

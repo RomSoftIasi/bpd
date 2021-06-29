@@ -1,0 +1,33 @@
+<webc-container controller="e-governance/organizations/ManageOrganizationsController">
+    <link href="/assets/css/pages/e-governance/main.css" rel="stylesheet">
+
+    <div class="container main-container">
+        <h1>Manage Organizations</h1>
+
+        <div class="container form-wrapper">
+            <div class="form-row-wrapper">
+                <label>Organization name:</label>
+                <input class="form-control" data-view-model="@newOrganization"/>
+            </div>
+
+            <footer class="left-align">
+                <button data-tag="back">Back</button>
+                <button data-tag="create-organization">Create Organization</button>
+            </footer>
+        </div>
+
+        <div class="container form-wrapper">
+            <div class="form-row-wrapper">
+                <label>Upload organization Blockchain domain information:</label>
+                <div class="file-input-wrapper w-auto">
+                    <label for="upload-files">Upload files</label>
+                    <input id="upload-files" multiple name="files" type="file"/>
+                </div>
+            </div>
+
+            <footer class="left-align">
+                <button class="import" data-tag="import-organization">Import Organization</button>
+            </footer>
+        </div>
+    </div>
+</webc-container>

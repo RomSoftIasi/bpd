@@ -17,14 +17,14 @@ h1 {
 .row-wrapper {
     column-gap: 0.5rem;
     display: grid;
-    grid-template-columns: minmax(40%, auto) repeat(auto-fill, [col-start] minmax(120px, 2fr) [col-end]);
+    grid-template-columns: minmax(40%, auto) repeat(auto-fit, minmax(120px, 1fr));
     text-align: center;
     margin: 0.5rem 0;
     padding: 0 0.75rem;
 }
 
 .grid-equal {
-    grid-template-columns: repeat(auto-fill, [col-start] minmax(200px, 1fr) [col-end]);
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
 }
 
 .inner-wrapper {

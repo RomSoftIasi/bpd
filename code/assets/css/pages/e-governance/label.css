@@ -26,6 +26,10 @@ label, span {
     padding: 0.5rem 0;
 }
 
+label[data-status] {
+    font-weight: 500;
+}
+
 label[data-status="true"] {
     color: rgba(57, 203, 71, 1);
 }
@@ -34,6 +38,18 @@ label[data-status="false"] {
     color: rgba(210, 13, 13, 1);
     cursor: pointer;
     text-decoration: underline;
+}
+
+label[data-status="installed"] {
+    color: rgba(47, 128, 237, 1);
+}
+
+label[data-status="ready"] {
+    color: rgba(39, 174, 96, 1);
+}
+
+label[data-status="pending"] {
+    color: rgba(198, 155, 24, 1);
 }
 
 .left-align,

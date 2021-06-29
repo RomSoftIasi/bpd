@@ -1,0 +1,63 @@
+<webc-container controller="e-governance/organizations/ViewBlockchainDomainController">
+    <link href="/assets/css/pages/e-governance/main.css" rel="stylesheet">
+
+    <div class="container main-container">
+        <h1>View Blockchain Domain</h1>
+
+        <div class="container form-wrapper">
+            <div class="form-row-wrapper">
+                <label>Main domain:</label>
+                <label class="font-weight-bold">{{@mainDomain}}</label>
+            </div>
+
+            <div class="form-row-wrapper">
+                <label>Subdomain:</label>
+                <label class="font-weight-bold">{{@subdomain}}</label>
+            </div>
+
+            <div class="form-row-wrapper">
+                <label>Vault domain:</label>
+                <label class="font-weight-bold">{{@vaultDomain}}</label>
+            </div>
+
+            <div class="form-row-wrapper">
+                <label>Jenkins:</label>
+                <label class="font-weight-bold">{{@jenkins}}</label>
+            </div>
+
+            <div class="form-row-wrapper">
+                <label>Jenkins user name:</label>
+                <label class="font-weight-bold">{{@jenkinsUserName}}</label>
+            </div>
+
+            <div class="form-row-wrapper">
+                <label>Jenkins Token:</label>
+                <label class="font-weight-bold">{{@jenkinsToken}}</label>
+            </div>
+
+            <div class="form-row-wrapper">
+                <label>Github pipeline repository:</label>
+                <label class="font-weight-bold">{{@githubRepositoryURL}}</label>
+            </div>
+
+            <div class="form-row-wrapper">
+                <label>Github access token:</label>
+                <label class="font-weight-bold">{{@githubRepositoryAccessToken}}</label>
+            </div>
+
+            <div class="form-row-wrapper">
+                <label>Deployment configuration:</label>
+                <textarea class="form-control" readonly value="@deploymentConfiguration"></textarea>
+            </div>
+
+            <div class="form-row-wrapper">
+                <label>Blockchain network cluster status:</label>
+                <label data-status="@dataStatus">{{@status}}</label>
+            </div>
+
+            <footer class="left-align">
+                <button data-tag="back">Back</button>
+            </footer>
+        </div>
+    </div>
+</webc-container>

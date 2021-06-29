@@ -6,8 +6,11 @@ export default class InitiateBlockchainDomainController extends WebcController {
     constructor(...props) {
         super(...props);
 
-        this.organizationUid = this.getState().organizationUid;
-        this.model = this.getFormViewModel();
+        const organizationUid = this.getState().organizationUid;
+        this.model = {
+            organizationUid: organizationUid,
+            ...this.getFormViewModel()
+        };
         this.BlockchainDomainService = new BlockchainDomainService(this.DSUStorage);
 
         this.initNavigationListeners();
@@ -27,10 +30,9 @@ export default class InitiateBlockchainDomainController extends WebcController {
     }
 
     saveNetwork() {
-        const blockchainDomainData = this.model.toObject();
-        blockchainDomainData.deploymentConfiguration = blockchainDomainData.deploymentConfiguration.value;
+        const blockchainDomainData = this.model.toObject("blockchainDomainModel");
         Loader.displayLoader();
-        this.BlockchainDomainService.createBlockchainDomain(this.organizationUid, blockchainDomainData, (err, result) => {
+        this.BlockchainDomainService.createBlockchainDomain(this.model.organizationUid, blockchainDomainData, (err, result) => {
             Loader.hideLoader();
             if (err) {
                 return console.error(err);
@@ -38,28 +40,28 @@ export default class InitiateBlockchainDomainController extends WebcController {
 
             console.log(result);
             this.navigateToPageTag("blockchain-domains-dashboard", {
-                organizationUid: this.organizationUid
+                organizationUid: this.model.organizationUid
             });
         });
     }
 
     getFormViewModel() {
         return {
-            mainDomain: "",
-            subdomain: "",
-            vaultDomain: "",
-            jenkins: "",
-            jenkinsUserName: "",
-            jenkinsToken: "",
-            githubRepositoryURL: "",
-            githubRepositoryAccessToken: "",
-            deploymentConfiguration: {
-                placeholder: `{
+            blockchainDomainModel: {
+                mainDomain: "",
+                subdomain: "",
+                vaultDomain: "",
+                jenkins: "",
+                jenkinsUserName: "",
+                jenkinsToken: "",
+                githubRepositoryURL: "",
+                githubRepositoryAccessToken: "",
+                deploymentConfiguration: ""
+            },
+            deploymentConfigurationPlaceholder: `{
                     // additional configuration in JSON format
                     "registry": "docker.io"
-                }`,
-                value: ""
-            }
+                }`
         };
     }
 }

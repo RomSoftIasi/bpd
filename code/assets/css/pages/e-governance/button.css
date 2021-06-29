@@ -6,6 +6,8 @@ button {
     color: #FFFFFF;
     display: flex;
     flex-wrap: wrap;
+    font-size: 16px;
+    font-weight: 500;
     justify-content: center;
     min-height: 4rem;
     width: 20rem;

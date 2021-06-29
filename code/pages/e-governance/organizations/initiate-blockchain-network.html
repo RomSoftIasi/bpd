@@ -7,48 +7,56 @@
         <div class="container form-wrapper">
             <div class="form-row-wrapper">
                 <label>Main domain:</label>
-                <input class="form-control" placeholder="Enter main domain (e.g. epiqa)" value="@mainDomain"/>
+                <input class="form-control" placeholder="Enter main domain (e.g. epiqa)"
+                       value="@blockchainDomainModel.mainDomain"/>
             </div>
 
             <div class="form-row-wrapper">
                 <label>Subdomain:</label>
-                <input class="form-control" placeholder="Enter subdomain (e.g. nvs.epiqa)" value="@subdomain"/>
+                <input class="form-control" placeholder="Enter subdomain (e.g. nvs.epiqa)"
+                       value="@blockchainDomainModel.subdomain"/>
             </div>
 
             <div class="form-row-wrapper">
                 <label>Vault domain:</label>
-                <input class="form-control" placeholder="Enter vault domain (e.g. nvs)" value="@vaultDomain"/>
+                <input class="form-control" placeholder="Enter vault domain (e.g. nvs)"
+                       value="@blockchainDomainModel.vaultDomain"/>
             </div>
 
             <div class="form-row-wrapper">
                 <label>Jenkins:</label>
-                <input class="form-control" placeholder="https://jenkins/CI/Server/URL" value="@jenkins"/>
+                <input class="form-control" placeholder="https://jenkins/CI/Server/URL"
+                       value="@blockchainDomainModel.jenkins"/>
             </div>
 
             <div class="form-row-wrapper">
                 <label>Jenkins user name:</label>
-                <input class="form-control" placeholder="Jenkins user name" value="@jenkinsUserName"/>
+                <input class="form-control" placeholder="Jenkins user name"
+                       value="@blockchainDomainModel.jenkinsUserName"/>
             </div>
 
             <div class="form-row-wrapper">
                 <label>Jenkins Token:</label>
-                <input class="form-control" placeholder="Jenkins Authorization Token" value="@jenkinsToken"/>
+                <input class="form-control" placeholder="Jenkins Authorization Token"
+                       value="@blockchainDomainModel.jenkinsToken"/>
             </div>
 
             <div class="form-row-wrapper">
                 <label>Github pipeline repository:</label>
-                <input class="form-control" placeholder="Github repository URL" value="@githubRepositoryURL"/>
+                <input class="form-control" placeholder="Github repository URL"
+                       value="@blockchainDomainModel.githubRepositoryURL"/>
             </div>
 
             <div class="form-row-wrapper">
                 <label>Github access token:</label>
                 <input class="form-control" placeholder="Github repository access token"
-                       value="@githubRepositoryAccessToken"/>
+                       value="@blockchainDomainModel.githubRepositoryAccessToken"/>
             </div>
 
             <div class="form-row-wrapper">
                 <label>Deployment configuration:</label>
-                <textarea class="form-control" data-view-model="@deploymentConfiguration"></textarea>
+                <textarea class="form-control" placeholder="@deploymentConfigurationPlaceholder"
+                          value="@blockchainDomainModel.deploymentConfiguration"></textarea>
             </div>
 
             <footer class="d-flex justify-content-between align-items-center">

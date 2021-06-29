@@ -19,13 +19,20 @@ export default class BlockchainDomainService {
             blockchainDomainData.uid = keySSI;
             blockchainDomainData.isOwner = true;
             blockchainDomainData.type = "Owner";
-            blockchainDomainData.status = "Ready to Install";
-            blockchainDomainData.dataStatus = "ready";
+            blockchainDomainData.isInstalled = false;
+            blockchainDomainData.isInstalling = false;
+            blockchainDomainData.isInstallFailed = false;
+            const {status, dataStatus} = this.getBlockchainDomainInstallStatus(blockchainDomainData);
+            blockchainDomainData.status = status;
+            blockchainDomainData.dataStatus = dataStatus;
             this.updateBlockchainDomainData(organizationUid, blockchainDomainData, callback);
         });
     }
 
     updateBlockchainDomainData(organizationUid, blockchainDomainData, callback) {
+        const {status, dataStatus} = this.getBlockchainDomainInstallStatus(blockchainDomainData);
+        blockchainDomainData.status = status;
+        blockchainDomainData.dataStatus = dataStatus;
         const blockchainDomainDataPath = this.getBlockchainDomainDataPath(organizationUid, blockchainDomainData.uid);
         this.DSUStorage.setObject(blockchainDomainDataPath, blockchainDomainData, (err) => {
             callback(err, blockchainDomainData);
@@ -79,5 +86,33 @@ export default class BlockchainDomainService {
 
     getBlockchainDomainDataPath(organizationUid, blockchainDomainUid) {
         return `${this.getBlockchainDomainsPath(organizationUid)}/${blockchainDomainUid}/data.json`;
+    }
+
+    getBlockchainDomainInstallStatus(blockchainDomainData) {
+        if (blockchainDomainData.isInstalled) {
+            return {
+                status: "Installed",
+                dataStatus: "installed"
+            }
+        }
+
+        if (blockchainDomainData.isInstalling) {
+            return {
+                status: "Installation Pending",
+                dataStatus: "pending"
+            }
+        }
+
+        if (blockchainDomainData.isInstallFailed) {
+            return {
+                status: "Installation Failed",
+                dataStatus: "failed"
+            }
+        }
+
+        return {
+            status: "Ready to Install",
+            dataStatus: "ready"
+        }
     }
 }

@@ -6,7 +6,7 @@
     row-gap: 1rem;
 }
 
-.container.main-container .container:last-child {
+.container.main-container > .form-wrapper:not(:first-of-type) {
     border-top: 1px solid #000000;
     padding-top: 2rem;
 }

@@ -55,7 +55,7 @@ export default class OrganizationsController extends WebcController {
                 }
 
                 const organization = organizationsList.pop();
-                organization.options = this.getOptionsViewModel();
+                organization.options = this.getOptionsViewModel(organization.uid);
 
                 this.BlockchainDomainService.listBlockchainDomains(organization.uid, (err, blockchainDomainsList) => {
                     if (err) {
@@ -73,13 +73,15 @@ export default class OrganizationsController extends WebcController {
         });
     }
 
-    getOptionsViewModel() {
+    getOptionsViewModel(organizationUid) {
         return [{
             tag: "view",
-            name: "View"
+            name: "View",
+            uid: organizationUid
         }, {
             tag: "edit",
-            name: "Edit"
+            name: "Edit",
+            uid: organizationUid
         }];
     }
 }

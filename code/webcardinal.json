@@ -126,13 +126,6 @@
       "tag": "edit-blockchain-network",
       "src": "/e-governance/organizations/edit-blockchain-network.html",
       "indexed": false
-    },
-    {
-      "name": "Join Blockchain Network",
-      "path": "/e-governance/organizations/join-blockchain-network",
-      "tag": "join-blockchain-network",
-      "src": "/e-governance/organizations/join-blockchain-network.html",
-      "indexed": false
     }
   ],
   "pagesFallback": {

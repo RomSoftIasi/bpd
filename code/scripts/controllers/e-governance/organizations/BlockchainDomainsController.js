@@ -34,21 +34,21 @@ export default class BlockchainDomainsController extends WebcController {
             });
         });
 
-        this.onTagClick("edit-blockchain-network", (model) => {
+        this.onTagClick("edit", (model) => {
             this.navigateToPageTag("edit-blockchain-network", {
                 organizationUid: this.model.organizationUid,
                 blockchainDomainUid: model.uid
             });
         });
 
-        this.onTagClick("view-blockchain-network", (model) => {
+        this.onTagClick("view", (model) => {
             this.navigateToPageTag("view-blockchain-network", {
                 organizationUid: this.model.organizationUid,
                 blockchainDomainUid: model.uid
             });
         });
 
-        this.onTagClick("manage-blockchain-network", (model) => {
+        this.onTagClick("manage-blockchain-domain", (model) => {
             this.navigateToPageTag("manage-blockchain-network", {
                 organizationUid: this.model.organizationUid,
                 blockchainDomainUid: model.uid
@@ -65,20 +65,28 @@ export default class BlockchainDomainsController extends WebcController {
             }
 
             this.model.blockchainDomains = blockchainDomains.map(domain => {
-                domain.options = this.getOptionsViewModel();
+                domain.options = this.getOptionsViewModel(domain.isOwner, domain.uid);
                 return domain;
             });
             Loader.hideLoader();
         });
     }
 
-    getOptionsViewModel() {
-        return [{
+    getOptionsViewModel(isOwner, blockchainDomainUid) {
+        const options = [{
             tag: "view",
-            name: "View"
-        }, {
-            tag: "edit",
-            name: "Edit"
+            name: "View",
+            uid: blockchainDomainUid
         }];
+
+        if (isOwner) {
+            options.push({
+                tag: "edit",
+                name: "Edit",
+                uid: blockchainDomainUid
+            });
+        }
+
+        return options;
     }
 }

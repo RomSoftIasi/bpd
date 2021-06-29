@@ -8,10 +8,9 @@
 
 h1 {
     color: rgba(0, 52, 91, 1);
-    font-size: 64px;
-    margin-bottom: 2rem;
-    padding: 2rem 0;
-    text-align: center;
+    font-size: 56px;
+    margin-bottom: 1rem;
+    padding: 1.5rem 0;
 }
 
 .row-wrapper {

@@ -10,6 +10,13 @@ body,
 .container.main-container {
     display: grid;
     grid-template-rows: auto 1fr auto;
+    padding: 0 5%;
+}
+
+.container.main-container,
+.container.main-container .container {
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .container.main-container > .container {
@@ -65,28 +72,4 @@ webc-app-container {
 
 webc-app-container .container {
     width: 100%;
-}
-
-@media (min-width: 576px) {
-    webc-app-container .container {
-        max-width: 540px;
-    }
-}
-
-@media (min-width: 768px) {
-    webc-app-container .container {
-        max-width: 720px;
-    }
-}
-
-@media (min-width: 992px) {
-    webc-app-container .container {
-        max-width: 960px;
-    }
-}
-
-@media (min-width: 1200px) {
-    webc-app-container .container {
-        max-width: 95%;
-    }
 }

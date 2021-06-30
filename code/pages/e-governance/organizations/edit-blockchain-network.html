@@ -6,6 +6,11 @@
 
         <div class="container form-wrapper">
             <div class="form-row-wrapper">
+                <label>Blockchain network cluster status:</label>
+                <label data-status="@blockchainDomainModel.dataStatus">{{@blockchainDomainModel.status}}</label>
+            </div>
+
+            <div class="form-row-wrapper">
                 <label>Main domain:</label>
                 <input class="form-control" placeholder="Enter main domain (e.g. epiqa)"
                        value="@blockchainDomainModel.mainDomain"/>
@@ -57,11 +62,6 @@
                 <label>Deployment configuration:</label>
                 <textarea class="form-control" placeholder="@deploymentConfigurationPlaceholder"
                           value="@blockchainDomainModel.deploymentConfiguration"></textarea>
-            </div>
-
-            <div class="form-row-wrapper">
-                <label>Blockchain network cluster status:</label>
-                <label data-status="@blockchainDomainModel.dataStatus">{{@blockchainDomainModel.status}}</label>
             </div>
         </div>
 

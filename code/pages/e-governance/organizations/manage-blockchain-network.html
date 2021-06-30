@@ -6,6 +6,11 @@
 
         <div class="container form-wrapper">
             <div class="form-row-wrapper">
+                <label>Blockchain network cluster status:</label>
+                <label data-status="@blockchainDomainModel.dataStatus">{{@blockchainDomainModel.status}}</label>
+            </div>
+
+            <div class="form-row-wrapper">
                 <label>Main domain:</label>
                 <label class="font-weight-bold">{{@blockchainDomainModel.mainDomain}}</label>
             </div>
@@ -39,11 +44,6 @@
                 <label>Deployment configuration:</label>
                 <textarea class="form-control" readonly
                           value="@blockchainDomainModel.deploymentConfiguration"></textarea>
-            </div>
-
-            <div class="form-row-wrapper">
-                <label>Blockchain network cluster status:</label>
-                <label data-status="@blockchainDomainModel.dataStatus">{{@blockchainDomainModel.status}}</label>
             </div>
 
             <div class="form-row-wrapper" data-if="@displayLogs">

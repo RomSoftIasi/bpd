@@ -52,6 +52,7 @@ main .row-wrapper label:first-child {
 
 main .row-wrapper.grid-equal label:first-child {
     text-align: center;
+    max-width: 100%;
 }
 
 main .row-wrapper:nth-child(odd) {

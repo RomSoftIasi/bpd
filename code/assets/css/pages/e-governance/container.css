@@ -1,12 +1,53 @@
-.container.main-container {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
+html,
+body,
+.container,
+.main-container {
     height: 100%;
-    row-gap: 1rem;
+    width: 100%;
+    overflow: hidden;
 }
 
-.container.main-container > .form-wrapper:not(:first-of-type) {
+.container.main-container {
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+}
+
+.container.main-container > .container {
+    overflow: auto;
+    scroll-behavior: smooth;
+}
+
+@media screen and (prefers-reduced-motion: reduce) {
+    .container.main-container > .container {
+        scroll-behavior: auto;
+    }
+}
+
+.container.main-container > .container::-webkit-scrollbar {
+    width: 0.5rem;
+}
+
+.container.main-container > .container::-webkit-scrollbar-track {
+    background-color: rgba(0, 135, 152, 0.25);
+}
+
+.container.main-container > .container::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 135, 152, 1);
+    border-radius: 0.5rem;
+}
+
+.container.main-container main {
+    overflow-y: auto;
+    grid-auto-flow: row;
+}
+
+.container.main-container header {
+    background: #FFFFFF;
+    position: sticky;
+    top: 0;
+}
+
+.container.main-container .form-wrapper:not(:first-of-type) {
     border-top: 1px solid #000000;
     padding-top: 2rem;
 }

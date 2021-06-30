@@ -50,16 +50,16 @@
                 <label>Installation logs:</label>
                 <textarea class="form-control" readonly value="@blockchainDomainModel.deploymentLogs"></textarea>
             </div>
-
-            <footer class="left-align flex-column align-items-start">
-                <div data-if="@isReadyToInstall">
-                    <button data-tag="install">Install Blockchain Domain</button>
-                </div>
-                <div data-if="@displayLogs">
-                    <button class="import" data-tag="remove">REMOVE Blockchain Domain</button>
-                </div>
-                <button data-tag="back">Back</button>
-            </footer>
         </div>
+
+        <footer class="left-align flex-column align-items-start">
+            <div data-if="@isReadyToInstall">
+                <button data-tag="install">Install Blockchain Domain</button>
+            </div>
+            <div data-if="@displayLogs">
+                <button class="import" data-tag="remove">REMOVE Blockchain Domain</button>
+            </div>
+            <button data-tag="back">Back</button>
+        </footer>
     </div>
 </webc-container>

@@ -30,7 +30,7 @@
     margin-top: 0;
 }
 
-textarea {
+textarea.form-control {
     height: 100px;
 }
 

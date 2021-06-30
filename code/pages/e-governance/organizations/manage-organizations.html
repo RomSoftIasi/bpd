@@ -4,30 +4,32 @@
     <div class="container main-container">
         <h1>Manage Organizations</h1>
 
-        <div class="container form-wrapper">
-            <div class="form-row-wrapper">
-                <label>Organization name:</label>
-                <input class="form-control w-50" data-view-model="@newOrganization"/>
-            </div>
-
-            <footer class="right-align">
-                <button data-tag="create-organization">Create Organization</button>
-            </footer>
-        </div>
-
-        <div class="container form-wrapper">
-            <div class="form-row-wrapper">
-                <label>Upload organization Blockchain domain information:</label>
-                <div class="file-input-wrapper d-flex">
-                    <label for="upload-files">Upload files</label>
-                    <input id="upload-files" multiple name="files" type="file"/>
+        <div class="container">
+            <div class="form-wrapper">
+                <div class="form-row-wrapper">
+                    <label>Organization name:</label>
+                    <input class="form-control w-50" data-view-model="@newOrganization"/>
                 </div>
+
+                <footer class="right-align">
+                    <button data-tag="create-organization">Create Organization</button>
+                </footer>
             </div>
 
-            <footer class="d-flex justify-content-between">
-                <button data-tag="back">Back</button>
-                <button class="import" data-tag="import-organization">Import Organization</button>
-            </footer>
+            <div class="form-wrapper">
+                <div class="form-row-wrapper">
+                    <label>Upload organization Blockchain domain information:</label>
+                    <div class="file-input-wrapper d-flex">
+                        <label for="upload-files">Upload files</label>
+                        <input id="upload-files" multiple name="files" type="file"/>
+                    </div>
+                </div>
+
+                <footer class="d-flex justify-content-between">
+                    <button data-tag="back">Back</button>
+                    <button class="import" data-tag="import-organization">Import Organization</button>
+                </footer>
+            </div>
         </div>
     </div>
 </webc-container>

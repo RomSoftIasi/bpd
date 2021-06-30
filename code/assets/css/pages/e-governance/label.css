@@ -3,6 +3,12 @@ label, span {
     font-weight: 500;
 }
 
+header label,
+header span,
+header button {
+    font-size: 1.125rem;
+}
+
 label, span {
     margin: 0;
     padding: 0.5rem 0;
@@ -27,7 +33,7 @@ label, span {
 }
 
 label[data-status] {
-    font-weight: 500;
+    font-weight: bold;
 }
 
 label[data-status="true"] {

@@ -18,7 +18,7 @@ h1 {
     display: grid;
     grid-template-columns: minmax(40%, auto) repeat(auto-fit, minmax(120px, 1fr));
     text-align: center;
-    margin: 0.5rem 0;
+    margin: 0.25rem 0;
     padding: 0 0.75rem;
 }
 

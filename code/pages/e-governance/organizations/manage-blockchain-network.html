@@ -1,0 +1,65 @@
+<webc-container controller="e-governance/organizations/ManageBlockchainDomainController">
+    <link href="/assets/css/pages/e-governance/main.css" rel="stylesheet">
+
+    <div class="container main-container">
+        <h1>Manage Blockchain Domain Deployment</h1>
+
+        <div class="container form-wrapper">
+            <div class="form-row-wrapper">
+                <label>Main domain:</label>
+                <label class="font-weight-bold">{{@blockchainDomainModel.mainDomain}}</label>
+            </div>
+
+            <div class="form-row-wrapper">
+                <label>Subdomain:</label>
+                <label class="font-weight-bold">{{@blockchainDomainModel.subdomain}}</label>
+            </div>
+
+            <div class="form-row-wrapper">
+                <label>Vault domain:</label>
+                <label class="font-weight-bold">{{@blockchainDomainModel.vaultDomain}}</label>
+            </div>
+
+            <div class="form-row-wrapper">
+                <label>Jenkins:</label>
+                <label class="font-weight-bold">{{@blockchainDomainModel.jenkins}}</label>
+            </div>
+
+            <div class="form-row-wrapper">
+                <label>Jenkins user name:</label>
+                <label class="font-weight-bold">{{@blockchainDomainModel.jenkinsUserName}}</label>
+            </div>
+
+            <div class="form-row-wrapper">
+                <label>Github pipeline repository:</label>
+                <label class="font-weight-bold">{{@blockchainDomainModel.githubRepositoryURL}}</label>
+            </div>
+
+            <div class="form-row-wrapper" data-if="@displayConfiguration">
+                <label>Deployment configuration:</label>
+                <textarea class="form-control" readonly
+                          value="@blockchainDomainModel.deploymentConfiguration"></textarea>
+            </div>
+
+            <div class="form-row-wrapper">
+                <label>Blockchain network cluster status:</label>
+                <label data-status="@blockchainDomainModel.dataStatus">{{@blockchainDomainModel.status}}</label>
+            </div>
+
+            <div class="form-row-wrapper" data-if="@displayLogs">
+                <label>Installation logs:</label>
+                <textarea class="form-control" readonly value="@blockchainDomainModel.deploymentLogs"></textarea>
+            </div>
+
+            <footer class="left-align flex-column align-items-start">
+                <div data-if="@isReadyToInstall">
+                    <button data-tag="install">Install Blockchain Domain</button>
+                </div>
+                <div data-if="@displayLogs">
+                    <button class="import" data-tag="remove">REMOVE Blockchain Domain</button>
+                </div>
+                <button data-tag="back">Back</button>
+            </footer>
+        </div>
+    </div>
+</webc-container>

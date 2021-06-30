@@ -133,6 +133,12 @@
       "tag": "view-blockchain-network",
       "src": "/e-governance/organizations/view-blockchain-network.html",
       "indexed": false
+    },{
+      "name": "Manage Blockchain Network",
+      "path": "/e-governance/organizations/manage-blockchain-network",
+      "tag": "manage-blockchain-network",
+      "src": "/e-governance/organizations/manage-blockchain-network.html",
+      "indexed": false
     }
   ],
   "pagesFallback": {

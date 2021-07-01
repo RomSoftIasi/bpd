@@ -68,6 +68,8 @@ label[data-status="pending"] {
     align-items: center;
     display: flex;
     width: 100%;
+    column-gap: 0.5rem;
+    row-gap: 0.5rem;
 }
 
 .left-align {

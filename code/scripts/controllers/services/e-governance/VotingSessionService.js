@@ -1,4 +1,4 @@
-import {downloadFile} from "../../../utils/fileDownloader.js";
+import {downloadFile} from "../../../utils/utils.js";
 
 export default class GovernanceService {
 

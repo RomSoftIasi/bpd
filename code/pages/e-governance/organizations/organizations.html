@@ -8,7 +8,8 @@
             <header>
                 <div class="row-wrapper grid-equal">
                     <label>Organization</label>
-                    <label>Type</label>
+                    <!--<label>Type</label>-->
+                    <label>Created at</label>
                     <label>Clusters</label>
                     <label>Blockchain domains</label>
                     <label>Options</label>
@@ -18,7 +19,8 @@
             <main data-for="@organizations">
                 <div class="row-wrapper grid-equal">
                     <label title="@name">{{@name}}</label>
-                    <label>{{@type}}</label>
+                    <!--<label>{{@type}}</label>-->
+                    <label>{{@createdAt}}</label>
                     <label>{{@numberOfClusters}}</label>
                     <label class="link" data-tag="manage-blockchain-domains">Manage</label>
                     <div class="d-flex justify-content-center align-items-center" data-for="@options">

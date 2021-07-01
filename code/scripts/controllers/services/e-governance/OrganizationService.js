@@ -58,7 +58,8 @@ export default class GovernanceService {
                 uid: keySSI,
                 numberOfClusters: 0,
                 isOwner: true,
-                type: "Owner"
+                type: "Owner",
+                createdAt: Date.now()
             };
             this.updateOrganizationData(organizationData, callback);
         });

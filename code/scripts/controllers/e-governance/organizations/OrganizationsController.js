@@ -2,6 +2,7 @@ const {WebcController} = WebCardinal.controllers;
 import OrganizationService from "../../services/e-governance/OrganizationService.js";
 import BlockchainDomainService from "../../services/e-governance/BlockchainDomainService.js";
 import * as Loader from "../../WebcSpinnerController.js";
+import {getFormattedDate} from "../../../utils/utils.js";
 
 export default class OrganizationsController extends WebcController {
     constructor(...props) {
@@ -55,6 +56,7 @@ export default class OrganizationsController extends WebcController {
                 }
 
                 const organization = organizationsList.pop();
+                organization.createdAt = getFormattedDate(organization.createdAt);
                 organization.options = this.getOptionsViewModel(organization.uid);
 
                 this.BlockchainDomainService.listBlockchainDomains(organization.uid, (err, blockchainDomainsList) => {

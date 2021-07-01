@@ -56,7 +56,6 @@ export default class GovernanceService {
                 name: organizationName,
                 keySSI: keySSI,
                 uid: keySSI,
-                numberOfClusters: 0,
                 isOwner: true,
                 type: "Owner",
                 createdAt: Date.now()

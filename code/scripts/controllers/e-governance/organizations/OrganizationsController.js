@@ -18,16 +18,16 @@ export default class OrganizationsController extends WebcController {
 
     initNavigationListeners() {
         this.onTagClick("add-organization", () => {
-            this.navigateToPageTag("manage-organizations");
+            this.navigateToPageTag("define-organization");
         });
 
-        this.onTagClick("edit-organization", (model) => {
+        this.onTagClick("edit", (model) => {
             this.navigateToPageTag("edit-organization", {
                 organizationUid: model.uid
             });
         });
 
-        this.onTagClick("view-organization", (model) => {
+        this.onTagClick("view", (model) => {
             this.navigateToPageTag("view-organization", {
                 organizationUid: model.uid
             });

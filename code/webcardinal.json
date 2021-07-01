@@ -100,44 +100,59 @@
       "indexed": false
     },
     {
-      "name": "Manage Organizations",
-      "path": "/e-governance/organizations/manage-organizations",
-      "tag": "manage-organizations",
-      "src": "/e-governance/organizations/manage-organizations.html",
+      "name": "Define New Organization",
+      "path": "/e-governance/organizations/define-organization",
+      "tag": "define-organization",
+      "src": "/e-governance/organizations/define-organization.html",
+      "indexed": false
+    },
+    {
+      "name": "Edit Organization",
+      "path": "/e-governance/organizations/edit-organization",
+      "tag": "edit-organization",
+      "src": "/e-governance/organizations/edit-organization.html",
+      "indexed": false
+    },
+    {
+      "name": "View Organization",
+      "path": "/e-governance/organizations/view-organization",
+      "tag": "view-organization",
+      "src": "/e-governance/organizations/view-organization.html",
       "indexed": false
     },
     {
       "name": "Blockchain Domains Dashboard",
-      "path": "/e-governance/organizations/blockchain-domains-dashboard",
+      "path": "/e-governance/blockchain-domain/blockchain-domains-dashboard",
       "tag": "blockchain-domains-dashboard",
-      "src": "/e-governance/organizations/blockchain-domains-dashboard.html",
+      "src": "/e-governance/blockchain-domain/blockchain-domains-dashboard.html",
       "indexed": false
     },
     {
       "name": "Initiate Blockchain Network",
-      "path": "/e-governance/organizations/initiate-blockchain-network",
+      "path": "/e-governance/blockchain-domain/initiate-blockchain-network",
       "tag": "initiate-blockchain-network",
-      "src": "/e-governance/organizations/initiate-blockchain-network.html",
+      "src": "/e-governance/blockchain-domain/initiate-blockchain-network.html",
       "indexed": false
     },
     {
       "name": "Edit Blockchain Network",
-      "path": "/e-governance/organizations/edit-blockchain-network",
+      "path": "/e-governance/blockchain-domain/edit-blockchain-network",
       "tag": "edit-blockchain-network",
-      "src": "/e-governance/organizations/edit-blockchain-network.html",
+      "src": "/e-governance/blockchain-domain/edit-blockchain-network.html",
       "indexed": false
     },
     {
       "name": "View Blockchain Network",
-      "path": "/e-governance/organizations/view-blockchain-network",
+      "path": "/e-governance/blockchain-domain/view-blockchain-network",
       "tag": "view-blockchain-network",
-      "src": "/e-governance/organizations/view-blockchain-network.html",
+      "src": "/e-governance/blockchain-domain/view-blockchain-network.html",
       "indexed": false
-    },{
+    },
+    {
       "name": "Manage Blockchain Network",
-      "path": "/e-governance/organizations/manage-blockchain-network",
+      "path": "/e-governance/blockchain-domain/manage-blockchain-network",
       "tag": "manage-blockchain-network",
-      "src": "/e-governance/organizations/manage-blockchain-network.html",
+      "src": "/e-governance/blockchain-domain/manage-blockchain-network.html",
       "indexed": false
     }
   ],

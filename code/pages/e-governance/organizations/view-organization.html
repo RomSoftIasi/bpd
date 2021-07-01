@@ -1,0 +1,30 @@
+<webc-container controller="e-governance/organizations/ViewOrganizationController">
+    <link href="/assets/css/pages/e-governance/main.css" rel="stylesheet">
+
+    <div class="container main-container">
+        <h1>View Organization</h1>
+
+        <div class="container">
+            <div class="form-wrapper">
+                <div class="form-row-wrapper">
+                    <label>Organization name:</label>
+                    <label class="font-weight-bold">{{@organizationData.name}}</label>
+                </div>
+
+                <div class="form-row-wrapper">
+                    <label>Created at:</label>
+                    <label class="font-weight-bold">{{@organizationData.createdAt}}</label>
+                </div>
+
+                <div class="form-row-wrapper">
+                    <label>Number of clusters:</label>
+                    <label class="font-weight-bold">{{@organizationData.numberOfClusters}}</label>
+                </div>
+            </div>
+        </div>
+
+        <footer class="left-align">
+            <button data-tag="back">Back</button>
+        </footer>
+    </div>
+</webc-container>

@@ -2,7 +2,7 @@ const {WebcController} = WebCardinal.controllers;
 import OrganizationService from "../../services/e-governance/OrganizationService.js";
 import * as Loader from "../../WebcSpinnerController.js";
 
-export default class ManageOrganizationsController extends WebcController {
+export default class DefineOrganizationController extends WebcController {
     constructor(...props) {
         super(...props);
 

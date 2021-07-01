@@ -1,6 +1,7 @@
 const {WebcController} = WebCardinal.controllers;
 import BlockchainDomainService from "../../services/e-governance/BlockchainDomainService.js";
 import * as Loader from "../../WebcSpinnerController.js";
+import {validateFormRequiredFields} from "../../../utils/utils.js";
 
 export default class InitiateBlockchainDomainController extends WebcController {
     constructor(...props) {
@@ -30,6 +31,10 @@ export default class InitiateBlockchainDomainController extends WebcController {
     }
 
     saveNetwork() {
+        if (!validateFormRequiredFields.call(this)) {
+            return;
+        }
+
         const blockchainDomainData = this.model.toObject("blockchainDomainModel");
         Loader.displayLoader();
         this.BlockchainDomainService.createBlockchainDomain(this.model.organizationUid, blockchainDomainData, (err, result) => {

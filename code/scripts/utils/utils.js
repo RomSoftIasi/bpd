@@ -54,23 +54,20 @@ function validateFormRequiredFields() {
         return isFormValid;
     }
 
-    requiredFields.forEach(field => {
+    let firstFieldFound = null;
+    requiredFields.forEach((field) => {
         if (field.value.trim().length === 0) {
             field.setCustomValidity(`${field.getAttribute("name")} is mandatory!`);
-            field.reportValidity();
             isFormValid = false;
-        }
 
-        if (this.markedValidation !== true) {
-            field.addEventListener("onkeyup", (event) => {
-                field.setCustomValidity("");
-                field.reportValidity();
-            });
+            if (!firstFieldFound) {
+                firstFieldFound = field;
+            }
         }
     });
 
-    if (this.markedValidation !== true) {
-        this.markedValidation = true;
+    if (firstFieldFound) {
+        firstFieldFound.reportValidity();
     }
 
     return isFormValid;

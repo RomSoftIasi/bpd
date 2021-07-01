@@ -4,7 +4,7 @@
     <div class="container main-container">
         <h1>Edit Blockchain Domain</h1>
 
-        <div class="container form-wrapper">
+        <div class="container form-wrapper" id="needs-validation">
             <div class="form-row-wrapper">
                 <label>Blockchain network cluster status:</label>
                 <label data-status="@blockchainDomainModel.dataStatus">{{@blockchainDomainModel.status}}</label>
@@ -12,51 +12,51 @@
 
             <div class="form-row-wrapper">
                 <label>Main domain:</label>
-                <input class="form-control" placeholder="Enter main domain (e.g. epiqa)"
-                       value="@blockchainDomainModel.mainDomain"/>
+                <input class="form-control" name="Main domain" placeholder="Enter main domain (e.g. epiqa)"
+                       readonly="@blockchainDomainModel.isInstalling" required value="@blockchainDomainModel.mainDomain"/>
             </div>
 
             <div class="form-row-wrapper">
                 <label>Subdomain:</label>
-                <input class="form-control" placeholder="Enter subdomain (e.g. nvs.epiqa)"
-                       value="@blockchainDomainModel.subdomain"/>
+                <input class="form-control" name="Subdomain" placeholder="Enter subdomain (e.g. nvs.epiqa)"
+                       readonly="@blockchainDomainModel.isInstalling" required value="@blockchainDomainModel.subdomain"/>
             </div>
 
             <div class="form-row-wrapper">
                 <label>Vault domain:</label>
-                <input class="form-control" placeholder="Enter vault domain (e.g. nvs)"
-                       value="@blockchainDomainModel.vaultDomain"/>
+                <input class="form-control" name="Vault domain" placeholder="Enter vault domain (e.g. nvs)"
+                       readonly="@blockchainDomainModel.isInstalling" required value="@blockchainDomainModel.vaultDomain"/>
             </div>
 
             <div class="form-row-wrapper">
                 <label>Jenkins:</label>
-                <input class="form-control" placeholder="https://jenkins/CI/Server/URL"
-                       value="@blockchainDomainModel.jenkins"/>
+                <input class="form-control" name="Jenkins URL" placeholder="https://jenkins/CI/Server/URL"
+                       readonly="@blockchainDomainModel.isInstalling" required value="@blockchainDomainModel.jenkins"/>
             </div>
 
             <div class="form-row-wrapper">
                 <label>Jenkins user name:</label>
-                <input class="form-control" placeholder="Jenkins user name"
-                       value="@blockchainDomainModel.jenkinsUserName"/>
+                <input class="form-control" name="Jenkins user name" placeholder="Jenkins user name"
+                       readonly="@blockchainDomainModel.isInstalling" required value="@blockchainDomainModel.jenkinsUserName"/>
             </div>
 
             <div class="form-row-wrapper">
                 <label>Jenkins Token:</label>
-                <input class="form-control" placeholder="Jenkins Authorization Token"
-                       value="@blockchainDomainModel.jenkinsToken"/>
+                <input class="form-control" name="Jenkins Token" placeholder="Jenkins Authorization Token"
+                       readonly="@blockchainDomainModel.isInstalling" required value="@blockchainDomainModel.jenkinsToken"/>
             </div>
 
             <div class="form-row-wrapper">
                 <label>Github usecase repository:</label>
-                <input class="form-control"
+                <input class="form-control" name="Github usecase repository"
                        placeholder="Github usecase repository URL (e.g. https://github.com/PharmaLedger-IMI/epi-workspace)"
-                       value="@blockchainDomainModel.githubRepositoryURL"/>
+                       readonly="@blockchainDomainModel.isInstalling" required value="@blockchainDomainModel.githubRepositoryURL"/>
             </div>
 
             <div class="form-row-wrapper">
                 <label>Deployment configuration:</label>
                 <textarea class="form-control" placeholder="@deploymentConfigurationPlaceholder"
-                          value="@blockchainDomainModel.deploymentConfiguration"></textarea>
+                          readonly="@blockchainDomainModel.isInstalling" value="@blockchainDomainModel.deploymentConfiguration"></textarea>
             </div>
         </div>
 

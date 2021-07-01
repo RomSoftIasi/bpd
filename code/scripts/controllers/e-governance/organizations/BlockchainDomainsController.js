@@ -65,6 +65,7 @@ export default class BlockchainDomainsController extends WebcController {
                 return console.error(err);
             }
 
+            this.model.hasBlockchainDomains = blockchainDomains.length > 0;
             this.model.blockchainDomains = blockchainDomains.map(domain => {
                 domain.lastInstallDate = domain.lastInstallDate ? getFormattedDate(domain.lastInstallDate) : "";
                 domain.options = this.getOptionsViewModel(domain.isOwner, domain.uid);

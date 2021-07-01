@@ -48,6 +48,7 @@ export default class OrganizationsController extends WebcController {
                 return console.error(err);
             }
 
+            this.model.hasOrganizations = organizationsList.length > 0;
             const updatedOrganizationsModel = []
             const updateModel = (organizationsList) => {
                 if (!organizationsList.length) {

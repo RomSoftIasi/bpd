@@ -13,6 +13,14 @@ h1 {
     padding: 1.5rem 0;
 }
 
+.no-data {
+    color: #008798;
+    font-size: 1.75rem;
+    font-style: italic;
+    padding-top: 2rem;
+    text-align: center;
+}
+
 .row-wrapper {
     column-gap: 0.5rem;
     display: grid;

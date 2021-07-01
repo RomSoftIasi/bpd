@@ -47,7 +47,37 @@ function downloadFileToDevice(path, fileName, downloadedFile) {
     link.click();
 }
 
+function validateFormRequiredFields() {
+    let isFormValid = true;
+    const requiredFields = this.querySelectorAll("#needs-validation .form-control[required]");
+    if (!requiredFields.length) {
+        return isFormValid;
+    }
+
+    requiredFields.forEach(field => {
+        if (field.value.trim().length === 0) {
+            field.setCustomValidity(`${field.getAttribute("name")} is mandatory!`);
+            field.reportValidity();
+            isFormValid = false;
+        }
+
+        if (this.markedValidation !== true) {
+            field.addEventListener("onkeyup", (event) => {
+                field.setCustomValidity("");
+                field.reportValidity();
+            });
+        }
+    });
+
+    if (this.markedValidation !== true) {
+        this.markedValidation = true;
+    }
+
+    return isFormValid;
+}
+
 export {
     getFormattedDate,
-    downloadFile
+    downloadFile,
+    validateFormRequiredFields
 };

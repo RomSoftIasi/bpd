@@ -1,6 +1,7 @@
 const {WebcController} = WebCardinal.controllers;
 import OrganizationService from "../../services/e-governance/OrganizationService.js";
 import * as Loader from "../../WebcSpinnerController.js";
+import {validateFormRequiredFields} from "../../../utils/utils.js";
 
 export default class EditOrganizationController extends WebcController {
     constructor(...props) {
@@ -42,7 +43,7 @@ export default class EditOrganizationController extends WebcController {
     }
 
     updateOrganization() {
-        if (!this.validateRequiredFields()) {
+        if (!validateFormRequiredFields.call(this)) {
             return;
         }
 
@@ -68,7 +69,8 @@ export default class EditOrganizationController extends WebcController {
         return {
             newOrganization: {
                 placeholder: "Organization name (e.g. Novartis)",
-                value: ""
+                value: "",
+                name: "Organization name"
             }
         };
     }

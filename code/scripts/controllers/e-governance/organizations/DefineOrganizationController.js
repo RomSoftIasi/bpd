@@ -1,6 +1,7 @@
 const {WebcController} = WebCardinal.controllers;
 import OrganizationService from "../../services/e-governance/OrganizationService.js";
 import * as Loader from "../../WebcSpinnerController.js";
+import {validateFormRequiredFields} from "../../../utils/utils.js";
 
 export default class DefineOrganizationController extends WebcController {
     constructor(...props) {
@@ -33,8 +34,8 @@ export default class DefineOrganizationController extends WebcController {
     }
 
     createOrganization() {
-        if (!this.model.newOrganization.value.trim().length) {
-            return console.error("Organization name cannot be empty!");
+        if (!validateFormRequiredFields.call(this)) {
+            return;
         }
 
         Loader.displayLoader();
@@ -59,7 +60,8 @@ export default class DefineOrganizationController extends WebcController {
         return {
             newOrganization: {
                 placeholder: "Organization name (e.g. Novartis)",
-                value: ""
+                value: "",
+                name: "Organization name"
             }
         };
     }

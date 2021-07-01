@@ -8,8 +8,9 @@
             <header>
                 <div class="row-wrapper grid-equal">
                     <label>Main Domain</label>
-                    <label>Type</label>
+                    <!--<label>Type</label>-->
                     <label>Status</label>
+                    <label>Install date</label>
                     <label>Operation</label>
                     <label>Options</label>
                 </div>
@@ -18,8 +19,9 @@
             <main data-for="@blockchainDomains">
                 <div class="row-wrapper grid-equal">
                     <label>{{@mainDomain}}</label>
-                    <label>{{@type}}</label>
+                    <!--<label>{{@type}}</label>-->
                     <label class="blockchain-status" data-status="@dataStatus">{{@shortStatus}}</label>
+                    <label>{{@lastInstallDate}}</label>
                     <label class="link" data-if="@isOwner" data-tag="manage-blockchain-domain">Manage</label>
                     <div class="d-flex justify-content-center align-items-center" data-for="@options">
                         <label class="link option" data-tag="@tag">{{@name}}</label>
@@ -29,6 +31,7 @@
         </div>
 
         <footer class="left-align flex-column align-items-start">
+            <button data-tag="back">Back</button>
             <button data-tag="initiate-blockchain-network">Initiate Network</button>
             <!--            <button data-tag="join-blockchain-network">Join Network</button>-->
         </footer>

@@ -1,6 +1,7 @@
 const {WebcController} = WebCardinal.controllers;
 import BlockchainDomainService from "../../services/e-governance/BlockchainDomainService.js";
 import * as Loader from "../../WebcSpinnerController.js";
+import {getFormattedDate} from "../../../utils/utils.js";
 
 export default class BlockchainDomainsController extends WebcController {
     constructor(...props) {
@@ -65,6 +66,7 @@ export default class BlockchainDomainsController extends WebcController {
             }
 
             this.model.blockchainDomains = blockchainDomains.map(domain => {
+                domain.lastInstallDate = domain.lastInstallDate ? getFormattedDate(domain.lastInstallDate) : "";
                 domain.options = this.getOptionsViewModel(domain.isOwner, domain.uid);
                 return domain;
             });

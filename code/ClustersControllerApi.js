@@ -85,6 +85,7 @@ export default class ClustersControllerApi {
         this.commandCluster(data, callback);
     }
 
+    // TODO:
     getPipelineLog(jenkinsPipeline, buildNo, clusterDetails, callback){
         const data = {
             command: 'jenkinsLog',
@@ -97,6 +98,21 @@ export default class ClustersControllerApi {
             }
         }
         this.commandCluster(data, callback);
+    }
+
+    getPipelineLogs(jenkinsPipeline, buildNo, jenkinsData, callback){
+        const data = {
+            command: 'jenkinsLog',
+            buildNo: buildNo,
+            jenkinsPipeline: jenkinsPipeline,
+            jenkinsData: jenkinsData
+        }
+
+        this.commandCluster(data, callback);
+    }
+
+    pipelineStatusRemove(blockchainNetworkName, callback) {
+        this.makeRequest('DELETE', this.CLUSTER_STATUS_PATH + '/' + blockchainNetworkName, {}, callback);
     }
 
     makeRequest(method, path, body, callback) {

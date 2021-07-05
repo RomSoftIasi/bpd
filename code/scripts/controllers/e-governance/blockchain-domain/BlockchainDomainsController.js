@@ -66,12 +66,74 @@ export default class BlockchainDomainsController extends WebcController {
             }
 
             this.model.hasBlockchainDomains = blockchainDomains.length > 0;
-            this.model.blockchainDomains = blockchainDomains.map(domain => {
+            this.model.blockchainDomains = blockchainDomains.map((domain, index) => {
                 domain.lastInstallDate = domain.lastInstallDate ? getFormattedDate(domain.lastInstallDate) : "";
                 domain.options = this.getOptionsViewModel(domain.isOwner, domain.uid);
+                if (domain.isInstalling) {
+                    this.checkForBlockchainDomainStatus(domain, index);
+                }
                 return domain;
             });
             Loader.hideLoader();
+        });
+    }
+
+    checkForBlockchainDomainStatus(blockchainDomainData, index) {
+        this.BlockchainDomainService.waitForClusterInstallationToFinish(blockchainDomainData.subdomain, (err, result) => {
+            blockchainDomainData.isInstalling = false;
+            blockchainDomainData.isReadyToInstall = false;
+            if (err) {
+                blockchainDomainData.isInstalled = false;
+                blockchainDomainData.isInstallFailed = true;
+                blockchainDomainData.deploymentLogs = err;
+                console.error(err);
+            } else {
+                if (result.pipelinesStatus === "ERROR") {
+                    blockchainDomainData.isInstalled = false;
+                    blockchainDomainData.isInstallFailed = true;
+                } else {
+                    blockchainDomainData.isInstalled = true;
+                    blockchainDomainData.isInstallFailed = false;
+                }
+                blockchainDomainData.deploymentLogs = result;
+            }
+
+            const jenkinsData = {
+                user: blockchainDomainData.jenkinsUserName,
+                token: blockchainDomainData.jenkinsToken,
+                jenkins: blockchainDomainData.jenkins
+            };
+
+            this.updateDeploymentLogs(blockchainDomainData, jenkinsData, (err, result) =>{
+                if (err) {
+                    return console.error(err);
+                }
+
+                console.log(result);
+                this.model.blockchainDomains[index] = blockchainDomainData;
+            });
+        });
+    }
+
+    updateDeploymentLogs(blockchainDomainData, jenkinsData, callback) {
+        this.BlockchainDomainService.parseDeploymentLogs(blockchainDomainData.deploymentLogs, jenkinsData, (err, logs) => {
+            if (err) {
+                return callback(err);
+            }
+
+            blockchainDomainData.deploymentLogs = logs.logDetails;
+            if (logs.hasFailedPipelines) {
+                blockchainDomainData.isInstalled = false;
+                blockchainDomainData.isInstallFailed = true;
+            }
+            this.BlockchainDomainService.updateBlockchainDomainData(this.model.organizationUid, blockchainDomainData, (err, result) => {
+                if (err) {
+                    return callback(err);
+                }
+
+                console.log(result);
+                this.BlockchainDomainService.removeClusterStatus(blockchainDomainData.subdomain, callback);
+            });
         });
     }
 

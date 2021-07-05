@@ -1,3 +1,5 @@
+import ClusterControllerApi from "../../../../ClustersControllerApi.js";
+
 export default class BlockchainDomainService {
 
     ORGANIZATION_PATH = "/organizations";
@@ -5,6 +7,7 @@ export default class BlockchainDomainService {
 
     constructor(DSUStorage) {
         this.DSUStorage = DSUStorage;
+        this.ClusterControllerApi = new ClusterControllerApi();
     }
 
     createBlockchainDomain(organizationUid, blockchainDomainData, callback) {
@@ -126,5 +129,88 @@ export default class BlockchainDomainService {
             status: "Blockchain domain is ready to install.",
             dataStatus: "ready"
         }
+    }
+
+    initiateAndWaitToInstallCluster(clusterDetails, callback) {
+        this.initiateInstallCluster(clusterDetails, (err, data) => {
+            if (err) {
+                return callback(err, undefined);
+            }
+
+            this.waitForClusterInstallationToFinish(clusterDetails.subdomain, (err, data) => {
+                if (err) {
+                    return callback(err);
+                }
+
+                return callback(undefined, data);
+            });
+        });
+    }
+
+    waitForClusterInstallationToFinish(blockchainNetworkName, callback) {
+        this.ClusterControllerApi.loopUntilClusterIsInstalled(blockchainNetworkName, callback);
+    }
+
+    initiateInstallCluster(clusterDetails, callback) {
+        let installClusterInfo = {
+            blockchainNetwork: clusterDetails.subdomain,
+            user: clusterDetails.jenkinsUserName,
+            token: clusterDetails.jenkinsToken,
+            jenkins: clusterDetails.jenkins,
+            pipelineToken: "",
+            clusterOperation: "initiateNetwork",
+            configMap: clusterDetails.deploymentConfiguration,
+            clusterStatus: clusterDetails.dataStatus
+        }
+
+        console.log(installClusterInfo);
+        console.log(clusterDetails);
+        this.ClusterControllerApi.startDeployCluster(installClusterInfo, (err, data) => {
+            if (err) {
+                console.log(err);
+                return callback(err);
+            }
+            callback(undefined, data);
+        });
+    }
+
+    parseDeploymentLogs(deploymentLogs, jenkinsData, callback) {
+        let log = "";
+        const pipelines = JSON.parse(deploymentLogs.pipelines);
+        const hasFailedPipelines = pipelines.findIndex(pipeline => pipeline.result === "FAILURE") !== -1;
+        const builds = pipelines.map(el => {
+            return {
+                buildNo: el.buildNo,
+                pipeline: el.name
+            };
+        });
+
+        const getLogs = (jenkinsPipeline, buildNo) => {
+            this.ClusterControllerApi.getPipelineLogs(jenkinsPipeline, buildNo, jenkinsData, (err, data) => {
+                if (err) {
+                    log += (`Failed to retrieve logs\nJenkins pipeline: ${jenkinsPipeline}\n$Build no.: ${buildNo}\n`);
+                    console.log(err);
+                } else {
+                    log += (`${data.message}\n`);
+                }
+
+                if (builds.length === 0) {
+                    return callback(undefined, {
+                        logDetails: log,
+                        hasFailedPipelines: hasFailedPipelines
+                    });
+                } else {
+                    const cElem = builds.shift();
+                    getLogs(cElem.pipeline, cElem.buildNo);
+                }
+            });
+        }
+
+        const cElem = builds.shift();
+        getLogs(cElem.pipeline, cElem.buildNo);
+    }
+
+    removeClusterStatus(blockchainNetworkName, callback) {
+        this.ClusterControllerApi.pipelineStatusRemove(blockchainNetworkName, callback);
     }
 }

@@ -49,6 +49,11 @@
                 <label>Deployment configuration:</label>
                 <textarea class="form-control" readonly value="@deploymentConfiguration"></textarea>
             </div>
+
+            <div class="form-row-wrapper" data-if="@displayLogs">
+                <label>Installation logs:</label>
+                <textarea class="form-control" readonly value="@deploymentLogs"></textarea>
+            </div>
         </div>
 
         <footer class="left-align">

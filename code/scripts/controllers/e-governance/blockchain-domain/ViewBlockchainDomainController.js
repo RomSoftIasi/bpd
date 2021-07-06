@@ -29,6 +29,8 @@ export default class ViewBlockchainDomainController extends WebcController {
             }
 
             this.model = blockchainDomainData;
+            const {isInstalled, isInstallFailed} = blockchainDomainData;
+            this.model.displayLogs = isInstalled || isInstallFailed;
         });
     }
 }

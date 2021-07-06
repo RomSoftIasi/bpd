@@ -136,13 +136,12 @@ export default class ClustersControllerApi {
         protocolInit.fetch(this.serverEndpoint + path + "#x-blockchain-domain-request", options)
             .then(response => {
                 console.log('[ClusterApiCall][Response]', method, path, response.status, response.statusCode);
-                if (!response.ok || [200,201,202].indexOf(response.status) === -1) {
-                    return callback(response);
+                if (!response.ok || [200, 201, 202].indexOf(response.status) === -1) {
+                    return response.json();
                 }
 
-                for(let entry of response.headers.entries()) {
-                    if (entry[0] === 'content-type' && entry[1] === 'application/raw')
-                    {
+                for (let entry of response.headers.entries()) {
+                    if (entry[0] === 'content-type' && entry[1] === 'application/raw') {
                         console.log('Received raw response');
                         return response.text();
                     }
@@ -152,13 +151,16 @@ export default class ClustersControllerApi {
                 return response.json();
             })
             .then((data) => {
-              // console.log('Received data from ControlContainer: ',data);
+                // console.log('Received data from ControlContainer: ',data);
+                if (data.err) {
+                    return callback(data.err);
+                }
+
                 callback(undefined, data);
             })
             .catch(error => {
                 return callback(error);
-            })
-
+            });
     }
 }
 

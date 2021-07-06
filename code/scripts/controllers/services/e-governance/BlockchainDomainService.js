@@ -165,18 +165,24 @@ export default class BlockchainDomainService {
 
         console.log(installClusterInfo);
         console.log(clusterDetails);
-        this.ClusterControllerApi.startDeployCluster(installClusterInfo, (err, data) => {
-            if (err) {
-                console.log(err);
-                return callback(err);
-            }
-            callback(undefined, data);
-        });
+        this.ClusterControllerApi.startDeployCluster(installClusterInfo, callback);
     }
 
     parseDeploymentLogs(deploymentLogs, jenkinsData, callback) {
+        if (deploymentLogs && typeof deploymentLogs === "string") {
+            deploymentLogs = JSON.parse(deploymentLogs);
+            if (deploymentLogs.errType === "internalError") {
+                return this.buildInternalErrorLogs(deploymentLogs, jenkinsData, callback);
+            }
+        }
+
         let log = "";
         const pipelines = JSON.parse(deploymentLogs.pipelines);
+        const exceptionErrorPipeline = pipelines.find(pipeline => pipeline.result === "EXCEPTION");
+        if (exceptionErrorPipeline) {
+            return this.buildInternalErrorLogs(JSON.parse(exceptionErrorPipeline.log), jenkinsData, callback);
+        }
+
         const hasFailedPipelines = pipelines.findIndex(pipeline => pipeline.result === "FAILURE") !== -1;
         const builds = pipelines.map(el => {
             return {
@@ -208,6 +214,18 @@ export default class BlockchainDomainService {
 
         const cElem = builds.shift();
         getLogs(cElem.pipeline, cElem.buildNo);
+    }
+
+    buildInternalErrorLogs(deploymentLogs, jenkinsData, callback) {
+        const log = JSON.stringify({
+            error: deploymentLogs.errMessage,
+            jenkinsData: deploymentLogs.jenkinsData || jenkinsData
+        });
+
+        return callback(undefined, {
+            logDetails: log,
+            hasFailedPipelines: true
+        });
     }
 
     removeClusterStatus(blockchainNetworkName, callback) {

@@ -99,10 +99,12 @@ export default class ManageBlockchainDomainController extends WebcController {
             blockchainDomainData.isInstalling = false;
             blockchainDomainData.isReadyToInstall = false;
             if (err) {
+                if(typeof err === "object") {
+                    err = JSON.stringify(err);
+                }
+                blockchainDomainData.deploymentLogs = err;
                 blockchainDomainData.isInstalled = false;
                 blockchainDomainData.isInstallFailed = true;
-                blockchainDomainData.deploymentLogs = err;
-                console.error(err);
             } else {
                 if (result.pipelinesStatus === "ERROR") {
                     blockchainDomainData.isInstalled = false;

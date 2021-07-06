@@ -152,15 +152,24 @@ export default class BlockchainDomainService {
     }
 
     initiateInstallCluster(clusterDetails, callback) {
+        const usecaseRepository = clusterDetails.githubRepositoryURL || "";
+
         let installClusterInfo = {
             blockchainNetwork: clusterDetails.subdomain,
             user: clusterDetails.jenkinsUserName,
             token: clusterDetails.jenkinsToken,
             jenkins: clusterDetails.jenkins,
             pipelineToken: "",
-            clusterOperation: "initiateNetwork",
+            clusterOperation: "initiateNetworkWithParameters",
             configMap: clusterDetails.deploymentConfiguration,
-            clusterStatus: clusterDetails.dataStatus
+            clusterStatus: clusterDetails.dataStatus,
+            parametrizedPipeline: {
+                domain: clusterDetails.mainDomain,
+                subdomain: clusterDetails.subdomain,
+                vaultdomain: clusterDetails.vaultDomain,
+                usecaseRepository: usecaseRepository,
+                workspace: usecaseRepository.split(".git")[0].split("/").pop()
+            }
         }
 
         console.log(installClusterInfo);

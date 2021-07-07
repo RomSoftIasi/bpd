@@ -159,7 +159,6 @@ export default class BlockchainDomainService {
             user: clusterDetails.jenkinsUserName,
             token: clusterDetails.jenkinsToken,
             jenkins: clusterDetails.jenkins,
-            pipelineToken: "",
             clusterOperation: "initiateNetworkWithParameters",
             configMap: clusterDetails.deploymentConfiguration,
             clusterStatus: clusterDetails.dataStatus,

@@ -104,7 +104,7 @@ export default class BlockchainDomainsController extends WebcController {
                 jenkins: blockchainDomainData.jenkins
             };
 
-            this.updateDeploymentLogs(blockchainDomainData, jenkinsData, (err, result) =>{
+            this.updateDeploymentLogs(blockchainDomainData, jenkinsData, (err, result) => {
                 if (err) {
                     return console.error(err);
                 }
@@ -122,6 +122,7 @@ export default class BlockchainDomainsController extends WebcController {
             }
 
             blockchainDomainData.deploymentLogs = logs.logDetails;
+            blockchainDomainData.lastInstallDate = Date.now();
             if (logs.hasFailedPipelines) {
                 blockchainDomainData.isInstalled = false;
                 blockchainDomainData.isInstallFailed = true;

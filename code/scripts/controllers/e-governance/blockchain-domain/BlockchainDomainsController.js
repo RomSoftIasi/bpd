@@ -72,9 +72,41 @@ export default class BlockchainDomainsController extends WebcController {
                 if (domain.isInstalling) {
                     this.checkForBlockchainDomainStatus(domain, index);
                 }
+                if(domain.isPendingRemove) {
+                    this.checkForBlockchainDomainRemove(domain, index);
+                }
                 return domain;
             });
             Loader.hideLoader();
+        });
+    }
+
+    checkForBlockchainDomainRemove(blockchainDomainData, index) {
+        this.BlockchainDomainService.waitForClusterRemoveToFinish(blockchainDomainData.subdomain, (err, result) => {
+            Loader.hideLoader();
+            if (err) {
+                return console.error(err);
+            }
+
+            console.log(result);
+            blockchainDomainData.isReadyToInstall = true;
+            blockchainDomainData.isInstalling = false;
+            blockchainDomainData.isInstalled = false;
+            blockchainDomainData.isInstallFailed = false;
+            blockchainDomainData.isPendingRemove = false;
+            blockchainDomainData.deploymentLogs = "";
+            this.BlockchainDomainService.updateBlockchainDomainData(this.model.organizationUid, blockchainDomainData, (err, result) => {
+                if (err) {
+                    return console.error(err);
+                }
+
+                console.log(result);
+                blockchainDomainData.lastInstallDate = getFormattedDate(blockchainDomainData.lastInstallDate);
+                this.model.blockchainDomains[index] = blockchainDomainData;
+                this.BlockchainDomainService.removeClusterStatus(blockchainDomainData.subdomain, (err, result) =>{
+                    console.log(err, result);
+                });
+            });
         });
     }
 
@@ -82,6 +114,7 @@ export default class BlockchainDomainsController extends WebcController {
         this.BlockchainDomainService.waitForClusterInstallationToFinish(blockchainDomainData.subdomain, (err, result) => {
             blockchainDomainData.isInstalling = false;
             blockchainDomainData.isReadyToInstall = false;
+            blockchainDomainData.isPendingRemove = false;
             if (err) {
                 blockchainDomainData.isInstalled = false;
                 blockchainDomainData.isInstallFailed = true;
@@ -104,36 +137,14 @@ export default class BlockchainDomainsController extends WebcController {
                 jenkins: blockchainDomainData.jenkins
             };
 
-            this.updateDeploymentLogs(blockchainDomainData, jenkinsData, (err, result) => {
+            this.BlockchainDomainService.updateDeploymentLogs(this.model.organizationUid, blockchainDomainData, jenkinsData, (err, result) => {
                 if (err) {
                     return console.error(err);
                 }
 
                 console.log(result);
+                blockchainDomainData.lastInstallDate = getFormattedDate(blockchainDomainData.lastInstallDate);
                 this.model.blockchainDomains[index] = blockchainDomainData;
-            });
-        });
-    }
-
-    updateDeploymentLogs(blockchainDomainData, jenkinsData, callback) {
-        this.BlockchainDomainService.parseDeploymentLogs(blockchainDomainData.deploymentLogs, jenkinsData, (err, logs) => {
-            if (err) {
-                return callback(err);
-            }
-
-            blockchainDomainData.deploymentLogs = logs.logDetails;
-            blockchainDomainData.lastInstallDate = Date.now();
-            if (logs.hasFailedPipelines) {
-                blockchainDomainData.isInstalled = false;
-                blockchainDomainData.isInstallFailed = true;
-            }
-            this.BlockchainDomainService.updateBlockchainDomainData(this.model.organizationUid, blockchainDomainData, (err, result) => {
-                if (err) {
-                    return callback(err);
-                }
-
-                console.log(result);
-                this.BlockchainDomainService.removeClusterStatus(blockchainDomainData.subdomain, callback);
             });
         });
     }

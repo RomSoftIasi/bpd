@@ -49,23 +49,56 @@ export default class ManageBlockchainDomainController extends WebcController {
                 }
 
                 this.model.blockchainDomainModel = blockchainDomainData;
-                const {isInstalling, isInstalled, isInstallFailed} = blockchainDomainData;
-                this.model.isReadyToInstall = !(isInstalling || isInstalled || isInstallFailed);
+                const {isInstalling, isInstalled, isInstallFailed, isPendingRemove} = blockchainDomainData;
+                this.model.isReadyToInstall = !(isInstalling || isInstalled || isInstallFailed || isPendingRemove);
                 this.model.displayConfiguration = this.model.isReadyToInstall || isInstalling;
                 this.model.displayLogs = isInstalled || isInstallFailed;
             });
     }
 
     removeBlockchainDomain() {
-        this.BlockchainDomainService.removeBlockchainDomain(this.model.organizationUid, this.model.blockchainDomainUid, (err, result) => {
+        Loader.displayLoader();
+        const blockchainDomainData = this.model.toObject("blockchainDomainModel");
+        blockchainDomainData.isInstalling = false;
+        blockchainDomainData.isReadyToInstall = false;
+        blockchainDomainData.isInstalled = false;
+        blockchainDomainData.isInstallFailed = false;
+        blockchainDomainData.isPendingRemove = true;
+
+        this.BlockchainDomainService.updateBlockchainDomainData(this.model.organizationUid, blockchainDomainData, (err, result) => {
             Loader.hideLoader();
             if (err) {
                 return console.error(err);
             }
 
             console.log(result);
+            this.startRemoveCluster(blockchainDomainData);
             this.navigateToPageTag("blockchain-domains-dashboard", {
                 organizationUid: this.model.organizationUid
+            });
+        });
+    }
+
+    startRemoveCluster(blockchainDomainData) {
+        this.BlockchainDomainService.removeBlockchainDomain(blockchainDomainData, (err, result) => {
+            Loader.hideLoader();
+            if (err) {
+                return console.error(err);
+            }
+
+            console.log(result);
+            blockchainDomainData.isReadyToInstall = true;
+            blockchainDomainData.isPendingRemove = false;
+            blockchainDomainData.deploymentLogs = "";
+            this.BlockchainDomainService.updateBlockchainDomainData(this.model.organizationUid, blockchainDomainData, (err, result) => {
+                if (err) {
+                    return console.error(err);
+                }
+
+                console.log(result);
+                this.BlockchainDomainService.removeClusterStatus(blockchainDomainData.subdomain, (err, result) => {
+                    console.log(err, result);
+                });
             });
         });
     }
@@ -76,6 +109,7 @@ export default class ManageBlockchainDomainController extends WebcController {
         blockchainDomainData.isReadyToInstall = false;
         blockchainDomainData.isInstalled = false;
         blockchainDomainData.isInstallFailed = false;
+        blockchainDomainData.isPendingRemove = false;
 
         Loader.displayLoader();
         this.BlockchainDomainService.updateBlockchainDomainData(this.model.organizationUid, blockchainDomainData, (err, result) => {
@@ -121,35 +155,12 @@ export default class ManageBlockchainDomainController extends WebcController {
                 token: blockchainDomainData.jenkinsToken,
                 jenkins: blockchainDomainData.jenkins
             };
-            this.updateDeploymentLogs(blockchainDomainData, jenkinsData, (err, result) => {
+            this.BlockchainDomainService.updateDeploymentLogs(this.model.organizationUid, blockchainDomainData, jenkinsData, (err, result) => {
                 if (err) {
                     return console.error(err);
                 }
 
                 console.log(result);
-            });
-        });
-    }
-
-    updateDeploymentLogs(blockchainDomainData, jenkinsData, callback) {
-        this.BlockchainDomainService.parseDeploymentLogs(blockchainDomainData.deploymentLogs, jenkinsData, (err, logs) => {
-            if (err) {
-                return callback(err);
-            }
-
-            blockchainDomainData.deploymentLogs = logs.logDetails;
-            blockchainDomainData.lastInstallDate = Date.now();
-            if (logs.hasFailedPipelines) {
-                blockchainDomainData.isInstalled = false;
-                blockchainDomainData.isInstallFailed = true;
-            }
-            this.BlockchainDomainService.updateBlockchainDomainData(this.model.organizationUid, blockchainDomainData, (err, result) => {
-                if (err) {
-                    return callback(err);
-                }
-
-                console.log(result);
-                this.BlockchainDomainService.removeClusterStatus(blockchainDomainData.subdomain, callback);
             });
         });
     }

@@ -25,6 +25,7 @@ export default class BlockchainDomainService {
             blockchainDomainData.isInstalled = false;
             blockchainDomainData.isInstalling = false;
             blockchainDomainData.isInstallFailed = false;
+            blockchainDomainData.isPendingRemove = false;
             blockchainDomainData.deploymentLogs = "";
             const {status, shortStatus, dataStatus} = this.getBlockchainDomainInstallStatus(blockchainDomainData);
             blockchainDomainData.status = status;
@@ -86,9 +87,39 @@ export default class BlockchainDomainService {
         });
     }
 
-    removeBlockchainDomain(organizationUid, blockchainDomainUid, callback) {
-        const blockchainDomainPath = `${this.BLOCKCHAIN_DOMAINS_PATH}/${blockchainDomainUid}`;
-        this.DSUStorage.call('clusterUnmount', organizationUid, blockchainDomainPath, callback);
+    removeBlockchainDomain(blockchainDomainData, callback) {
+        this.initiateRemoveCluster(blockchainDomainData, (err, result) => {
+            if (err) {
+                return callback(err);
+            }
+
+            this.waitForClusterRemoveToFinish(blockchainDomainData.subdomain, callback);
+        });
+    }
+
+    waitForClusterRemoveToFinish(blockchainNetworkName, callback) {
+        this.ClusterControllerApi.loopUntilClusterIsInstalled(blockchainNetworkName, callback);
+    }
+
+    initiateRemoveCluster(clusterDetails, callback) {
+        let removeClusterInfo = {
+            blockchainNetwork: clusterDetails.subdomain,
+            user: clusterDetails.jenkinsUserName,
+            token: clusterDetails.jenkinsToken,
+            jenkins: clusterDetails.jenkins,
+            clusterOperation: "removeNetworkWithParameters",
+            configMap: clusterDetails.deploymentConfiguration,
+            clusterStatus: clusterDetails.dataStatus,
+            parametrizedPipeline: {
+                domain: clusterDetails.mainDomain,
+                subdomain: clusterDetails.subdomain,
+                vaultdomain: clusterDetails.vaultDomain
+            }
+        };
+
+        console.log(removeClusterInfo);
+        console.log(clusterDetails);
+        this.ClusterControllerApi.startRemoveCluster(removeClusterInfo, callback);
     }
 
     getBlockchainDomainsPath(uid) {
@@ -121,6 +152,14 @@ export default class BlockchainDomainService {
                 shortStatus: "Installation Failed",
                 status: "Blockchain domain FAILED to be installed.",
                 dataStatus: "failed"
+            }
+        }
+
+        if (blockchainDomainData.isPendingRemove) {
+            return {
+                shortStatus: "Removing Pending",
+                status: "Blockchain domain is being removed...",
+                dataStatus: "pending-remove"
             }
         }
 
@@ -238,5 +277,28 @@ export default class BlockchainDomainService {
 
     removeClusterStatus(blockchainNetworkName, callback) {
         this.ClusterControllerApi.pipelineStatusRemove(blockchainNetworkName, callback);
+    }
+
+    updateDeploymentLogs(organizationUid, blockchainDomainData, jenkinsData, callback) {
+        this.parseDeploymentLogs(blockchainDomainData.deploymentLogs, jenkinsData, (err, logs) => {
+            if (err) {
+                return callback(err);
+            }
+
+            blockchainDomainData.deploymentLogs = logs.logDetails;
+            blockchainDomainData.lastInstallDate = Date.now();
+            if (logs.hasFailedPipelines) {
+                blockchainDomainData.isInstalled = false;
+                blockchainDomainData.isInstallFailed = true;
+            }
+            this.updateBlockchainDomainData(organizationUid, blockchainDomainData, (err, result) => {
+                if (err) {
+                    return callback(err);
+                }
+
+                console.log(result);
+                this.removeClusterStatus(blockchainDomainData.subdomain, callback);
+            });
+        });
     }
 }

@@ -62,6 +62,10 @@ export default class ClustersControllerApi {
         this.makeRequest('POST', this.CLUSTER_DEPLOY_PATH, clusterDetails, callback);
     }
 
+    startRemoveCluster(clusterDetails, callback) {
+        this.makeRequest('POST', this.CLUSTER_DEPLOY_PATH, clusterDetails, callback);
+    }
+
     startCluster(clusterDetails, callback) {
         this.makeRequest('PUT', this.CLUSTER_START_PATH, clusterDetails, callback);
     }

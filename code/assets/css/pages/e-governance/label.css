@@ -41,7 +41,8 @@ label[data-status="true"] {
 }
 
 label[data-status="false"],
-label[data-status="failed"] {
+label[data-status="failed"],
+label[data-status="pending-remove"] {
     color: rgba(210, 13, 13, 1);
 }
 

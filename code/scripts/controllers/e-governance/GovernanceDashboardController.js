@@ -46,6 +46,7 @@ export default class GovernanceDashboardController extends WebcController {
             });
 
             this.model.news = newsList;
+            this.model.hasNews = newsList.length > 0;
             Loader.hideLoader();
         });
     }

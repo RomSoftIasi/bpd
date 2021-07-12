@@ -25,7 +25,7 @@ export default class BlockchainDomainService {
             blockchainDomainData.isInstalled = false;
             blockchainDomainData.isInstalling = false;
             blockchainDomainData.isInstallFailed = false;
-            blockchainDomainData.isPendingRemove = false;
+            blockchainDomainData.isUninstalling = false;
             blockchainDomainData.deploymentLogs = "";
             const {status, shortStatus, dataStatus} = this.getBlockchainDomainInstallStatus(blockchainDomainData);
             blockchainDomainData.status = status;
@@ -87,21 +87,11 @@ export default class BlockchainDomainService {
         });
     }
 
-    removeBlockchainDomain(blockchainDomainData, callback) {
-        this.initiateRemoveCluster(blockchainDomainData, (err, result) => {
-            if (err) {
-                return callback(err);
-            }
-
-            this.waitForClusterRemoveToFinish(blockchainDomainData.subdomain, callback);
-        });
-    }
-
     waitForClusterRemoveToFinish(blockchainNetworkName, callback) {
         this.ClusterControllerApi.loopUntilClusterIsInstalled(blockchainNetworkName, callback);
     }
 
-    initiateRemoveCluster(clusterDetails, callback) {
+    initiateUninstallCluster(clusterDetails, callback) {
         let removeClusterInfo = {
             blockchainNetwork: clusterDetails.subdomain,
             user: clusterDetails.jenkinsUserName,
@@ -155,11 +145,11 @@ export default class BlockchainDomainService {
             }
         }
 
-        if (blockchainDomainData.isPendingRemove) {
+        if (blockchainDomainData.isUninstalling) {
             return {
-                shortStatus: "Removing Pending",
-                status: "Blockchain domain is being removed...",
-                dataStatus: "pending-remove"
+                shortStatus: "Uninstalling in progress",
+                status: "UNINSTALLING Blockchain Domain is in progress...",
+                dataStatus: "pending-uninstall"
             }
         }
 
@@ -168,22 +158,6 @@ export default class BlockchainDomainService {
             status: "Blockchain domain is ready to install.",
             dataStatus: "ready"
         }
-    }
-
-    initiateAndWaitToInstallCluster(clusterDetails, callback) {
-        this.initiateInstallCluster(clusterDetails, (err, data) => {
-            if (err) {
-                return callback(err, undefined);
-            }
-
-            this.waitForClusterInstallationToFinish(clusterDetails.subdomain, (err, data) => {
-                if (err) {
-                    return callback(err);
-                }
-
-                return callback(undefined, data);
-            });
-        });
     }
 
     waitForClusterInstallationToFinish(blockchainNetworkName, callback) {

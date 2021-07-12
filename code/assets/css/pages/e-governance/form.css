@@ -1,7 +1,7 @@
 .form-wrapper {
     display: flex;
     flex-direction: column;
-    row-gap: 1rem;
+    row-gap: 0.25rem;
 }
 
 .form-wrapper > label {
@@ -30,8 +30,15 @@
     margin-top: 0;
 }
 
+input.form-control,
 textarea.form-control {
-    height: 100px;
+    height: auto;
+    line-height: 1;
+    font-size: 0.75rem;
+}
+
+textarea.form-control {
+    height: 200px;
 }
 
 label.download,

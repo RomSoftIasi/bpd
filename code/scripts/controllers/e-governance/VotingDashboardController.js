@@ -66,6 +66,7 @@ export default class VotingDashboardController extends WebcController {
             });
 
             this.model.votingSessions = votingSessions;
+            this.model.hasVotingSessions = votingSessions.length > 0;
             Loader.hideLoader();
         });
     }

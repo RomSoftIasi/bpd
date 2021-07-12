@@ -4,8 +4,10 @@
     <div class="container main-container">
         <h1 class="center-align">Voting dashboard</h1>
 
-        <div class="container">
-            <header>
+        <div class="container" data-if="@hasVotingSessions">
+            <h2 class="no-data" slot="false">No Voting sessions defined</h2>
+
+            <header slot="true">
                 <div class="row-wrapper">
                     <label>Vote</label>
                     <label>Type</label>
@@ -16,7 +18,7 @@
                 </div>
             </header>
 
-            <main data-for="@votingSessions">
+            <main data-for="@votingSessions" slot="true">
                 <div class="row-wrapper">
                     <label title="@title">{{@title}}</label>
                     <label>{{@type}}</label>

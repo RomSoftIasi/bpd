@@ -1,5 +1,6 @@
 const {WebcController} = WebCardinal.controllers;
 import BlockchainDomainService from "../../services/e-governance/BlockchainDomainService.js";
+import {getNotificationServiceInstance} from "../../services/e-governance/NotificationService.js";
 import * as Loader from "../../WebcSpinnerController.js";
 import {getFormattedDate} from "../../../utils/utils.js";
 
@@ -12,7 +13,9 @@ export default class BlockchainDomainsController extends WebcController {
             organizationUid: organizationUid,
             blockchainDomains: []
         };
+
         this.BlockchainDomainService = new BlockchainDomainService(this.DSUStorage);
+        this.NotificationService = getNotificationServiceInstance(this.DSUStorage);
 
         this.initNavigationListeners();
         this.displayBlockchainDomainsList();
@@ -69,83 +72,41 @@ export default class BlockchainDomainsController extends WebcController {
             this.model.blockchainDomains = blockchainDomains.map((domain, index) => {
                 domain.lastInstallDate = domain.lastInstallDate ? getFormattedDate(domain.lastInstallDate) : "";
                 domain.options = this.getOptionsViewModel(domain.isOwner, domain.uid);
+
                 if (domain.isInstalling) {
-                    this.checkForBlockchainDomainStatus(domain, index);
+                    this.checkForInstallPipelineStatus(domain, index);
                 }
-                if(domain.isPendingRemove) {
-                    this.checkForBlockchainDomainRemove(domain, index);
+                if (domain.isUninstalling) {
+                    this.checkForUninstallPipelineStatus(domain, index);
                 }
+
                 return domain;
             });
             Loader.hideLoader();
         });
     }
 
-    checkForBlockchainDomainRemove(blockchainDomainData, index) {
-        this.BlockchainDomainService.waitForClusterRemoveToFinish(blockchainDomainData.subdomain, (err, result) => {
-            Loader.hideLoader();
+    checkForInstallPipelineStatus(blockchainDomainData, index) {
+        this.NotificationService.checkForInstallPipelineStatus(this.model.organizationUid, blockchainDomainData, (err, updatedBlockchainDomainData) => {
             if (err) {
                 return console.error(err);
             }
 
-            console.log(result);
-            blockchainDomainData.isReadyToInstall = true;
-            blockchainDomainData.isInstalling = false;
-            blockchainDomainData.isInstalled = false;
-            blockchainDomainData.isInstallFailed = false;
-            blockchainDomainData.isPendingRemove = false;
-            blockchainDomainData.deploymentLogs = "";
-            this.BlockchainDomainService.updateBlockchainDomainData(this.model.organizationUid, blockchainDomainData, (err, result) => {
-                if (err) {
-                    return console.error(err);
-                }
-
-                console.log(result);
-                blockchainDomainData.lastInstallDate = getFormattedDate(blockchainDomainData.lastInstallDate);
-                this.model.blockchainDomains[index] = blockchainDomainData;
-                this.BlockchainDomainService.removeClusterStatus(blockchainDomainData.subdomain, (err, result) =>{
-                    console.log(err, result);
-                });
-            });
+            console.log(updatedBlockchainDomainData);
+            updatedBlockchainDomainData.lastInstallDate = getFormattedDate(updatedBlockchainDomainData.lastInstallDate);
+            this.model.blockchainDomains[index] = updatedBlockchainDomainData;
         });
     }
 
-    checkForBlockchainDomainStatus(blockchainDomainData, index) {
-        this.BlockchainDomainService.waitForClusterInstallationToFinish(blockchainDomainData.subdomain, (err, result) => {
-            blockchainDomainData.isInstalling = false;
-            blockchainDomainData.isReadyToInstall = false;
-            blockchainDomainData.isPendingRemove = false;
+    checkForUninstallPipelineStatus(blockchainDomainData, index) {
+        this.NotificationService.checkForUninstallPipelineStatus(this.model.organizationUid, blockchainDomainData, (err, updatedBlockchainDomainData) => {
             if (err) {
-                blockchainDomainData.isInstalled = false;
-                blockchainDomainData.isInstallFailed = true;
-                blockchainDomainData.deploymentLogs = err;
-                console.error(err);
-            } else {
-                if (result.pipelinesStatus === "ERROR") {
-                    blockchainDomainData.isInstalled = false;
-                    blockchainDomainData.isInstallFailed = true;
-                } else {
-                    blockchainDomainData.isInstalled = true;
-                    blockchainDomainData.isInstallFailed = false;
-                }
-                blockchainDomainData.deploymentLogs = result;
+                return console.error(err);
             }
 
-            const jenkinsData = {
-                user: blockchainDomainData.jenkinsUserName,
-                token: blockchainDomainData.jenkinsToken,
-                jenkins: blockchainDomainData.jenkins
-            };
-
-            this.BlockchainDomainService.updateDeploymentLogs(this.model.organizationUid, blockchainDomainData, jenkinsData, (err, result) => {
-                if (err) {
-                    return console.error(err);
-                }
-
-                console.log(result);
-                blockchainDomainData.lastInstallDate = getFormattedDate(blockchainDomainData.lastInstallDate);
-                this.model.blockchainDomains[index] = blockchainDomainData;
-            });
+            console.log(updatedBlockchainDomainData);
+            updatedBlockchainDomainData.lastInstallDate = getFormattedDate(updatedBlockchainDomainData.lastInstallDate);
+            this.model.blockchainDomains[index] = updatedBlockchainDomainData;
         });
     }
 

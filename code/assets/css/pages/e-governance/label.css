@@ -1,17 +1,18 @@
 label, span {
-    font-size: 1rem;
+    font-size: 0.75rem;
     font-weight: 500;
+    margin: 0;
+    padding: 0.25rem 0;
+}
+
+.row-wrapper label {
+    padding: 0.5rem 0;
 }
 
 header label,
 header span,
 header button {
-    font-size: 1.125rem;
-}
-
-label, span {
-    margin: 0;
-    padding: 0.5rem 0;
+    font-size: 0.875rem;
 }
 
 .link {
@@ -28,10 +29,6 @@ label, span {
     text-decoration: underline;
 }
 
-.row-wrapper label {
-    padding: 0.5rem 0;
-}
-
 label[data-status] {
     font-weight: bold;
 }
@@ -42,7 +39,7 @@ label[data-status="true"] {
 
 label[data-status="false"],
 label[data-status="failed"],
-label[data-status="pending-remove"] {
+label[data-status="pending-uninstall"] {
     color: rgba(210, 13, 13, 1);
 }
 

@@ -80,7 +80,7 @@ export default class EditOrganizationController extends WebcController {
 
             if (domainsList.length) {
                 // TODO: Display a modal with the error message as content
-                const errorMessage = "The organization is not empty!";
+                const errorMessage = "The organization cannot be removed! Please remove the existing Blockchain Domains from this organization first!";
                 const modalConfiguration = {
                     model: {errorMessage: errorMessage},
                     controller: 'ErrorModalController',

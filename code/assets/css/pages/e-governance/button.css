@@ -13,8 +13,12 @@ button {
     width: 18rem;
 }
 
-button.import {
+button.red-button {
     background: #D20D0D;
+}
+
+button.green-button {
+    background: #27AE60;
 }
 
 button:focus,

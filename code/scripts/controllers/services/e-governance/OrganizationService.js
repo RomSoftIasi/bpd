@@ -73,4 +73,11 @@ export default class GovernanceService {
     getOrganizationsDataPath(identifier) {
         return `${this.ORGANIZATION_PATH}/${identifier}/data.json`;
     }
+
+    unmountOrganization(organizationUid, callback) {
+        let unmountPath = this.ORGANIZATION_PATH + '/' + organizationUid;
+        this.DSUStorage.call('organizationUnmount', unmountPath, (err, result) => {
+            callback(err, result);
+        });
+    }
 }

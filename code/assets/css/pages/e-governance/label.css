@@ -95,3 +95,7 @@ label.option {
 label.option:last-child {
     border: none;
 }
+
+.error {
+    color: darkred;
+}

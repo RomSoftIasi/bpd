@@ -80,7 +80,15 @@ export default class EditOrganizationController extends WebcController {
 
             if (domainsList.length) {
                 // TODO: Display a modal with the error message as content
-                return console.error("The organization is not empty!");
+                const errorMessage = "The organization is not empty!";
+                const modalConfiguration = {
+                    model: {errorMessage: errorMessage},
+                    controller: 'ErrorModalController',
+                    disableBackdropClosing: false,
+                    disableCancelButton: true
+                };
+                this.showModalFromTemplate('e-governance/error-modal', () => { }, () => { }, modalConfiguration);
+                return;
             }
 
             const modalConfiguration = {

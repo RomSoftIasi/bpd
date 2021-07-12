@@ -25,6 +25,10 @@ webc-modal::part(content) {
     background-color: rgb(255, 255, 255);
 }
 
+webc-modal::part(confirm) {
+    background: #008798;
+}
+
 @media (min-width: 500px) {
     webc-modal::part(dialog) {
         max-width: 1100px;

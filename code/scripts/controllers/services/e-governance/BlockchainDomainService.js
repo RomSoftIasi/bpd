@@ -280,4 +280,54 @@ export default class BlockchainDomainService {
         const clusterPath = `${this.BLOCKCHAIN_DOMAINS_PATH}/${blockchainDomainUid}`;
         this.DSUStorage.call("clusterUnmount", organizationUid, clusterPath, callback);
     }
+
+    initiateUpgradeCluster(clusterDetails, callback) {
+        const usecaseRepository = clusterDetails.githubRepositoryURL || "";
+
+        let installClusterInfo = {
+            blockchainNetwork: clusterDetails.subdomain,
+            user: clusterDetails.jenkinsUserName,
+            token: clusterDetails.jenkinsToken,
+            jenkins: clusterDetails.jenkins,
+            clusterOperation: "upgradeNetworkUsingDefaultConfiguration",
+            configMap: clusterDetails.deploymentConfiguration,
+            clusterStatus: clusterDetails.dataStatus,
+            parametrizedPipeline: {
+                domain: clusterDetails.mainDomain,
+                subdomain: clusterDetails.subdomain,
+                vaultdomain: clusterDetails.vaultDomain,
+                usecaseRepository: usecaseRepository,
+                workspace: usecaseRepository.split(".git")[0].split("/").pop()
+            }
+        }
+
+        console.log(installClusterInfo);
+        console.log(clusterDetails);
+        this.ClusterControllerApi.startDeployCluster(installClusterInfo, callback);
+    }
+
+    initiateRetryInstallCluster(clusterDetails, callback) {
+        const usecaseRepository = clusterDetails.githubRepositoryURL || "";
+
+        let installClusterInfo = {
+            blockchainNetwork: clusterDetails.subdomain,
+            user: clusterDetails.jenkinsUserName,
+            token: clusterDetails.jenkinsToken,
+            jenkins: clusterDetails.jenkins,
+            clusterOperation: "retryInitiateNetworkWithDefaultConfiguration",
+            configMap: clusterDetails.deploymentConfiguration,
+            clusterStatus: clusterDetails.dataStatus,
+            parametrizedPipeline: {
+                domain: clusterDetails.mainDomain,
+                subdomain: clusterDetails.subdomain,
+                vaultdomain: clusterDetails.vaultDomain,
+                usecaseRepository: usecaseRepository,
+                workspace: usecaseRepository.split(".git")[0].split("/").pop()
+            }
+        }
+
+        console.log(installClusterInfo);
+        console.log(clusterDetails);
+        this.ClusterControllerApi.startDeployCluster(installClusterInfo, callback);
+    }
 }

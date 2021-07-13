@@ -21,6 +21,10 @@ button.green-button {
     background: #27AE60;
 }
 
+button.yellow-button {
+    background: #F2C94C;
+}
+
 button:focus,
 button:active,
 button:hover,
@@ -33,4 +37,12 @@ button.small {
     min-height: unset;
     width: unset;
     padding: 0.5rem 1rem;
+}
+
+.left-align button {
+    margin-right: 0.5rem;
+}
+
+.right-align button {
+    margin-left: 0.5rem;
 }

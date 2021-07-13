@@ -58,10 +58,13 @@
                 <button class="red-button" data-tag="remove">Remove Blockchain Domain Definition</button>
             </div>
             <div class="left-align" data-if="@displayLogs">
-                <button class="red-button" data-tag="uninstall">UNINSTALL Blockchain Domain</button>
-                <div data-if="@isInstallFailed">
-                    <button data-tag="install">Reinstall Blockchain Domain</button>
+                <div data-if="@blockchainDomainModel.isInstalled">
+                    <button class="green-button" data-tag="upgrade">Upgrade Blockchain Domain</button>
                 </div>
+                <div data-if="@blockchainDomainModel.isInstallFailed">
+                    <button class="yellow-button" data-tag="retry">Retry Blockchain Domain Installation</button>
+                </div>
+                <button class="red-button" data-tag="uninstall">UNINSTALL Blockchain Domain</button>
             </div>
             <button data-tag="back">Back</button>
         </footer>

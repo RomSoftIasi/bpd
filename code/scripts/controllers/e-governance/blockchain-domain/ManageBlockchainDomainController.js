@@ -46,6 +46,20 @@ export default class ManageBlockchainDomainController extends WebcController {
 
             this.removeBlockchainDomainDefinition();
         });
+
+        this.onTagClick("upgrade", (model, target, event) => {
+            event.preventDefault();
+            event.stopImmediatePropagation();
+
+            this.upgradeBlockchainDomain();
+        });
+
+        this.onTagClick("retry", (model, target, event) => {
+            event.preventDefault();
+            event.stopImmediatePropagation();
+
+            this.retryBlockchainDomainInstallation();
+        });
     }
 
     updateDisplayConditions(blockchainDomainData) {
@@ -67,11 +81,11 @@ export default class ManageBlockchainDomainController extends WebcController {
                 this.model.blockchainDomainModel = blockchainDomainData;
                 this.updateDisplayConditions(blockchainDomainData);
 
-                if (this.model.isInstalling) {
+                if (this.model.blockchainDomainModel.isInstalling) {
                     this.checkForInstallPipelineStatus(blockchainDomainData);
                 }
 
-                if (this.model.isUninstalling) {
+                if (this.model.blockchainDomainModel.isUninstalling) {
                     this.checkForUninstallPipelineStatus(blockchainDomainData);
                 }
             });
@@ -173,6 +187,66 @@ export default class ManageBlockchainDomainController extends WebcController {
             console.log(result);
             this.navigateToPageTag("blockchain-domains-dashboard", {
                 organizationUid: organizationUid
+            });
+        });
+    }
+
+    upgradeBlockchainDomain() {
+        const blockchainDomainData = this.model.toObject("blockchainDomainModel");
+        blockchainDomainData.isInstalling = true;
+        blockchainDomainData.isReadyToInstall = false;
+        blockchainDomainData.isInstalled = false;
+        blockchainDomainData.isInstallFailed = false;
+        blockchainDomainData.isUninstalling = false;
+
+        Loader.displayLoader();
+        this.BlockchainDomainService.updateBlockchainDomainData(this.model.organizationUid, blockchainDomainData, (err, result) => {
+            if (err) {
+                Loader.hideLoader();
+                return console.error(err);
+            }
+
+            console.log(result);
+            this.BlockchainDomainService.initiateUpgradeCluster(blockchainDomainData, (err, result) => {
+                Loader.hideLoader();
+                if (err) {
+                    return console.error(err);
+                }
+
+                console.log(result);
+                this.navigateToPageTag("blockchain-domains-dashboard", {
+                    organizationUid: this.model.organizationUid
+                });
+            });
+        });
+    }
+
+    retryBlockchainDomainInstallation() {
+        const blockchainDomainData = this.model.toObject("blockchainDomainModel");
+        blockchainDomainData.isInstalling = true;
+        blockchainDomainData.isReadyToInstall = false;
+        blockchainDomainData.isInstalled = false;
+        blockchainDomainData.isInstallFailed = false;
+        blockchainDomainData.isUninstalling = false;
+
+        Loader.displayLoader();
+        this.BlockchainDomainService.updateBlockchainDomainData(this.model.organizationUid, blockchainDomainData, (err, result) => {
+            if (err) {
+                Loader.hideLoader();
+                return console.error(err);
+            }
+
+            console.log(result);
+            this.BlockchainDomainService.initiateRetryInstallCluster(blockchainDomainData, (err, result) => {
+                Loader.hideLoader();
+                if (err) {
+                    return console.error(err);
+                }
+
+                console.log(result);
+                this.navigateToPageTag("blockchain-domains-dashboard", {
+                    organizationUid: this.model.organizationUid
+                });
             });
         });
     }

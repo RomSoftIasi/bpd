@@ -60,7 +60,6 @@ body,
 }
 
 .container.main-container footer {
-    column-gap: 1rem;
     display: flex;
     padding: 1rem 0;
     row-gap: 0.5rem;

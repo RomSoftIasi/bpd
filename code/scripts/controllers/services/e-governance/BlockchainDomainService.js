@@ -97,7 +97,7 @@ export default class BlockchainDomainService {
             user: clusterDetails.jenkinsUserName,
             token: clusterDetails.jenkinsToken,
             jenkins: clusterDetails.jenkins,
-            clusterOperation: "removeNetworkWithParameters",
+            clusterOperation: "uninstallNetworkWithDefaultConfiguration",
             configMap: clusterDetails.deploymentConfiguration,
             clusterStatus: clusterDetails.dataStatus,
             parametrizedPipeline: {
@@ -172,7 +172,7 @@ export default class BlockchainDomainService {
             user: clusterDetails.jenkinsUserName,
             token: clusterDetails.jenkinsToken,
             jenkins: clusterDetails.jenkins,
-            clusterOperation: "initiateNetworkWithParameters",
+            clusterOperation: "initiateNetworkWithDefaultConfiguration",
             configMap: clusterDetails.deploymentConfiguration,
             clusterStatus: clusterDetails.dataStatus,
             parametrizedPipeline: {

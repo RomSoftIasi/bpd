@@ -39,6 +39,13 @@ export default class ManageBlockchainDomainController extends WebcController {
 
             this.uninstallBlockchainDomain();
         });
+
+        this.onTagClick("remove", (model, target, event) => {
+            event.preventDefault();
+            event.stopImmediatePropagation();
+
+            this.removeBlockchainDomainDefinition();
+        });
     }
 
     updateDisplayConditions(blockchainDomainData) {
@@ -150,6 +157,22 @@ export default class ManageBlockchainDomainController extends WebcController {
                 this.navigateToPageTag("blockchain-domains-dashboard", {
                     organizationUid: this.model.organizationUid
                 });
+            });
+        });
+    }
+
+    removeBlockchainDomainDefinition() {
+        Loader.displayLoader();
+        const {organizationUid, blockchainDomainUid} = this.model;
+        this.BlockchainDomainService.removeBlockchainDomainDefinition(organizationUid, blockchainDomainUid, (err, result) => {
+            Loader.hideLoader();
+            if (err) {
+                return console.error(err);
+            }
+
+            console.log(result);
+            this.navigateToPageTag("blockchain-domains-dashboard", {
+                organizationUid: organizationUid
             });
         });
     }

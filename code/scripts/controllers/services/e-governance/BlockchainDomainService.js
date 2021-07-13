@@ -275,4 +275,9 @@ export default class BlockchainDomainService {
             });
         });
     }
+
+    removeBlockchainDomainDefinition(organizationUid, blockchainDomainUid, callback) {
+        const clusterPath = `${this.BLOCKCHAIN_DOMAINS_PATH}/${blockchainDomainUid}`;
+        this.DSUStorage.call("clusterUnmount", organizationUid, clusterPath, callback);
+    }
 }

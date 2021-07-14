@@ -2,19 +2,19 @@
     <link href="/assets/css/pages/e-governance/main.css" rel="stylesheet">
 
     <div class="container main-container">
-        <h1 class="center-align">Organizations</h1>
+        <h1 class="center-align">{{$title}}</h1>
 
         <div class="container" data-if="@hasOrganizations">
-            <h2 class="no-data" slot="false">No Organizations defined</h2>
+            <h2 class="no-data" slot="false">{{$noData}}</h2>
 
             <header slot="true">
                 <div class="row-wrapper grid-equal">
-                    <label>Organization</label>
-                    <!--<label>Type</label>-->
-                    <label>Created at</label>
-                    <label>Clusters</label>
-                    <label>Blockchain domains</label>
-                    <label>Options</label>
+                    <label>{{$header.organization}}</label>
+                    <!--<label>{{$type}}</label>-->
+                    <label>{{$header.createdAt}}</label>
+                    <label>{{$header.clusters}}</label>
+                    <label>{{$header.blockchainDomains}}</label>
+                    <label>{{$header.options}}</label>
                 </div>
             </header>
 
@@ -24,7 +24,7 @@
                     <!--<label>{{@type}}</label>-->
                     <label>{{@createdAt}}</label>
                     <label>{{@numberOfClusters}}</label>
-                    <label class="link" data-tag="manage-blockchain-domains">Manage</label>
+                    <label class="link" data-tag="manage-blockchain-domains">{{$manage}}</label>
                     <div class="d-flex justify-content-center align-items-center" data-for="@options">
                         <label class="link option" data-tag="@tag">{{@name}}</label>
                     </div>
@@ -33,7 +33,7 @@
         </div>
 
         <footer class="left-align">
-            <button data-tag="add-organization">Add New Organization</button>
+            <button data-tag="add-organization">{{$addOrganization}}</button>
         </footer>
     </div>
 </webc-container>

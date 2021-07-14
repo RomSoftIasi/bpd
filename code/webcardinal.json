@@ -159,5 +159,6 @@
   "pagesFallback": {
     "name": "404",
     "src": "./manage-organizations.html"
-  }
+  },
+  "skin": "en"
 }

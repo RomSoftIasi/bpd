@@ -2,12 +2,12 @@
     <link href="/assets/css/pages/e-governance/main.css" rel="stylesheet">
 
     <div class="container main-container">
-        <h1>Edit Organization</h1>
+        <h1>{{$title}}</h1>
 
         <div class="container">
             <div class="form-wrapper" id="needs-validation">
                 <div class="form-row-wrapper">
-                    <label>Organization name:</label>
+                    <label>{{$organizationName}}:</label>
                     <input class="form-control w-50" data-view-model="@newOrganization" required/>
                 </div>
             </div>
@@ -15,10 +15,10 @@
 
         <footer class="left-align flex-column align-items-start">
             <div class="left-align">
-                <button data-tag="update-organization">Update Organization</button>
-                <button class="red-button" data-tag="remove-organization">REMOVE Organization</button>
+                <button data-tag="update-organization">{{$updateOrganization}}</button>
+                <button class="red-button" data-tag="remove-organization">{{$removeOrganization}}</button>
             </div>
-            <button data-tag="back">Back</button>
+            <button data-tag="back">{{$back}}</button>
         </footer>
     </div>
 </webc-container>

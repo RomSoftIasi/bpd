@@ -1,9 +1,10 @@
 const {WebcController} = WebCardinal.controllers;
 
-export default class RemoveOrganizationController extends WebcController {
+export default class ConfirmModalController extends WebcController {
     constructor(...props) {
         super(...props);
 
+        this.model = {};
         this.handleConfirm();
         this.handleCancel();
     }

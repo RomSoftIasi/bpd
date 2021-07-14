@@ -2,12 +2,12 @@
     <link href="/assets/css/pages/e-governance/main.css" rel="stylesheet">
 
     <div class="container main-container">
-        <h1>Define New Organization</h1>
+        <h1>{{$title}}</h1>
 
         <div class="container">
             <div class="form-wrapper" id="needs-validation">
                 <div class="form-row-wrapper">
-                    <label>Organization name:</label>
+                    <label>{{$organizationName}}:</label>
                     <input class="form-control w-50" data-view-model="@newOrganization" required/>
                 </div>
             </div>
@@ -31,8 +31,8 @@
         </div>
 
         <footer class="left-align">
-            <button data-tag="back">Back</button>
-            <button data-tag="create-organization">Create Organization</button>
+            <button data-tag="back">{{$back}}</button>
+            <button data-tag="create-organization">{{$createOrganization}}</button>
         </footer>
     </div>
 </webc-container>

@@ -57,7 +57,9 @@ function validateFormRequiredFields() {
     let firstFieldFound = null;
     requiredFields.forEach((field) => {
         if (field.value.trim().length === 0) {
-            field.setCustomValidity(`${field.getAttribute("name")} is mandatory!`);
+            const mandatoryField = this.translate("mandatoryField")
+                .replace("[FIELD_NAME]", field.getAttribute("name"));
+            field.setCustomValidity(mandatoryField);
             isFormValid = false;
 
             if (!firstFieldFound) {

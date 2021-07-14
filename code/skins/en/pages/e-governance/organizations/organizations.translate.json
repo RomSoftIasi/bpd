@@ -1,0 +1,16 @@
+{
+  "title": "Organizations",
+  "noData": "No Organizations defined",
+  "manage": "Manage",
+  "view": "View",
+  "edit": "Edit",
+  "addOrganization": "Add New Organization",
+  "header": {
+    "organization": "Organization",
+    "type": "Type",
+    "createdAt": "Created at",
+    "clusters": "Clusters",
+    "blockchainDomains": "Blockchain domains",
+    "options": "Options"
+  }
+}

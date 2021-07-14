@@ -79,11 +79,11 @@ export default class OrganizationsController extends WebcController {
     getOptionsViewModel(organizationUid) {
         return [{
             tag: "view",
-            name: "View",
+            name: this.translate("view"),
             uid: organizationUid
         }, {
             tag: "edit",
-            name: "Edit",
+            name: this.translate("edit"),
             uid: organizationUid
         }];
     }

@@ -80,19 +80,20 @@ export default class EditOrganizationController extends WebcController {
 
             if (domainsList.length) {
                 // TODO: Display a modal with the error message as content
-                const errorMessage = "The organization cannot be removed! Please remove the existing Blockchain Domains from this organization first!";
+                const errorMessage = this.translate("removeOrganizationError");
                 const modalConfiguration = {
                     model: {errorMessage: errorMessage},
-                    controller: 'ErrorModalController',
+                    controller: 'e-governance/ErrorModalController',
                     disableBackdropClosing: false,
-                    disableCancelButton: true
+                    disableCancelButton: true,
+                    confirmButtonText: this.translate("modal.confirmButtonText")
                 };
                 this.showModalFromTemplate('e-governance/error-modal', () => { }, () => { }, modalConfiguration);
                 return;
             }
 
             const modalConfiguration = {
-                controller: 'e-governance/organizations/RemoveOrganizationController',
+                controller: 'e-governance/ConfirmModalController',
                 disableBackdropClosing: false
             };
 
@@ -125,9 +126,9 @@ export default class EditOrganizationController extends WebcController {
     getFormViewModel() {
         return {
             newOrganization: {
-                placeholder: "Organization name (e.g. Novartis)",
+                placeholder: this.translate("organizationNamePlaceholder"),
                 value: "",
-                name: "Organization name"
+                name: this.translate("organizationName")
             }
         };
     }

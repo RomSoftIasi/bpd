@@ -1,0 +1,8 @@
+{
+  "title": "Define New Organization",
+  "organizationName": "Organization name",
+  "organizationNamePlaceholder": "Organization name (e.g. Novartis)",
+  "back": "Back",
+  "createOrganization": "Create Organization",
+  "mandatoryField": "[FIELD_NAME] is mandatory!"
+}

@@ -59,9 +59,9 @@ export default class DefineOrganizationController extends WebcController {
     getFormViewModel() {
         return {
             newOrganization: {
-                placeholder: "Organization name (e.g. Novartis)",
+                placeholder: this.translate("organizationNamePlaceholder"),
                 value: "",
-                name: "Organization name"
+                name: this.translate("organizationName")
             }
         };
     }

@@ -10,7 +10,7 @@
   "deploymentConfiguration": "Deployment configuration",
   "installationLogs": "Installation logs",
   "back": "Back",
-  "installBlockchainDomain": "Install Blockchain Domain",
+  "installBlockchainDomain": "Install APIHub",
   "uninstallBlockchainDomain": "UNINSTALL Blockchain Domain",
   "retryBlockchainDomainInstallation": "Retry Blockchain Domain Installation",
   "upgradeBlockchainDomain": "Upgrade Blockchain Domain",
@@ -20,9 +20,9 @@
       "status": "Blockchain domain is ready to install.",
       "shortStatus": "Ready to Install"
     },
-    "pending": {
-      "status": "Blockchain domain installation pending...",
-      "shortStatus": "Installation Pending"
+    "installing": {
+      "status": "Blockchain domain installing...",
+      "shortStatus": "Installing in progress"
     },
     "failed": {
       "status": "Blockchain domain FAILED to be installed.",
@@ -32,7 +32,7 @@
       "status": "Blockchain domain installed successfully.",
       "shortStatus": "Installed"
     },
-    "pending-uninstall": {
+    "uninstalling": {
       "status": "UNINSTALLING Blockchain Domain is in progress...",
       "shortStatus": "Uninstalling in progress"
     }

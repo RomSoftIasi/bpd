@@ -39,7 +39,7 @@ label[data-status="true"] {
 
 label[data-status="false"],
 label[data-status="failed"],
-label[data-status="pending-uninstall"] {
+label[data-status="uninstalling"] {
     color: rgba(210, 13, 13, 1);
 }
 
@@ -56,7 +56,7 @@ label[data-status="ready"] {
     color: rgba(39, 174, 96, 1);
 }
 
-label[data-status="pending"] {
+label[data-status="installing"] {
     color: rgba(198, 155, 24, 1);
 }
 

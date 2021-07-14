@@ -121,7 +121,7 @@ export default class BlockchainDomainService {
         }
 
         if (blockchainDomainData.isInstalling) {
-            dataStatus = "pending";
+            dataStatus = "installing";
         }
 
         if (blockchainDomainData.isInstallFailed) {
@@ -129,7 +129,7 @@ export default class BlockchainDomainService {
         }
 
         if (blockchainDomainData.isUninstalling) {
-            dataStatus = "pending-uninstall";
+            dataStatus = "uninstalling";
         }
 
         return dataStatus;

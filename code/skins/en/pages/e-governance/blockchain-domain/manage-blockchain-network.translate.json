@@ -36,5 +36,11 @@
       "status": "UNINSTALLING Blockchain Domain is in progress...",
       "shortStatus": "Uninstalling in progress"
     }
+  },
+  "modal": {
+    "cancelButtonText": "Cancel",
+    "confirmButtonText": "Confirm",
+    "confirmTitle": "Remove Blockchain Domain Definition",
+    "confirmMessage": "Are you sure you want to REMOVE the selected blockchain domain definition? This operation cannot be undone!"
   }
 }

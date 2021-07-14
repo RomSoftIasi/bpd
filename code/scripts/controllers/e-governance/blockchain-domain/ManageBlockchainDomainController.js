@@ -44,7 +44,7 @@ export default class ManageBlockchainDomainController extends WebcController {
             event.preventDefault();
             event.stopImmediatePropagation();
 
-            this.removeBlockchainDomainDefinition();
+            this.removeBlockchainDomainHandler();
         });
 
         this.onTagClick("upgrade", (model, target, event) => {
@@ -175,6 +175,24 @@ export default class ManageBlockchainDomainController extends WebcController {
                 });
             });
         });
+    }
+
+    removeBlockchainDomainHandler() {
+        const modalConfiguration = {
+            controller: 'e-governance/ConfirmModalController',
+            disableBackdropClosing: false
+        };
+
+        this.showModalFromTemplate('e-governance/confirm-modal',
+            () => {
+                this.removeBlockchainDomainDefinition();
+            }, (event) => {
+                const error = event.detail || null
+
+                if (error && error !== true) {
+                    console.error(error);
+                }
+            }, modalConfiguration);
     }
 
     removeBlockchainDomainDefinition() {

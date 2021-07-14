@@ -73,6 +73,9 @@ export default class BlockchainDomainsController extends WebcController {
                 domain.lastInstallDate = domain.lastInstallDate ? getFormattedDate(domain.lastInstallDate) : "";
                 domain.options = this.getOptionsViewModel(domain.isOwner, domain.uid);
 
+                const {shortStatus} = this.translationModel.statuses[domain.dataStatus];
+                domain.shortStatus = shortStatus;
+
                 if (domain.isInstalling) {
                     this.checkForInstallPipelineStatus(domain, index);
                 }
@@ -113,14 +116,14 @@ export default class BlockchainDomainsController extends WebcController {
     getOptionsViewModel(isOwner, blockchainDomainUid) {
         const options = [{
             tag: "view",
-            name: "View",
+            name: this.translate("view"),
             uid: blockchainDomainUid
         }];
 
         if (isOwner) {
             options.push({
                 tag: "edit",
-                name: "Edit",
+                name: this.translate("edit"),
                 uid: blockchainDomainUid
             });
         }

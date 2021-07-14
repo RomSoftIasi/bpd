@@ -2,67 +2,67 @@
     <link href="/assets/css/pages/e-governance/main.css" rel="stylesheet">
 
     <div class="container main-container">
-        <h1>Edit Blockchain Domain</h1>
+        <h1>{{$title}}</h1>
 
         <div class="container form-wrapper" id="needs-validation">
             <div class="form-row-wrapper">
-                <label>Blockchain network cluster status:</label>
+                <label>{{$status}}:</label>
                 <label data-status="@blockchainDomainModel.dataStatus">{{@blockchainDomainModel.status}}</label>
             </div>
 
             <div class="form-row-wrapper">
-                <label>Main domain:</label>
+                <label>{{$mainDomain}}:</label>
                 <input class="form-control" name="Main domain" placeholder="Enter main domain (e.g. epiqa)"
                        readonly="@blockchainDomainModel.isInstalling" required value="@blockchainDomainModel.mainDomain"/>
             </div>
 
             <div class="form-row-wrapper">
-                <label>Subdomain:</label>
+                <label>{{$subdomain}}:</label>
                 <input class="form-control" name="Subdomain" placeholder="Enter subdomain (e.g. nvs.epiqa)"
                        readonly="@blockchainDomainModel.isInstalling" required value="@blockchainDomainModel.subdomain"/>
             </div>
 
             <div class="form-row-wrapper">
-                <label>Vault domain:</label>
+                <label>{{$vaultDomain}}:</label>
                 <input class="form-control" name="Vault domain" placeholder="Enter vault domain (e.g. nvs)"
                        readonly="@blockchainDomainModel.isInstalling" required value="@blockchainDomainModel.vaultDomain"/>
             </div>
 
             <div class="form-row-wrapper">
-                <label>Jenkins:</label>
+                <label>{{$jenkins}}:</label>
                 <input class="form-control" name="Jenkins URL" placeholder="https://jenkins/CI/Server/URL"
                        readonly="@blockchainDomainModel.isInstalling" required value="@blockchainDomainModel.jenkins"/>
             </div>
 
             <div class="form-row-wrapper">
-                <label>Jenkins user name:</label>
+                <label>{{$jenkinsUserName}}:</label>
                 <input class="form-control" name="Jenkins user name" placeholder="Jenkins user name"
                        readonly="@blockchainDomainModel.isInstalling" required value="@blockchainDomainModel.jenkinsUserName"/>
             </div>
 
             <div class="form-row-wrapper">
-                <label>Jenkins Token:</label>
+                <label>{{$jenkinsToken}}:</label>
                 <input class="form-control" name="Jenkins Token" placeholder="Jenkins Authorization Token"
                        readonly="@blockchainDomainModel.isInstalling" required value="@blockchainDomainModel.jenkinsToken"/>
             </div>
 
             <div class="form-row-wrapper">
-                <label>Github usecase repository:</label>
+                <label>{{$githubUsecaseRepository}}:</label>
                 <input class="form-control" name="Github usecase repository"
                        placeholder="Github usecase repository URL (e.g. https://github.com/PharmaLedger-IMI/epi-workspace)"
                        readonly="@blockchainDomainModel.isInstalling" required value="@blockchainDomainModel.githubRepositoryURL"/>
             </div>
 
             <div class="form-row-wrapper">
-                <label>Deployment configuration:</label>
+                <label>{{$deploymentConfiguration}}:</label>
                 <textarea class="form-control" placeholder="@deploymentConfigurationPlaceholder"
                           readonly="@blockchainDomainModel.isInstalling" value="@blockchainDomainModel.deploymentConfiguration"></textarea>
             </div>
         </div>
 
         <footer class="d-flex justify-content-between align-items-center">
-            <button data-tag="back">Back</button>
-            <button data-tag="update-network">Update network</button>
+            <button data-tag="back">{{$back}}</button>
+            <button data-tag="update-network">{{$updateNetwork}}</button>
         </footer>
     </div>
 </webc-container>

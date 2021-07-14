@@ -27,19 +27,13 @@ export default class BlockchainDomainService {
             blockchainDomainData.isInstallFailed = false;
             blockchainDomainData.isUninstalling = false;
             blockchainDomainData.deploymentLogs = "";
-            const {status, shortStatus, dataStatus} = this.getBlockchainDomainInstallStatus(blockchainDomainData);
-            blockchainDomainData.status = status;
-            blockchainDomainData.shortStatus = shortStatus;
-            blockchainDomainData.dataStatus = dataStatus;
+            blockchainDomainData.dataStatus = this.getBlockchainDomainInstallStatus(blockchainDomainData);
             this.updateBlockchainDomainData(organizationUid, blockchainDomainData, callback);
         });
     }
 
     updateBlockchainDomainData(organizationUid, blockchainDomainData, callback) {
-        const {status, shortStatus, dataStatus} = this.getBlockchainDomainInstallStatus(blockchainDomainData);
-        blockchainDomainData.status = status;
-        blockchainDomainData.shortStatus = shortStatus;
-        blockchainDomainData.dataStatus = dataStatus;
+        blockchainDomainData.dataStatus = this.getBlockchainDomainInstallStatus(blockchainDomainData);
         const blockchainDomainDataPath = this.getBlockchainDomainDataPath(organizationUid, blockchainDomainData.uid);
         this.DSUStorage.setObject(blockchainDomainDataPath, blockchainDomainData, (err) => {
             callback(err, blockchainDomainData);
@@ -121,43 +115,24 @@ export default class BlockchainDomainService {
     }
 
     getBlockchainDomainInstallStatus(blockchainDomainData) {
+        let dataStatus = "ready";
         if (blockchainDomainData.isInstalled) {
-            return {
-                shortStatus: "Installed",
-                status: "Blockchain domain installed successfully.",
-                dataStatus: "installed"
-            }
+            dataStatus = "installed";
         }
 
         if (blockchainDomainData.isInstalling) {
-            return {
-                shortStatus: "Installation Pending",
-                status: "Blockchain domain installation pending...",
-                dataStatus: "pending"
-            }
+            dataStatus = "pending";
         }
 
         if (blockchainDomainData.isInstallFailed) {
-            return {
-                shortStatus: "Installation Failed",
-                status: "Blockchain domain FAILED to be installed.",
-                dataStatus: "failed"
-            }
+            dataStatus = "failed";
         }
 
         if (blockchainDomainData.isUninstalling) {
-            return {
-                shortStatus: "Uninstalling in progress",
-                status: "UNINSTALLING Blockchain Domain is in progress...",
-                dataStatus: "pending-uninstall"
-            }
+            dataStatus = "pending-uninstall";
         }
 
-        return {
-            shortStatus: "Ready to Install",
-            status: "Blockchain domain is ready to install.",
-            dataStatus: "ready"
-        }
+        return dataStatus;
     }
 
     waitForClusterInstallationToFinish(blockchainNetworkName, callback) {

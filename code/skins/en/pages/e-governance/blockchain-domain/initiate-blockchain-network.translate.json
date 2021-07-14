@@ -1,0 +1,15 @@
+{
+  "title": "Initiate Blockchain Domain",
+  "status": "Blockchain network cluster status",
+  "mainDomain": "Main domain",
+  "subdomain": "Subdomain",
+  "vaultDomain": "Vault domain",
+  "jenkins": "Jenkins",
+  "jenkinsUserName": "Jenkins user name",
+  "jenkinsToken": "Jenkins Token",
+  "githubUsecaseRepository": "Github usecase repository",
+  "deploymentConfiguration": "Deployment configuration",
+  "back": "Back",
+  "saveNetwork": "Save Network",
+  "mandatoryField": "[FIELD_NAME] is mandatory!"
+}

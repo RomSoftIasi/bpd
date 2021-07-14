@@ -79,6 +79,8 @@ export default class ManageBlockchainDomainController extends WebcController {
                 }
 
                 this.model.blockchainDomainModel = blockchainDomainData;
+                const {status} = this.translationModel.statuses[blockchainDomainData.dataStatus];
+                this.model.blockchainDomainModel.status = status;
                 this.updateDisplayConditions(blockchainDomainData);
 
                 if (this.model.blockchainDomainModel.isInstalling) {

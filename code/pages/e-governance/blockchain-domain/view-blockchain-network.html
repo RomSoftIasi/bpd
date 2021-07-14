@@ -2,62 +2,62 @@
     <link href="/assets/css/pages/e-governance/main.css" rel="stylesheet">
 
     <div class="container main-container">
-        <h1>View Blockchain Domain</h1>
+        <h1>{{$title}}</h1>
 
         <div class="container form-wrapper">
             <div class="form-row-wrapper">
-                <label>Blockchain network cluster status:</label>
+                <label>{{$status}}:</label>
                 <label data-status="@dataStatus">{{@status}}</label>
             </div>
 
             <div class="form-row-wrapper">
-                <label>Main domain:</label>
+                <label>{{$mainDomain}}:</label>
                 <label class="font-weight-bold">{{@mainDomain}}</label>
             </div>
 
             <div class="form-row-wrapper">
-                <label>Subdomain:</label>
+                <label>{{$subdomain}}:</label>
                 <label class="font-weight-bold">{{@subdomain}}</label>
             </div>
 
             <div class="form-row-wrapper">
-                <label>Vault domain:</label>
+                <label>{{$vaultDomain}}:</label>
                 <label class="font-weight-bold">{{@vaultDomain}}</label>
             </div>
 
             <div class="form-row-wrapper">
-                <label>Jenkins:</label>
+                <label>{{$jenkins}}:</label>
                 <label class="font-weight-bold">{{@jenkins}}</label>
             </div>
 
             <div class="form-row-wrapper">
-                <label>Jenkins user name:</label>
+                <label>{{$jenkinsUserName}}:</label>
                 <label class="font-weight-bold">{{@jenkinsUserName}}</label>
             </div>
 
             <div class="form-row-wrapper">
-                <label>Jenkins Token:</label>
+                <label>{{$jenkinsToken}}:</label>
                 <label class="font-weight-bold">{{@jenkinsToken}}</label>
             </div>
 
             <div class="form-row-wrapper">
-                <label>Github usecase repository:</label>
+                <label>{{$githubUsecaseRepository}}:</label>
                 <label class="font-weight-bold">{{@githubRepositoryURL}}</label>
             </div>
 
             <div class="form-row-wrapper">
-                <label>Deployment configuration:</label>
+                <label>{{$deploymentConfiguration}}:</label>
                 <textarea class="form-control" readonly value="@deploymentConfiguration"></textarea>
             </div>
 
             <div class="form-row-wrapper" data-if="@displayLogs">
-                <label>Installation logs:</label>
+                <label>{{$installationLogs}}:</label>
                 <textarea class="form-control" readonly value="@deploymentLogs"></textarea>
             </div>
         </div>
 
         <footer class="left-align">
-            <button data-tag="back">Back</button>
+            <button data-tag="back">{{$back}}</button>
         </footer>
     </div>
 </webc-container>

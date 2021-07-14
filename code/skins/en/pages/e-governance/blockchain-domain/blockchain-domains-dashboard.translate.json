@@ -1,0 +1,40 @@
+{
+  "title": "Blockchain Domains",
+  "noData": "No Blockchain Domains defined",
+  "manage": "Manage",
+  "view": "View",
+  "edit": "Edit",
+  "back": "Back",
+  "initiateNetwork": "Initiate Network",
+  "joinNetwork": "Join Network",
+  "header": {
+    "mainDomain": "Main Domain",
+    "type": "Type",
+    "status": "Status",
+    "lastInstallDate": "Last Install date",
+    "operations": "Operations",
+    "options": "Options"
+  },
+  "statuses": {
+    "ready": {
+      "status": "Blockchain domain is ready to install.",
+      "shortStatus": "Ready to Install"
+    },
+    "pending": {
+      "status": "Blockchain domain installation pending...",
+      "shortStatus": "Installation Pending"
+    },
+    "failed": {
+      "status": "Blockchain domain FAILED to be installed.",
+      "shortStatus": "Installation Failed"
+    },
+    "installed": {
+      "status": "Blockchain domain installed successfully.",
+      "shortStatus": "Installed"
+    },
+    "pending-uninstall": {
+      "status": "UNINSTALLING Blockchain Domain is in progress...",
+      "shortStatus": "Uninstalling in progress"
+    }
+  }
+}

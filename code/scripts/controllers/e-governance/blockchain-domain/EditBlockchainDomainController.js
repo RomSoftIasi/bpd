@@ -47,6 +47,8 @@ export default class EditBlockchainDomainController extends WebcController {
                 ...blockchainDomainData,
                 blockchainDomainUid: blockchainDomainUid
             };
+            const {status} = this.translationModel.statuses[blockchainDomainData.dataStatus];
+            this.model.blockchainDomainModel.status = status;
         });
     }
 

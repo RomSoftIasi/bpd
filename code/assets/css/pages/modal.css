@@ -1,45 +1,40 @@
-@import url("main.css");
-
-.bpd-modal-title {
-    color: black !important;
-    font-size: 22px;
-    font-weight: bold;
-}
-
-.bpd-modal-content {
+.modal-content {
+    align-items: center;
+    border: none;
+    display: flex;
+    height: 100%;
+    justify-content: center;
     padding: 1rem;
+    width: 100%;
 }
 
-.bpd-modal-content .code_canvas {
-    height: 200px;
-    margin: 1rem 0;
-}
-
-.bpd-grid-two-columns {
+.modal-footer {
     display: flex;
     justify-content: space-around;
-    column-gap: 0.5rem;
-    row-gap: 0.5rem
+    width: 100%;
+    border: none;
 }
 
-.bpd-translucent-buttons {
-    display: block;
-    padding: 0;
-    margin-top: 50px;
+.modal-content h5 {
+    text-align: center;
 }
 
-.bpd-translucent-buttons button,
-.bpd-translucent-buttons button:disabled {
-    color: #007bff;
-    background-color: white;
-    border-color: white;
-    width: 225px;
-    margin-bottom: 20px;
+webc-modal::part(content) {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+    border-radius: 0.25rem;
+    background-color: rgb(255, 255, 255);
 }
 
-.btn-sm {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    column-gap: 0.25rem;
+webc-modal::part(confirm) {
+    background: #008798;
+}
+
+@media (min-width: 500px) {
+    webc-modal::part(dialog) {
+        max-width: 1100px;
+    }
+
+    webc-modal::part(main) {
+        padding: 1rem 3rem;
+    }
 }

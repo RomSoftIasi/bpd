@@ -1,0 +1,12 @@
+<link href="/assets/css/pages/main.css" rel="stylesheet">
+
+<h2 slot="header">{{$modal.confirmTitle}}</h2>
+
+<div class="modal-content">
+    <h5>{{$modal.confirmMessage}}</h5>
+</div>
+
+<div class="modal-footer" slot="footer">
+    <button class="green-button" data-tag="cancel">{{$modal.cancelButtonText}}</button>
+    <button class="red-button" data-tag="confirm">{{$modal.confirmButtonText}}</button>
+</div>

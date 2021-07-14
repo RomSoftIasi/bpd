@@ -1,164 +1,122 @@
 {
   "theme": "blue-fluorite-theme",
+  "skin": "en",
   "pages": [
     {
-      "name": "Manage Organizations",
-      "path": "/manage-organizations",
-      "icon": "fa-home",
-      "tag": "manage-organizations",
-      "src": "manage-organizations.html"
-    },
-    {
-      "name": "Manage Clusters",
-      "path": "/cluster/manage-clusters",
-      "tag": "view-clusters",
-      "src": "clusters/manage-clusters.html",
-      "indexed": false
-    },
-    {
-      "name": "Governance",
-      "path": "/organizations/governance",
-      "tag": "governance",
-      "src": "organizations/governance.html",
-      "indexed": false
-    },
-    {
-      "name": "Voting",
-      "path": "/organizations/voting",
-      "tag": "voting",
-      "src": "organizations/voting.html",
-      "indexed": false
-    },
-    {
-      "name": "Monitoring",
-      "path": "/organizations/monitoring",
-      "tag": "monitoring",
-      "src": "organizations/monitoring.html",
-      "indexed": false
-    },
-    {
-      "name": "Ssapp Review",
-      "path": "/organizations/ssapp-review",
-      "tag": "ssapp-review",
-      "src": "organizations/ssapp-review.html",
-      "indexed": false
-    },
-    {
       "name": "Governance Dashboard",
-      "path": "/e-governance/governance-dashboard/dashboard",
+      "path": "/governance-dashboard/dashboard",
       "tag": "governance-dashboard",
-      "src": "/e-governance/governance-dashboard/dashboard.html",
+      "src": "/governance-dashboard/dashboard.html",
       "indexed": false
     },
     {
       "name": "Voting Dashboard",
-      "path": "/e-governance/voting-dashboard/dashboard",
+      "path": "/voting-dashboard/dashboard",
       "tag": "voting-dashboard",
-      "src": "/e-governance/voting-dashboard/dashboard.html",
+      "src": "/voting-dashboard/dashboard.html",
       "indexed": false
     },
     {
       "name": "New Voting Session",
-      "path": "/e-governance/voting-dashboard/new-voting-session",
+      "path": "/voting-dashboard/new-voting-session",
       "tag": "new-voting-session",
-      "src": "/e-governance/voting-dashboard/new-voting-session.html",
+      "src": "/voting-dashboard/new-voting-session.html",
       "indexed": false
     },
     {
       "name": "New Voting Session Consultation",
-      "path": "/e-governance/voting-dashboard/new-voting-session-consultation",
+      "path": "/voting-dashboard/new-voting-session-consultation",
       "tag": "new-voting-session-consultation",
-      "src": "/e-governance/voting-dashboard/new-voting-session-consultation.html",
+      "src": "/voting-dashboard/new-voting-session-consultation.html",
       "indexed": false
     },
     {
       "name": "New Voting Session Generic",
-      "path": "/e-governance/voting-dashboard/new-voting-session-generic",
+      "path": "/voting-dashboard/new-voting-session-generic",
       "tag": "new-voting-session-generic",
-      "src": "/e-governance/voting-dashboard/new-voting-session-generic.html",
+      "src": "/voting-dashboard/new-voting-session-generic.html",
       "indexed": false
     },
     {
       "name": "New Voting Session Fixed Structure",
-      "path": "/e-governance/voting-dashboard/new-voting-session-fixed-structure",
+      "path": "/voting-dashboard/new-voting-session-fixed-structure",
       "tag": "new-voting-session-fixed-structure",
-      "src": "/e-governance/voting-dashboard/new-voting-session-fixed-structure.html",
+      "src": "/voting-dashboard/new-voting-session-fixed-structure.html",
       "indexed": false
     },
     {
       "name": "Perform Vote",
-      "path": "/e-governance/voting-dashboard/perform-vote",
+      "path": "/voting-dashboard/perform-vote",
       "tag": "perform-vote",
-      "src": "/e-governance/voting-dashboard/perform-vote.html",
+      "src": "/voting-dashboard/perform-vote.html",
       "indexed": false
     },
     {
       "name": "Organizations",
-      "path": "/e-governance/organizations/organizations",
+      "path": "/organizations/organizations",
       "tag": "organization-dashboard",
-      "src": "/e-governance/organizations/organizations.html",
+      "src": "/organizations/organizations.html",
       "indexed": false
     },
     {
       "name": "Define New Organization",
-      "path": "/e-governance/organizations/define-organization",
+      "path": "/organizations/define-organization",
       "tag": "define-organization",
-      "src": "/e-governance/organizations/define-organization.html",
+      "src": "/organizations/define-organization.html",
       "indexed": false
     },
     {
       "name": "Edit Organization",
-      "path": "/e-governance/organizations/edit-organization",
+      "path": "/organizations/edit-organization",
       "tag": "edit-organization",
-      "src": "/e-governance/organizations/edit-organization.html",
+      "src": "/organizations/edit-organization.html",
       "indexed": false
     },
     {
       "name": "View Organization",
-      "path": "/e-governance/organizations/view-organization",
+      "path": "/organizations/view-organization",
       "tag": "view-organization",
-      "src": "/e-governance/organizations/view-organization.html",
+      "src": "/organizations/view-organization.html",
       "indexed": false
     },
     {
       "name": "Blockchain Domains Dashboard",
-      "path": "/e-governance/blockchain-domain/blockchain-domains-dashboard",
+      "path": "/blockchain-domain/blockchain-domains-dashboard",
       "tag": "blockchain-domains-dashboard",
-      "src": "/e-governance/blockchain-domain/blockchain-domains-dashboard.html",
+      "src": "/blockchain-domain/blockchain-domains-dashboard.html",
       "indexed": false
     },
     {
       "name": "Initiate Blockchain Network",
-      "path": "/e-governance/blockchain-domain/initiate-blockchain-network",
+      "path": "/blockchain-domain/initiate-blockchain-network",
       "tag": "initiate-blockchain-network",
-      "src": "/e-governance/blockchain-domain/initiate-blockchain-network.html",
+      "src": "/blockchain-domain/initiate-blockchain-network.html",
       "indexed": false
     },
     {
       "name": "Edit Blockchain Network",
-      "path": "/e-governance/blockchain-domain/edit-blockchain-network",
+      "path": "/blockchain-domain/edit-blockchain-network",
       "tag": "edit-blockchain-network",
-      "src": "/e-governance/blockchain-domain/edit-blockchain-network.html",
+      "src": "/blockchain-domain/edit-blockchain-network.html",
       "indexed": false
     },
     {
       "name": "View Blockchain Network",
-      "path": "/e-governance/blockchain-domain/view-blockchain-network",
+      "path": "/blockchain-domain/view-blockchain-network",
       "tag": "view-blockchain-network",
-      "src": "/e-governance/blockchain-domain/view-blockchain-network.html",
+      "src": "/blockchain-domain/view-blockchain-network.html",
       "indexed": false
     },
     {
       "name": "Manage Blockchain Network",
-      "path": "/e-governance/blockchain-domain/manage-blockchain-network",
+      "path": "/blockchain-domain/manage-blockchain-network",
       "tag": "manage-blockchain-network",
-      "src": "/e-governance/blockchain-domain/manage-blockchain-network.html",
+      "src": "/blockchain-domain/manage-blockchain-network.html",
       "indexed": false
     }
   ],
   "pagesFallback": {
     "name": "404",
-    "src": "./manage-organizations.html"
-  },
-  "skin": "en"
+    "src": "./governance-dashboard/dashboard.html"
+  }
 }

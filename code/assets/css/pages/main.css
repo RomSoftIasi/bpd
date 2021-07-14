@@ -1,178 +1,73 @@
-@import url("card.css");
-@import url("icons.css");
+@import url("button.css");
+@import url("checkbox.css");
+@import url("container.css");
 @import url("form.css");
+@import url("label.css");
+@import url("modal.css");
+@import url("radio.css");
+@import url("voting.css");
 
-.bpd-header {
-    height: 80px;
-    box-shadow: 0 6px 30px -9px rgba(0, 0, 0, 0.75);
-    display: flex;
-    justify-content: flex-end;
-    padding: 25px 50px;
-    font-size: 18px;
-    color: slategray;
-    font-weight: 400;
-}
-
-.bpd-dashboard {
-    margin: 50px;
-    box-shadow: 0 0 13px -2px rgba(0, 0, 0, 0.75);
-    border-radius: 8px;
-    padding: 20px 25px 60px 25px;
-}
-
-.bpd-dashboard img {
-    width: 100%;
-    margin-top: 30px;
-}
-
-.bpd-dashboard .image_container {
-    margin-bottom: 0;
-}
-
-.bpd-dashboard-title {
-    font-size: 22px;
-    font-weight: bold;
-    font-family: sans-serif;
-}
-
-.bpd-tabs .bpd-dashboard-title label {
-    width: 100%;
-}
-
-.bpd-organization-elements {
-    display: flex;
-    flex-wrap: wrap;
-}
-
-.bpd-create-organization {
-    margin: 20px 0;
-}
-
-.bpd-create-organization-button + label {
-    font-size: 15px;
-}
-
-.bpd-organization-card-label,
-.bpd-create-organization-label {
-    font-size: 15px;
-    font-family: sans-serif;
-    font-weight: 100;
-}
-
-.bpd-organization-button {
-    background-color: white;
-    border: 0;
-    color: black;
-    font-size: 1rem;
-    line-height: 1.5;
-}
-
-.bpd-organization-button:hover {
-    background-color: #ddd;
-}
-
-.bpd-organization-button-remove {
-    color: red !important;
-}
-
-.bpd-input,
-.bpd-input .form-group {
-    margin-top: 0.75rem;
-}
-
-.bpd-input .form-group {
-    width: 450px;
+h1 {
+    color: rgba(0, 52, 91, 1);
+    font-size: 56px;
     margin-bottom: 1rem;
+    padding: 1.5rem 0;
 }
 
-.form-group label {
-    font-size: 18px;
-    color: #9d9d9d;
-    line-height: 1.5rem;
-}
-
-.bpd-creation-row {
-    margin-top: 20px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-}
-
-.bpd-creation-row button.btn {
-    width: 12rem;
-}
-
-.bpd-creation-row button.btn.btn-link,
-.bpd-creation-row button.btn.btn-link:focus,
-.bpd-creation-row button.btn.btn-link:hover,
-.bpd-creation-row button.btn.btn-link:active,
-.bpd-creation-row button.btn.btn-link:focus:active {
-    text-decoration: none;
-}
-
-.bpd-row .bpd-for-each-row {
-    margin-bottom: 20px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    column-gap: 0.25rem;
-}
-
-.bpd-for-each-row.dsu-type-row {
-    display: grid;
-    grid-template-columns: 2fr 4fr 1fr 1fr 1fr;
-}
-
-label.info,
-label.error {
-    display: flex;
-    justify-content: center;
+.no-data {
+    color: #008798;
+    font-size: 1.75rem;
     font-style: italic;
-    word-wrap: break-word;
+    padding-top: 2rem;
+    text-align: center;
 }
 
-label.info {
-    color: #572a57;
-}
-
-label.error {
-    color: #ff0000;
-}
-
-.question-wrapper {
+.row-wrapper {
+    column-gap: 0.5rem;
     display: grid;
-    grid-template-columns: 2fr 3fr;
-    column-gap: 2rem;
-    padding: 0 1rem;
+    grid-template-columns: minmax(40%, auto) repeat(auto-fit, minmax(120px, 1fr));
+    text-align: center;
+    margin: 0.25rem 0;
+    padding: 0 0.75rem;
+}
+
+.grid-equal {
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
 }
 
 .inner-wrapper {
     display: flex;
-    row-gap: 1rem;
+    row-gap: 0.5rem;
     flex-direction: column;
     justify-content: center;
-    align-items: center;
+    align-items: baseline;
 }
 
-.inner-wrapper .bpd-input {
-    margin: 0;
-    max-width: 400px;
+header .row-wrapper {
+    border-top: 1px solid #00345B;
+    border-bottom: 1px solid #00345B;
+    transform: rotate(-0.06deg);
 }
 
-webc-modal::part(content) {
-    border: 2px solid rgba(0, 0, 255, 0.3);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
-    border-radius: 0.25rem;
-    background-color: rgb(255, 255, 255);
+main .row-wrapper label:first-child {
+    display: inline-block;
+    max-width: 90%;
+    overflow: hidden;
+    text-align: left;
+    text-overflow: ellipsis;
+    vertical-align: middle;
+    white-space: nowrap;
 }
 
-@media (min-width: 500px) {
-    webc-modal::part(dialog) {
-        max-width: 900px;
-    }
+main .row-wrapper.grid-equal label:first-child {
+    text-align: center;
+    max-width: 100%;
+}
 
-    webc-modal::part(main) {
-        padding: 1rem 3rem;
-    }
+main .row-wrapper:nth-child(odd) {
+    background-color: rgba(0, 135, 152, 0.19);
+}
+
+main .row-wrapper:nth-child(even) {
+    background-color: rgba(0, 52, 91, 0.3);
 }

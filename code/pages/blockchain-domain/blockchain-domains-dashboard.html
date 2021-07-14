@@ -1,0 +1,41 @@
+<webc-container controller="blockchain-domain/BlockchainDomainsController">
+    <link href="/assets/css/pages/main.css" rel="stylesheet">
+
+    <div class="container main-container">
+        <h1 class="center-align">{{$title}}</h1>
+
+        <div class="container" data-if="@hasBlockchainDomains">
+            <h2 class="no-data" slot="false">{{$noData}}</h2>
+
+            <header slot="true">
+                <div class="row-wrapper grid-equal">
+                    <label>{{$header.mainDomain}}</label>
+                    <!--<label>{{$header.type}}</label>-->
+                    <label>{{$header.status}}</label>
+                    <label>{{$header.lastInstallDate}}</label>
+                    <label>{{$header.operations}}</label>
+                    <label>{{$header.options}}</label>
+                </div>
+            </header>
+
+            <main data-for="@blockchainDomains" slot="true">
+                <div class="row-wrapper grid-equal">
+                    <label>{{@mainDomain}}</label>
+                    <!--<label>{{@type}}</label>-->
+                    <label class="blockchain-status" data-status="@dataStatus">{{@shortStatus}}</label>
+                    <label>{{@lastInstallDate}}</label>
+                    <label class="link" data-if="@isOwner" data-tag="manage-blockchain-domain">{{$manage}}</label>
+                    <div class="d-flex justify-content-center align-items-center" data-for="@options">
+                        <label class="link option" data-tag="@tag">{{@name}}</label>
+                    </div>
+                </div>
+            </main>
+        </div>
+
+        <footer class="left-align">
+            <button data-tag="back">{{$back}}</button>
+            <button data-tag="initiate-blockchain-network">{{$initiateNetwork}}</button>
+            <!--            <button data-tag="join-blockchain-network">{{$joinNetwork}}</button>-->
+        </footer>
+    </div>
+</webc-container>

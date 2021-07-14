@@ -1,0 +1,30 @@
+<webc-container controller="organizations/ViewOrganizationController">
+    <link href="/assets/css/pages/main.css" rel="stylesheet">
+
+    <div class="container main-container">
+        <h1>{{$title}}</h1>
+
+        <div class="container">
+            <div class="form-wrapper">
+                <div class="form-row-wrapper">
+                    <label>{{$organizationName}}:</label>
+                    <label class="font-weight-bold">{{@organizationData.name}}</label>
+                </div>
+
+                <div class="form-row-wrapper">
+                    <label>{{$createdAt}}:</label>
+                    <label class="font-weight-bold">{{@organizationData.createdAt}}</label>
+                </div>
+
+                <div class="form-row-wrapper">
+                    <label>{{$numberOfClusters}}:</label>
+                    <label class="font-weight-bold">{{@organizationData.numberOfClusters}}</label>
+                </div>
+            </div>
+        </div>
+
+        <footer class="left-align">
+            <button data-tag="back">{{$back}}</button>
+        </footer>
+    </div>
+</webc-container>

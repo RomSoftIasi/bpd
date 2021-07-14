@@ -1,0 +1,64 @@
+<webc-container controller="voting-session/FixedStructureVotingController">
+    <link href="/assets/css/pages/main.css" rel="stylesheet">
+
+    <div class="container main-container">
+        <h1>New Voting Session - Generic</h1>
+
+        <div class="container form-wrapper">
+            <div class="form-row-wrapper">
+                <label>Question:</label>
+                <textarea class="form-control" data-view-model="@question"></textarea>
+            </div>
+
+            <div class="form-row-wrapper">
+                <label>Possible responses:</label>
+                <div class="inner-wrapper w-25">
+                    <div class="inner-wrapper" data-for="@defaultAnswers" id="default-answers">
+                        <div class="form-check">
+                            <input class="form-check-input" id="@label" type="checkbox" value="@value">
+                            <label class="form-check-label" for="@label">{{@label}}</label>
+                        </div>
+                    </div>
+                    <div class="inner-wrapper" data-for="@answers" id="answers">
+                        <input class="form-control small" data-view-model="@"/>
+                    </div>
+                    <button class="small" data-tag="add-answer">Add Answer</button>
+                </div>
+            </div>
+
+            <div class="form-row-wrapper">
+                <label>Deadline:</label>
+                <input class="form-control w-25" data-view-model="@deadline" type="date">
+            </div>
+
+            <div class="form-row-wrapper">
+                <label>Select voting action:</label>
+                <input class="form-control w-50" data-view-model="@votingAction">
+            </div>
+
+            <div class="form-row-wrapper">
+                <label>Partner DID:</label>
+                <div class="inner-wrapper">
+                    <input class="form-control w-50" data-view-model="@partnerDID">
+                    <div class="file-input-wrapper w-auto">
+                        <label for="upload-documentation">Upload candidate documentation</label>
+                        <input id="upload-documentation" name="documentation" type="file"/>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-row-wrapper">
+                <label>Response type:</label>
+                <div class="form-check">
+                    <input class="form-check-input" id="unique" type="checkbox" value="@uniqueAnswer">
+                    <label class="form-check-label" for="unique">Unique</label>
+                </div>
+            </div>
+        </div>
+
+        <footer class="left-align">
+            <button data-tag="back">Back</button>
+            <button data-tag="finish">Finish and Publish Question</button>
+        </footer>
+    </div>
+</webc-container>

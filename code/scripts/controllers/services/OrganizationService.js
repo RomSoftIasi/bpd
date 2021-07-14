@@ -1,4 +1,4 @@
-export default class OrganizationService {
+export default class GovernanceService {
 
     ORGANIZATION_PATH = "/organizations";
 
@@ -6,108 +6,78 @@ export default class OrganizationService {
         this.DSUStorage = DSUStorage;
     }
 
-    getOrganizationModel(callback) {
-        this.DSUStorage.call('listDSUs', this.ORGANIZATION_PATH, (err, dsuList) => {
+    listOrganizations(callback) {
+        this.DSUStorage.call('listDSUs', this.ORGANIZATION_PATH, (err, organizationsIdentifierList) => {
             if (err) {
-                callback(err, undefined);
-                return;
+                return callback(err);
             }
-            let organisations = [];
-            let getOrgDsu = (dsuItem) => {
-                this.DSUStorage.getItem(this._getDsuStoragePath(dsuItem.identifier), (err, content) => {
-                    if (err) {
-                        organisations.slice(0);
-                        callback(err, undefined);
-                        return;
-                    }
-                    let textDecoder = new TextDecoder("utf-8");
-                    let organization = JSON.parse(textDecoder.decode(content));
-                    organisations.push(organization);
 
-                    if (dsuList.length === 0) {
-                        const model = {
-                            organizations: []
-                        };
-                        model.organizations = organisations;
-                        callback(undefined, model);
-                        return;
+            const organizationsDataList = [];
+            const getOrganizationDSU = (organizationsIdentifierList) => {
+                if (!organizationsIdentifierList.length) {
+                    return callback(undefined, organizationsDataList);
+                }
+
+                const id = organizationsIdentifierList.pop();
+                this.getOrganizationData(id.identifier, (err, organizationData) => {
+                    if (err) {
+                        return callback(err);
                     }
-                    getOrgDsu(dsuList.shift());
-                })
+
+                    organizationsDataList.push(organizationData);
+                    getOrganizationDSU(organizationsIdentifierList);
+                });
             };
 
-            if (dsuList.length === 0) {
-                const model = {
-                    organizations: []
-                };
-                callback(undefined, model);
-                return;
-            }
-            getOrgDsu(dsuList.shift());
-        })
+            getOrganizationDSU(organizationsIdentifierList);
+        });
     }
 
-    getOrganization(uid, callback) {
-        this.DSUStorage.getItem(this._getDsuStoragePath(uid), (err, content) => {
+    getOrganizationData(identifier, callback) {
+        this.DSUStorage.getItem(this.getOrganizationsDataPath(identifier), (err, content) => {
             if (err) {
-                callback(err, undefined);
-                return;
+                return callback(err);
             }
-            let textDecoder = new TextDecoder("utf-8");
-            let organization = JSON.parse(textDecoder.decode(content));
-            callback(undefined, organization);
-        })
+
+            const textDecoder = new TextDecoder("utf-8");
+            const organizationData = JSON.parse(textDecoder.decode(content));
+            callback(undefined, organizationData);
+        });
     }
 
-    saveOrganization(data, callback) {
+    createOrganization(organizationName, callback) {
         this.DSUStorage.call('createSSIAndMount', this.ORGANIZATION_PATH, (err, keySSI) => {
             if (err) {
                 callback(err, undefined);
                 return;
             }
-            data.KeySSI = keySSI;
-            data.uid = keySSI;
-            this.updateOrganization(data, callback);
-        })
-    }
 
-    mountOrganization(keySSI, callback) {
-        this.DSUStorage.call('mount', this.ORGANIZATION_PATH, keySSI, (err) => {
-            if (err) {
-                return callback(err, undefined);
-            }
-
-            this.getOrganization(keySSI, (err, org) => {
-                if (err) {
-                    return callback(err, undefined);
-                }
-                callback(undefined, org);
-            })
-        })
-    }
-
-    updateOrganization(data, callback) {
-        this.DSUStorage.setObject(this._getDsuStoragePath(data.uid), data, (err) => {
-            if (err) {
-                callback(err, undefined);
-                return;
-            }
-            callback(undefined, data);
-        })
-    }
-
-    unmountOrganization(orgUid, callback) {
-        let unmountPath = this.ORGANIZATION_PATH + '/' + orgUid;
-        this.DSUStorage.call('organizationUnmount', unmountPath, (err, result) => {
-            if (err) {
-                callback(err, undefined);
-                return;
-            }
-            callback(undefined, result);
+            const organizationData = {
+                name: organizationName,
+                keySSI: keySSI,
+                uid: keySSI,
+                isOwner: true,
+                type: "Owner",
+                createdAt: Date.now()
+            };
+            this.updateOrganizationData(organizationData, callback);
         });
     }
 
-    _getDsuStoragePath(keySSI) {
-        return this.ORGANIZATION_PATH + '/' + keySSI + '/data.json';
+    updateOrganizationData(organizationData, callback) {
+        this.DSUStorage.setObject(this.getOrganizationsDataPath(organizationData.uid), organizationData, (err) => {
+            callback(err, organizationData);
+        });
+    }
+
+    getOrganizationsDataPath(identifier) {
+        return `${this.ORGANIZATION_PATH}/${identifier}/data.json`;
+    }
+
+    unmountOrganization(organizationUid, callback) {
+        let unmountPath = this.ORGANIZATION_PATH + '/' + organizationUid;
+        this.DSUStorage.call('organizationUnmount', unmountPath, (err, result) => {
+            callback(err, result);
+        });
     }
 }

@@ -1,0 +1,38 @@
+<webc-container controller="VotingDashboardController">
+    <link href="/assets/css/pages/main.css" rel="stylesheet">
+
+    <div class="container main-container">
+        <h1 class="center-align">Voting dashboard</h1>
+
+        <div class="container" data-if="@hasVotingSessions">
+            <h2 class="no-data" slot="false">No Voting sessions defined</h2>
+
+            <header slot="true">
+                <div class="row-wrapper">
+                    <label>Vote</label>
+                    <label>Type</label>
+                    <label>Due date</label>
+                    <label>Status</label>
+                    <label>Overall Status</label>
+                    <label>Options</label>
+                </div>
+            </header>
+
+            <main data-for="@votingSessions" slot="true">
+                <div class="row-wrapper">
+                    <label title="@title">{{@title}}</label>
+                    <label>{{@type}}</label>
+                    <label>{{@date}}</label>
+                    <label data-status="@voted" data-tag="vote-now">{{@status}}</label>
+                    <label data-status="@concluded">{{@overallStatus}}</label>
+                    <label class="link" data-tag="options">{{@options}}</label>
+                </div>
+            </main>
+        </div>
+
+        <footer class="left-align">
+            <button data-tag="back">Back</button>
+            <button data-tag="new-voting-session">New Voting Session</button>
+        </footer>
+    </div>
+</webc-container>

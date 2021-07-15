@@ -126,7 +126,7 @@ export default class ManageBlockchainDomainController extends WebcController {
         blockchainDomainData.isInstallFailed = false;
         blockchainDomainData.isUninstalling = true;
 
-        this.BlockchainDomainService.updateBlockchainDomainData(this.model.organizationUid, blockchainDomainData, (err, result) => {
+        this.BlockchainDomainService.updateDomain(this.model.organizationUid, blockchainDomainData, (err, result) => {
             if (err) {
                 Loader.hideLoader();
                 return console.error(err);
@@ -156,7 +156,7 @@ export default class ManageBlockchainDomainController extends WebcController {
         blockchainDomainData.isUninstalling = false;
 
         Loader.displayLoader();
-        this.BlockchainDomainService.updateBlockchainDomainData(this.model.organizationUid, blockchainDomainData, (err, result) => {
+        this.BlockchainDomainService.updateDomain(this.model.organizationUid, blockchainDomainData, (err, result) => {
             if (err) {
                 Loader.hideLoader();
                 return console.error(err);
@@ -220,7 +220,7 @@ export default class ManageBlockchainDomainController extends WebcController {
         blockchainDomainData.isUninstalling = false;
 
         Loader.displayLoader();
-        this.BlockchainDomainService.updateBlockchainDomainData(this.model.organizationUid, blockchainDomainData, (err, result) => {
+        this.BlockchainDomainService.updateDomain(this.model.organizationUid, blockchainDomainData, (err, result) => {
             if (err) {
                 Loader.hideLoader();
                 return console.error(err);
@@ -250,7 +250,7 @@ export default class ManageBlockchainDomainController extends WebcController {
         blockchainDomainData.isUninstalling = false;
 
         Loader.displayLoader();
-        this.BlockchainDomainService.updateBlockchainDomainData(this.model.organizationUid, blockchainDomainData, (err, result) => {
+        this.BlockchainDomainService.updateDomain(this.model.organizationUid, blockchainDomainData, (err, result) => {
             if (err) {
                 Loader.hideLoader();
                 return console.error(err);

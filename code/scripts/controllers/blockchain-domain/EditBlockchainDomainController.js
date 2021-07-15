@@ -59,7 +59,7 @@ export default class EditBlockchainDomainController extends WebcController {
 
         Loader.displayLoader();
         const blockchainDomainData = this.model.toObject("blockchainDomainModel");
-        this.BlockchainDomainService.updateBlockchainDomainData(this.model.organizationUid, blockchainDomainData, (err, result) => {
+        this.BlockchainDomainService.updateDomain(this.model.organizationUid, blockchainDomainData, (err, result) => {
             Loader.hideLoader();
             if (err) {
                 return console.error(err);

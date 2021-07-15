@@ -79,7 +79,6 @@ export default class EditOrganizationController extends WebcController {
             }
 
             if (domainsList.length) {
-                // TODO: Display a modal with the error message as content
                 const errorMessage = this.translate("removeOrganizationError");
                 const modalConfiguration = {
                     model: {errorMessage: errorMessage},

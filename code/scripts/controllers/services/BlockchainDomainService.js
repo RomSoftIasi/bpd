@@ -28,11 +28,11 @@ export default class BlockchainDomainService {
             blockchainDomainData.isUninstalling = false;
             blockchainDomainData.deploymentLogs = "";
             blockchainDomainData.dataStatus = this.getBlockchainDomainInstallStatus(blockchainDomainData);
-            this.updateBlockchainDomainData(organizationUid, blockchainDomainData, callback);
+            this.updateDomain(organizationUid, blockchainDomainData, callback);
         });
     }
 
-    updateBlockchainDomainData(organizationUid, blockchainDomainData, callback) {
+    updateDomain(organizationUid, blockchainDomainData, callback) {
         blockchainDomainData.dataStatus = this.getBlockchainDomainInstallStatus(blockchainDomainData);
         const blockchainDomainDataPath = this.getBlockchainDomainDataPath(organizationUid, blockchainDomainData.uid);
         this.DSUStorage.setObject(blockchainDomainDataPath, blockchainDomainData, (err) => {
@@ -73,7 +73,7 @@ export default class BlockchainDomainService {
         this.DSUStorage.getObject(blockchainDomainDataPath, callback);
     }
 
-    waitForClusterRemoveToFinish(blockchainNetworkName, callback) {
+    waitForClusterRemoval(blockchainNetworkName, callback) {
         this.ClusterControllerApi.loopUntilClusterIsInstalled(blockchainNetworkName, callback);
     }
 
@@ -232,7 +232,7 @@ export default class BlockchainDomainService {
                 blockchainDomainData.isInstalled = false;
                 blockchainDomainData.isInstallFailed = true;
             }
-            this.updateBlockchainDomainData(organizationUid, blockchainDomainData, (err, result) => {
+            this.updateDomain(organizationUid, blockchainDomainData, (err, result) => {
                 if (err) {
                     return callback(err);
                 }

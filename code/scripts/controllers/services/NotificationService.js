@@ -6,19 +6,19 @@ class NotificationService {
         this.DSUStorage = DSUStorage;
         this.BlockchainDomainService = new BlockchainDomainService(DSUStorage);
 
-        this.installNotificationCallback = null;
-        this.uninstallNotificationCallback = null;
+        this.installCallback = null;
+        this.uninstallCallback = null;
     }
 
     checkForInstallPipelineStatus(organizationUid, blockchainDomainData, callback) {
-        if (this.installNotificationCallback) {
+        if (this.installCallback) {
             // If a callback is already assigned, do not register again the pipeline status listener, only update the notification callback
-            this.installNotificationCallback = callback;
+            this.installCallback = callback;
             return;
         }
 
         // Set the callback that will provide the updated model when the pipeline finishes the execution
-        this.installNotificationCallback = callback;
+        this.installCallback = callback;
         this.BlockchainDomainService.waitForClusterInstallationToFinish(blockchainDomainData.subdomain, (err, result) => {
             blockchainDomainData.isInstalling = false;
             blockchainDomainData.isReadyToInstall = false;
@@ -50,23 +50,23 @@ class NotificationService {
 
             this.BlockchainDomainService.updateDeploymentLogs(organizationUid, blockchainDomainData, jenkinsData, (err, result) => {
                 console.log(err, result);
-                this.installNotificationCallback(err, blockchainDomainData);
+                this.installCallback(err, blockchainDomainData);
                 // Reset the notification callback when the process is completed
-                this.installNotificationCallback = null;
+                this.installCallback = null;
             });
         });
     }
 
     checkForUninstallPipelineStatus(organizationUid, blockchainDomainData, callback) {
-        if (this.uninstallNotificationCallback) {
+        if (this.uninstallCallback) {
             // If a callback is already assigned, do not register again the pipeline status listener, only update the notification callback
-            this.uninstallNotificationCallback = callback;
+            this.uninstallCallback = callback;
             return;
         }
 
         // Set the callback that will provide the updated model when the pipeline finishes the execution
-        this.uninstallNotificationCallback = callback;
-        this.BlockchainDomainService.waitForClusterRemoveToFinish(blockchainDomainData.subdomain, (err, result) => {
+        this.uninstallCallback = callback;
+        this.BlockchainDomainService.waitForClusterRemoval(blockchainDomainData.subdomain, (err, result) => {
             if (err) {
                 return console.error(err);
             }
@@ -78,7 +78,7 @@ class NotificationService {
             blockchainDomainData.isInstallFailed = false;
             blockchainDomainData.isUninstalling = false;
             blockchainDomainData.deploymentLogs = "";
-            this.BlockchainDomainService.updateBlockchainDomainData(organizationUid, blockchainDomainData, (err, result) => {
+            this.BlockchainDomainService.updateDomain(organizationUid, blockchainDomainData, (err, result) => {
                 if (err) {
                     return console.error(err);
                 }
@@ -86,9 +86,9 @@ class NotificationService {
                 console.log(result);
                 this.BlockchainDomainService.removeClusterStatus(blockchainDomainData.subdomain, (err, result) => {
                     console.log(err, result);
-                    this.uninstallNotificationCallback(err, blockchainDomainData);
+                    this.uninstallCallback(err, blockchainDomainData);
                     // Reset the notification callback when the process is completed
-                    this.uninstallNotificationCallback = null;
+                    this.uninstallCallback = null;
                 });
             });
         });

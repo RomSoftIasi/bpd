@@ -2,12 +2,13 @@ const {WebcController} = WebCardinal.controllers;
 import OrganizationService from "../services/OrganizationService.js";
 import * as Loader from "../WebcSpinnerController.js";
 import {validateFormRequiredFields} from "../../utils/utils.js";
+import {getOrganizationFormViewModel} from "../../view-models/defineOrganization.js";
 
 export default class DefineOrganizationController extends WebcController {
     constructor(...props) {
         super(...props);
 
-        this.model = this.getFormViewModel();
+        this.model = getOrganizationFormViewModel.call(this);
         this.OrganizationService = new OrganizationService(this.DSUStorage);
 
         this.initNavigationListeners();
@@ -54,15 +55,5 @@ export default class DefineOrganizationController extends WebcController {
         if (blockchainDomainFiles && blockchainDomainFiles.files.length) {
             console.log(blockchainDomainFiles.files);
         }
-    }
-
-    getFormViewModel() {
-        return {
-            newOrganization: {
-                placeholder: this.translate("organizationNamePlaceholder"),
-                value: "",
-                name: this.translate("organizationName")
-            }
-        };
     }
 }

@@ -3,13 +3,14 @@ import OrganizationService from "../services/OrganizationService.js";
 import BlockchainDomainService from "../services/BlockchainDomainService.js";
 import * as Loader from "../WebcSpinnerController.js";
 import {validateFormRequiredFields} from "../../utils/utils.js";
+import {getOrganizationFormViewModel} from "../../view-models/defineOrganization.js";
 
-export default class EditOrganizationController extends WebcController {
+export default class DefineOrganizationController extends WebcController {
     constructor(...props) {
         super(...props);
 
         const {organizationUid} = this.getState();
-        this.model = this.getFormViewModel();
+        this.model = getOrganizationFormViewModel.call(this);
         this.model.organizationUid = organizationUid;
         this.OrganizationService = new OrganizationService(this.DSUStorage);
         this.BlockchainDomainService = new BlockchainDomainService(this.DSUStorage);
@@ -120,15 +121,5 @@ export default class EditOrganizationController extends WebcController {
             console.log(result);
             this.navigateToPageTag("organization-dashboard");
         });
-    }
-
-    getFormViewModel() {
-        return {
-            newOrganization: {
-                placeholder: this.translate("organizationNamePlaceholder"),
-                value: "",
-                name: this.translate("organizationName")
-            }
-        };
     }
 }

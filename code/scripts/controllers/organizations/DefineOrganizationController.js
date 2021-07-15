@@ -2,7 +2,7 @@ const {WebcController} = WebCardinal.controllers;
 import OrganizationService from "../services/OrganizationService.js";
 import * as Loader from "../WebcSpinnerController.js";
 import {validateFormRequiredFields} from "../../utils/utils.js";
-import {getOrganizationFormViewModel} from "../../view-models/defineOrganization.js";
+import {getOrganizationFormViewModel} from "../../view-models/organization.js";
 
 export default class DefineOrganizationController extends WebcController {
     constructor(...props) {

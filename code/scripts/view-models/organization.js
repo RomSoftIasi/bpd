@@ -1,9 +1,9 @@
 function getOrganizationFormViewModel() {
     return {
         newOrganization: {
-            placeholder: this.translate("organizationNamePlaceholder"),
+            placeholder: this.translate("form.organizationName.placeholder"),
+            name: this.translate("form.organizationName.label"),
             value: "",
-            name: this.translate("organizationName"),
             required: true
         }
     };

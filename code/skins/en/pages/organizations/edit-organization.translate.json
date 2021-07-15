@@ -1,7 +1,5 @@
 {
   "title": "Edit Organization",
-  "organizationName": "Organization name",
-  "organizationNamePlaceholder": "Organization name (e.g. Novartis)",
   "back": "Back",
   "updateOrganization": "Update Organization",
   "removeOrganization": "REMOVE Organization",
@@ -13,5 +11,11 @@
     "errorTitle": "Error",
     "confirmTitle": "Remove Organization",
     "confirmMessage": "Are you sure you want to REMOVE the selected organization? This operation cannot be undone!"
+  },
+  "form": {
+    "organizationName": {
+      "label": "Organization name",
+      "placeholder": "Organization name (e.g. Novartis)"
+    }
   }
 }

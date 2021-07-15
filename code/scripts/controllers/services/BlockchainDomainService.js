@@ -132,7 +132,7 @@ export default class BlockchainDomainService {
     }
 
     initiateInstallCluster(clusterDetails, callback) {
-        const usecaseRepository = clusterDetails.githubRepositoryURL || "";
+        const usecaseRepository = clusterDetails.githubUsecaseRepository || "";
 
         let installClusterInfo = {
             blockchainNetwork: clusterDetails.subdomain,
@@ -249,7 +249,7 @@ export default class BlockchainDomainService {
     }
 
     initiateUpgradeCluster(clusterDetails, callback) {
-        const usecaseRepository = clusterDetails.githubRepositoryURL || "";
+        const usecaseRepository = clusterDetails.githubUsecaseRepository || "";
 
         let installClusterInfo = {
             blockchainNetwork: clusterDetails.subdomain,
@@ -274,7 +274,7 @@ export default class BlockchainDomainService {
     }
 
     initiateRetryInstallCluster(clusterDetails, callback) {
-        const usecaseRepository = clusterDetails.githubRepositoryURL || "";
+        const usecaseRepository = clusterDetails.githubUsecaseRepository || "";
 
         let installClusterInfo = {
             blockchainNetwork: clusterDetails.subdomain,

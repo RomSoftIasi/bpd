@@ -1,14 +1,6 @@
 {
   "title": "Edit Blockchain Domain",
   "status": "Blockchain network cluster status",
-  "mainDomain": "Main domain",
-  "subdomain": "Subdomain",
-  "vaultDomain": "Vault domain",
-  "jenkins": "Jenkins",
-  "jenkinsUserName": "Jenkins user name",
-  "jenkinsToken": "Jenkins Token",
-  "githubUsecaseRepository": "Github usecase repository",
-  "deploymentConfiguration": "Deployment configuration",
   "back": "Back",
   "updateNetwork": "Update Network",
   "mandatoryField": "[FIELD_NAME] is mandatory!",
@@ -32,6 +24,40 @@
     "uninstalling": {
       "status": "UNINSTALLING Blockchain Domain is in progress...",
       "shortStatus": "Uninstalling in progress"
+    }
+  },
+  "form": {
+    "mainDomain": {
+      "label": "Main domain",
+      "placeholder": "Enter main domain (e.g. epiqa)"
+    },
+    "subdomain": {
+      "label": "Subdomain",
+      "placeholder": "Enter subdomain (e.g. nvs.epiqa)"
+    },
+    "vaultDomain": {
+      "label": "Vault domain",
+      "placeholder": "Enter vault domain (e.g. nvs)"
+    },
+    "jenkins": {
+      "label": "Jenkins",
+      "placeholder": "https://jenkins/CI/Server/URL"
+    },
+    "jenkinsUserName": {
+      "label": "Jenkins user name",
+      "placeholder": "Jenkins user name"
+    },
+    "jenkinsToken": {
+      "label": "Jenkins Token",
+      "placeholder": "Jenkins Authorization Token"
+    },
+    "githubUsecaseRepository": {
+      "label": "Github usecase repository",
+      "placeholder": "Github usecase repository URL (e.g. https://github.com/PharmaLedger-IMI/epi-workspace)"
+    },
+    "deploymentConfiguration": {
+      "label": "Deployment configuration",
+      "placeholder": "`{\n\t// additional configuration in JSON format\n\t\"registry\": \"docker.io\"\n}`"
     }
   }
 }

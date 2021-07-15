@@ -7,56 +7,48 @@
         <div class="container form-wrapper" id="needs-validation">
             <div class="form-row-wrapper">
                 <label>{{$status}}:</label>
-                <label data-status="@blockchainDomainModel.dataStatus">{{@blockchainDomainModel.status}}</label>
+                <label data-status="@dataStatus">{{@status}}</label>
             </div>
 
             <div class="form-row-wrapper">
-                <label>{{$mainDomain}}:</label>
-                <input class="form-control" name="Main domain" placeholder="Enter main domain (e.g. epiqa)"
-                       readonly="@blockchainDomainModel.isInstalling" required value="@blockchainDomainModel.mainDomain"/>
+                <label>{{$form.mainDomain.label}}:</label>
+                <input class="form-control" data-view-model="@blockchainDomainModel.mainDomain"/>
             </div>
 
             <div class="form-row-wrapper">
-                <label>{{$subdomain}}:</label>
-                <input class="form-control" name="Subdomain" placeholder="Enter subdomain (e.g. nvs.epiqa)"
-                       readonly="@blockchainDomainModel.isInstalling" required value="@blockchainDomainModel.subdomain"/>
+                <label>{{$form.subdomain.label}}:</label>
+                <input class="form-control" data-view-model="@blockchainDomainModel.subdomain"/>
             </div>
 
             <div class="form-row-wrapper">
-                <label>{{$vaultDomain}}:</label>
-                <input class="form-control" name="Vault domain" placeholder="Enter vault domain (e.g. nvs)"
-                       readonly="@blockchainDomainModel.isInstalling" required value="@blockchainDomainModel.vaultDomain"/>
+                <label>{{$form.vaultDomain.label}}:</label>
+                <input class="form-control" data-view-model="@blockchainDomainModel.vaultDomain"/>
             </div>
 
             <div class="form-row-wrapper">
-                <label>{{$jenkins}}:</label>
-                <input class="form-control" name="Jenkins URL" placeholder="https://jenkins/CI/Server/URL"
-                       readonly="@blockchainDomainModel.isInstalling" required value="@blockchainDomainModel.jenkins"/>
+                <label>{{$form.jenkins.label}}:</label>
+                <input class="form-control" data-view-model="@blockchainDomainModel.jenkins"/>
             </div>
 
             <div class="form-row-wrapper">
-                <label>{{$jenkinsUserName}}:</label>
-                <input class="form-control" name="Jenkins user name" placeholder="Jenkins user name"
-                       readonly="@blockchainDomainModel.isInstalling" required value="@blockchainDomainModel.jenkinsUserName"/>
+                <label>{{$form.jenkinsUserName.label}}:</label>
+                <input class="form-control" data-view-model="@blockchainDomainModel.jenkinsUserName"/>
             </div>
 
             <div class="form-row-wrapper">
-                <label>{{$jenkinsToken}}:</label>
-                <input class="form-control" name="Jenkins Token" placeholder="Jenkins Authorization Token"
-                       readonly="@blockchainDomainModel.isInstalling" required value="@blockchainDomainModel.jenkinsToken"/>
+                <label>{{$form.jenkinsToken.label}}:</label>
+                <input class="form-control" data-view-model="@blockchainDomainModel.jenkinsToken"/>
             </div>
 
             <div class="form-row-wrapper">
-                <label>{{$githubUsecaseRepository}}:</label>
-                <input class="form-control" name="Github usecase repository"
-                       placeholder="Github usecase repository URL (e.g. https://github.com/PharmaLedger-IMI/epi-workspace)"
-                       readonly="@blockchainDomainModel.isInstalling" required value="@blockchainDomainModel.githubRepositoryURL"/>
+                <label>{{$form.githubUsecaseRepository.label}}:</label>
+                <input class="form-control" data-view-model="@blockchainDomainModel.githubUsecaseRepository"/>
             </div>
 
             <div class="form-row-wrapper">
-                <label>{{$deploymentConfiguration}}:</label>
-                <textarea class="form-control" placeholder="@deploymentConfigurationPlaceholder"
-                          readonly="@blockchainDomainModel.isInstalling" value="@blockchainDomainModel.deploymentConfiguration"></textarea>
+                <label>{{$form.deploymentConfiguration.label}}:</label>
+                <textarea class="form-control"
+                          data-view-model="@blockchainDomainModel.deploymentConfiguration"></textarea>
             </div>
         </div>
 

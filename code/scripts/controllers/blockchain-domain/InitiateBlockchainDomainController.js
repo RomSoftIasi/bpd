@@ -2,6 +2,7 @@ const {WebcController} = WebCardinal.controllers;
 import BlockchainDomainService from "../services/BlockchainDomainService.js";
 import * as Loader from "../WebcSpinnerController.js";
 import {validateFormRequiredFields} from "../../utils/utils.js";
+import {getBlockchainDomainFormViewModel} from "../../view-models/blockchainDomain.js";
 
 export default class InitiateBlockchainDomainController extends WebcController {
     constructor(...props) {
@@ -10,7 +11,7 @@ export default class InitiateBlockchainDomainController extends WebcController {
         const organizationUid = this.getState().organizationUid;
         this.model = {
             organizationUid: organizationUid,
-            ...this.getFormViewModel()
+            blockchainDomainModel: {...getBlockchainDomainFormViewModel.call(this)}
         };
         this.BlockchainDomainService = new BlockchainDomainService(this.DSUStorage);
 
@@ -31,11 +32,11 @@ export default class InitiateBlockchainDomainController extends WebcController {
     }
 
     saveNetwork() {
-        if (!validateFormRequiredFields.call(this)) {
+        if (!this.isValidForm()) {
             return;
         }
 
-        const blockchainDomainData = this.model.toObject("blockchainDomainModel");
+        const blockchainDomainData = this.getDomainData();
         Loader.displayLoader();
         this.BlockchainDomainService.createBlockchainDomain(this.model.organizationUid, blockchainDomainData, (err, result) => {
             Loader.hideLoader();
@@ -50,23 +51,18 @@ export default class InitiateBlockchainDomainController extends WebcController {
         });
     }
 
-    getFormViewModel() {
-        return {
-            blockchainDomainModel: {
-                mainDomain: "",
-                subdomain: "",
-                vaultDomain: "",
-                jenkins: "",
-                jenkinsUserName: "",
-                jenkinsToken: "",
-                githubRepositoryURL: "",
-                githubRepositoryAccessToken: "",
-                deploymentConfiguration: ""
-            },
-            deploymentConfigurationPlaceholder: `{
-                    // additional configuration in JSON format
-                    "registry": "docker.io"
-                }`
-        };
+    getDomainData() {
+        const domainData = {};
+        const domainModel = this.model.toObject("blockchainDomainModel");
+        Object.keys(domainModel).forEach(key => {
+            domainData[key] = domainModel[key].value;
+        });
+
+        return domainData;
+    }
+
+    isValidForm() {
+        // TODO: Update with other types of validations
+        return validateFormRequiredFields.call(this);
     }
 }

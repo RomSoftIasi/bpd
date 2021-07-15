@@ -2,7 +2,7 @@ const {WebcController} = WebCardinal.controllers;
 import BlockchainDomainService from "../services/BlockchainDomainService.js";
 import * as Loader from "../WebcSpinnerController.js";
 import {validateFormRequiredFields} from "../../utils/utils.js";
-import {getBlockchainDomainFormViewModel} from "../../view-models/blockchainDomain.js";
+import {getBlockchainDomainFormViewModel, getReadOnlyFields} from "../../view-models/blockchainDomain.js";
 
 export default class EditBlockchainDomainController extends WebcController {
     constructor(...props) {
@@ -71,9 +71,11 @@ export default class EditBlockchainDomainController extends WebcController {
     }
 
     setDomainData(domainData) {
+        const readOnlyFields = getReadOnlyFields(domainData.dataStatus);
         const domainModel = this.model.toObject("blockchainDomainModel");
         Object.keys(domainModel).forEach(key => {
             this.model.blockchainDomainModel[key].value = domainData[key];
+            this.model.blockchainDomainModel[key].readonly = readOnlyFields.findIndex(field => field === key) !== -1;
         });
     }
 

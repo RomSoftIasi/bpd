@@ -50,6 +50,33 @@ function getBlockchainDomainFormViewModel() {
     }
 }
 
+function getReadOnlyFields(condition) {
+    if (condition === "installed") {
+        return [
+            "mainDomain",
+            "vaultDomain",
+            "subdomain",
+            "jenkins"
+        ];
+    }
+
+    if (condition === "installing") {
+        return [
+            "mainDomain",
+            "vaultDomain",
+            "subdomain",
+            "jenkins",
+            "jenkinsUserName",
+            "jenkinsToken",
+            "githubUsecaseRepository",
+            "deploymentConfiguration"
+        ];
+    }
+
+    return [];
+}
+
 export {
-    getBlockchainDomainFormViewModel
+    getBlockchainDomainFormViewModel,
+    getReadOnlyFields
 };

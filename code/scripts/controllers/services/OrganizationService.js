@@ -34,15 +34,7 @@ export default class GovernanceService {
     }
 
     getOrganizationData(identifier, callback) {
-        this.DSUStorage.getItem(this.getOrganizationsDataPath(identifier), (err, content) => {
-            if (err) {
-                return callback(err);
-            }
-
-            const textDecoder = new TextDecoder("utf-8");
-            const organizationData = JSON.parse(textDecoder.decode(content));
-            callback(undefined, organizationData);
-        });
+        this.DSUStorage.getObject(this.getOrganizationsDataPath(identifier), callback);
     }
 
     createOrganization(organizationName, callback) {

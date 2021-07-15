@@ -37,15 +37,7 @@ export default class GovernanceService {
     }
 
     getNewsData(identifier, callback) {
-        this.DSUStorage.getItem(this.getNewsDataPath(identifier), (err, content) => {
-            if (err) {
-                return callback(err);
-            }
-
-            const textDecoder = new TextDecoder("utf-8");
-            const newsData = JSON.parse(textDecoder.decode(content));
-            callback(undefined, newsData);
-        });
+        this.DSUStorage.getObject(this.getNewsDataPath(identifier), callback);
     }
 
     listVoteSessions(callback) {
@@ -76,15 +68,7 @@ export default class GovernanceService {
     }
 
     getVoteData(identifier, callback) {
-        this.DSUStorage.getItem(this.getVotingDataPath(identifier), (err, content) => {
-            if (err) {
-                return callback(err);
-            }
-
-            const textDecoder = new TextDecoder("utf-8");
-            const newsData = JSON.parse(textDecoder.decode(content));
-            callback(undefined, newsData);
-        });
+        this.DSUStorage.getObject(this.getVotingDataPath(identifier), callback);
     }
 
     registerVotingSession(voteData, callback) {

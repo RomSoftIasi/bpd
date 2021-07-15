@@ -70,15 +70,7 @@ export default class BlockchainDomainService {
 
     getBlockchainDomainData(organizationUid, blockchainDomainUid, callback) {
         const blockchainDomainDataPath = this.getBlockchainDomainDataPath(organizationUid, blockchainDomainUid);
-        this.DSUStorage.getItem(blockchainDomainDataPath, (err, content) => {
-            if (err) {
-                return callback(err);
-            }
-
-            const textDecoder = new TextDecoder("utf-8");
-            const blockchainDomainData = JSON.parse(textDecoder.decode(content));
-            callback(undefined, blockchainDomainData);
-        });
+        this.DSUStorage.getObject(blockchainDomainDataPath, callback);
     }
 
     waitForClusterRemoveToFinish(blockchainNetworkName, callback) {

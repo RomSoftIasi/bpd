@@ -3,7 +3,8 @@ function getOrganizationFormViewModel() {
         newOrganization: {
             placeholder: this.translate("organizationNamePlaceholder"),
             value: "",
-            name: this.translate("organizationName")
+            name: this.translate("organizationName"),
+            required: true
         }
     };
 }

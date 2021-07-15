@@ -60,7 +60,7 @@ function getReadOnlyFields(condition) {
         ];
     }
 
-    if (condition === "installing") {
+    if (condition === "installing" || condition === "uninstalling") {
         return [
             "mainDomain",
             "vaultDomain",

@@ -25,6 +25,13 @@ export default class EditBlockchainDomainController extends WebcController {
             event.preventDefault();
             event.stopImmediatePropagation();
 
+            if (this.model.previousBlockchainDomainData.isInstalling) {
+                // Block updating domain data when installation is in progress to avoid overwriting deployment logs
+                return this.navigateToPageTag("blockchain-domains-dashboard", {
+                    organizationUid: this.model.organizationUid
+                });
+            }
+
             this.updateNetwork();
         });
     }

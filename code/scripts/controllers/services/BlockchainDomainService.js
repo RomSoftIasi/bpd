@@ -159,9 +159,9 @@ export default class BlockchainDomainService {
     parseDeploymentLogs(deploymentLogs, jenkinsData, callback) {
         if (deploymentLogs && typeof deploymentLogs === "string") {
             deploymentLogs = JSON.parse(deploymentLogs);
-            if (deploymentLogs.errType === "internalError") {
-                return this.buildInternalErrorLogs(deploymentLogs, jenkinsData, callback);
-            }
+        }
+        if (deploymentLogs.errType === "internalError") {
+            return this.buildInternalErrorLogs(deploymentLogs, jenkinsData, callback);
         }
 
         let log = "";

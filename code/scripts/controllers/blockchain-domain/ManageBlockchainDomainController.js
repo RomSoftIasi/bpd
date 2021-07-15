@@ -166,7 +166,13 @@ export default class ManageBlockchainDomainController extends WebcController {
             this.BlockchainDomainService.initiateInstallCluster(blockchainDomainData, (err, result) => {
                 Loader.hideLoader();
                 if (err) {
-                    return console.error(err);
+                    console.log(err);
+                    blockchainDomainData.isInstalling = false;
+                    blockchainDomainData.isInstalled = true;
+                    blockchainDomainData.deploymentLogs = JSON.stringify(err);
+                    this.BlockchainDomainService.updateDeploymentLogs(this.model.organizationUid, blockchainDomainData, null, (err, result) => {
+                        console.log(err, result);
+                    });
                 }
 
                 console.log(result);
@@ -230,7 +236,13 @@ export default class ManageBlockchainDomainController extends WebcController {
             this.BlockchainDomainService.initiateUpgradeCluster(blockchainDomainData, (err, result) => {
                 Loader.hideLoader();
                 if (err) {
-                    return console.error(err);
+                    console.log(err);
+                    blockchainDomainData.isInstalling = false;
+                    blockchainDomainData.isInstalled = true;
+                    blockchainDomainData.deploymentLogs = JSON.stringify(err);
+                    this.BlockchainDomainService.updateDeploymentLogs(this.model.organizationUid, blockchainDomainData, null, (err, result) => {
+                        console.log(err, result);
+                    });
                 }
 
                 console.log(result);
@@ -260,7 +272,13 @@ export default class ManageBlockchainDomainController extends WebcController {
             this.BlockchainDomainService.initiateRetryInstallCluster(blockchainDomainData, (err, result) => {
                 Loader.hideLoader();
                 if (err) {
-                    return console.error(err);
+                    console.log(err);
+                    blockchainDomainData.isInstalling = false;
+                    blockchainDomainData.isInstalled = true;
+                    blockchainDomainData.deploymentLogs = JSON.stringify(err);
+                    this.BlockchainDomainService.updateDeploymentLogs(this.model.organizationUid, blockchainDomainData, null, (err, result) => {
+                        console.log(err, result);
+                    });
                 }
 
                 console.log(result);

@@ -53,22 +53,66 @@ export default class DefineOrganizationController extends WebcController {
     }
 
     updateOrganization() {
-        if (!validateFormRequiredFields.call(this)) {
+        if (!this.isValidForm()) {
             return;
         }
 
-        const organizationData = this.model.toObject("organizationData");
-        organizationData.name = this.model.newOrganization.value;
         Loader.displayLoader();
-        this.OrganizationService.updateOrganizationData(organizationData, (err, result) => {
-            Loader.hideLoader();
+        const organizationName = this.model.newOrganization.value;
+        this.OrganizationService.isExistingOrganization(organizationName, this.model.organizationUid,(err, organizationExists) => {
             if (err) {
+                Loader.hideLoader();
                 return console.error(err);
             }
 
-            console.log(result);
-            this.navigateToPageTag("organization-dashboard");
+            if (organizationExists) {
+                Loader.hideLoader();
+                return this.displayErrorModal();
+            }
+
+            const organizationData = this.model.toObject("organizationData");
+            organizationData.name = organizationName;
+            Loader.displayLoader();
+            this.OrganizationService.updateOrganizationData(organizationData, (err, result) => {
+                Loader.hideLoader();
+                if (err) {
+                    return console.error(err);
+                }
+
+                console.log(result);
+                this.navigateToPageTag("organization-dashboard");
+            });
         });
+    }
+
+    displayErrorModal() {
+        const errorMessage = this.translate("validation.organizationName.organizationExists");
+        const modalConfiguration = {
+            model: {errorMessage: errorMessage},
+            controller: 'ErrorModalController',
+            disableBackdropClosing: false,
+            disableCancelButton: true,
+            confirmButtonText: this.translate("modal.confirmButtonText")
+        };
+        this.showModalFromTemplate('error-modal', () => {
+        }, () => {
+        }, modalConfiguration);
+    }
+
+    isValidForm() {
+        return validateFormRequiredFields.call(this) && this.validateFormFields();
+    }
+
+    validateFormFields() {
+        const organizationModel = this.model.toObject("newOrganization");
+        const isValid = /^([a-z]|[A-Z]|[0-9]|\s|\.|-){1,30}$/sg.test(organizationModel.value);
+        if (!isValid) {
+            const inputField = this.querySelector(`#${organizationModel.id}`);
+            inputField.setCustomValidity(this.translate("validation.organizationName.validationMessage"));
+            inputField.reportValidity();
+        }
+
+        return isValid;
     }
 
     removeOrganizationHandler() {
@@ -88,7 +132,9 @@ export default class DefineOrganizationController extends WebcController {
                     disableCancelButton: true,
                     confirmButtonText: this.translate("modal.confirmButtonText")
                 };
-                this.showModalFromTemplate('error-modal', () => { }, () => { }, modalConfiguration);
+                this.showModalFromTemplate('error-modal', () => {
+                }, () => {
+                }, modalConfiguration);
                 return;
             }
 

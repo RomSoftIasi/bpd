@@ -15,7 +15,14 @@
   "form": {
     "organizationName": {
       "label": "Organization name",
-      "placeholder": "Organization name (e.g. Novartis)"
+      "placeholder": "Organization name (e.g. Novartis)",
+      "description": "Maximum of 30 alphanumeric characters, including spaces, dots and dashes"
+    }
+  },
+  "validation": {
+    "organizationName": {
+      "organizationExists": "An organization with the same name already exists!",
+      "validationMessage": "Organization name should have a maximum of 30 alphanumeric characters, including spaces, dots and dashes"
     }
   }
 }

@@ -8,7 +8,10 @@
             <div class="form-wrapper" id="needs-validation">
                 <div class="form-row-wrapper">
                     <label>{{$form.organizationName.label}}:</label>
-                    <input class="form-control w-50" data-view-model="@newOrganization"/>
+                    <div>
+                        <input class="form-control w-50" data-view-model="@newOrganization"/>
+                        <small class="form-text text-muted">{{$form.organizationName.description}}</small>
+                    </div>
                 </div>
             </div>
         </div>

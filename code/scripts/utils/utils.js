@@ -54,22 +54,16 @@ function validateFormRequiredFields() {
         return isFormValid;
     }
 
-    let firstFieldFound = null;
-    requiredFields.forEach((field) => {
+    for (let index = 0; index < requiredFields.length; ++index) {
+        const field = requiredFields[index];
         if (field.value.trim().length === 0) {
-            const mandatoryField = this.translate("mandatoryField")
+            const mandatoryFieldMessage = this.translate("mandatoryField")
                 .replace("[FIELD_NAME]", field.getAttribute("name"));
-            field.setCustomValidity(mandatoryField);
+            field.setCustomValidity(mandatoryFieldMessage);
+            field.reportValidity();
             isFormValid = false;
-
-            if (!firstFieldFound) {
-                firstFieldFound = field;
-            }
+            break;
         }
-    });
-
-    if (firstFieldFound) {
-        firstFieldFound.reportValidity();
     }
 
     return isFormValid;

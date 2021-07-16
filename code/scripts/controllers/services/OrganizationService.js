@@ -52,6 +52,7 @@ export default class GovernanceService {
                 type: "Owner",
                 createdAt: Date.now()
             };
+
             this.updateOrganizationData(organizationData, callback);
         });
     }
@@ -59,6 +60,30 @@ export default class GovernanceService {
     updateOrganizationData(organizationData, callback) {
         this.DSUStorage.setObject(this.getOrganizationsDataPath(organizationData.uid), organizationData, (err) => {
             callback(err, organizationData);
+        });
+    }
+
+    isExistingOrganization(organizationName, organizationUid, callback) {
+        if (typeof organizationUid === "function") {
+            callback = organizationUid;
+            organizationUid = null;
+        }
+
+        this.listOrganizations((err, organizationsList) => {
+            if (err) {
+                return callback(err);
+            }
+
+            const organizationIndex = organizationsList.findIndex(org => {
+                let found = org.name.trim() === organizationName.trim();
+                if (organizationUid) {
+                    found &= (org.uid !== organizationUid);
+                }
+
+                return found;
+            });
+
+            return callback(undefined, organizationIndex !== -1);
         });
     }
 

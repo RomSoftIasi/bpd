@@ -4,7 +4,8 @@ function getOrganizationFormViewModel() {
             placeholder: this.translate("form.organizationName.placeholder"),
             name: this.translate("form.organizationName.label"),
             value: "",
-            required: true
+            required: true,
+            id: "new-organization"
         }
     };
 }

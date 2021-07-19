@@ -3,6 +3,7 @@ import BlockchainDomainService from "../services/BlockchainDomainService.js";
 import * as Loader from "../WebcSpinnerController.js";
 import {validateFormRequiredFields} from "../../utils/utils.js";
 import {getBlockchainDomainFormViewModel} from "../../view-models/blockchainDomain.js";
+import {displayValidationErrorModal, validateFormFields} from "./Validator.js";
 
 export default class InitiateBlockchainDomainController extends WebcController {
     constructor(...props) {
@@ -36,17 +37,30 @@ export default class InitiateBlockchainDomainController extends WebcController {
             return;
         }
 
-        const blockchainDomainData = this.getDomainData();
         Loader.displayLoader();
-        this.BlockchainDomainService.createBlockchainDomain(this.model.organizationUid, blockchainDomainData, (err, result) => {
-            Loader.hideLoader();
+        const blockchainDomainData = this.getDomainData();
+        const {organizationUid} = this.model;
+        this.BlockchainDomainService.isExistingBlockchainDomain(organizationUid, blockchainDomainData, (err, foundDomain) => {
             if (err) {
+                Loader.hideLoader();
                 return console.error(err);
             }
 
-            console.log(result);
-            this.navigateToPageTag("blockchain-domains-dashboard", {
-                organizationUid: this.model.organizationUid
+            if (foundDomain) {
+                Loader.hideLoader();
+                return displayValidationErrorModal.call(this, blockchainDomainData, foundDomain);
+            }
+
+            this.BlockchainDomainService.createBlockchainDomain(organizationUid, blockchainDomainData, (err, result) => {
+                Loader.hideLoader();
+                if (err) {
+                    return console.error(err);
+                }
+
+                console.log(result);
+                this.navigateToPageTag("blockchain-domains-dashboard", {
+                    organizationUid: organizationUid
+                });
             });
         });
     }
@@ -62,7 +76,6 @@ export default class InitiateBlockchainDomainController extends WebcController {
     }
 
     isValidForm() {
-        // TODO: Update with other types of validations
-        return validateFormRequiredFields.call(this);
+        return validateFormRequiredFields.call(this) && validateFormFields.call(this);
     }
 }

@@ -12,37 +12,58 @@
 
             <div class="form-row-wrapper">
                 <label>{{$form.mainDomain.label}}:</label>
-                <input class="form-control" data-view-model="@blockchainDomainModel.mainDomain"/>
+                <div>
+                    <input class="form-control" data-view-model="@blockchainDomainModel.mainDomain"/>
+                    <small class="form-text text-muted">{{$form.mainDomain.description}}</small>
+                </div>
             </div>
 
             <div class="form-row-wrapper">
                 <label>{{$form.subdomain.label}}:</label>
-                <input class="form-control" data-view-model="@blockchainDomainModel.subdomain"/>
+                <div>
+                    <input class="form-control" data-view-model="@blockchainDomainModel.subdomain"/>
+                    <small class="form-text text-muted">{{$form.subdomain.description}}</small>
+                </div>
             </div>
 
             <div class="form-row-wrapper">
                 <label>{{$form.vaultDomain.label}}:</label>
-                <input class="form-control" data-view-model="@blockchainDomainModel.vaultDomain"/>
+                <div>
+                    <input class="form-control" data-view-model="@blockchainDomainModel.vaultDomain"/>
+                    <small class="form-text text-muted">{{$form.vaultDomain.description}}</small>
+                </div>
             </div>
 
             <div class="form-row-wrapper">
                 <label>{{$form.jenkins.label}}:</label>
-                <input class="form-control" data-view-model="@blockchainDomainModel.jenkins"/>
+                <div>
+                    <input class="form-control" data-view-model="@blockchainDomainModel.jenkins"/>
+                    <small class="form-text text-muted">{{$form.jenkins.description}}</small>
+                </div>
             </div>
 
             <div class="form-row-wrapper">
                 <label>{{$form.jenkinsUserName.label}}:</label>
-                <input class="form-control" data-view-model="@blockchainDomainModel.jenkinsUserName"/>
+                <div>
+                    <input class="form-control" data-view-model="@blockchainDomainModel.jenkinsUserName"/>
+                    <small class="form-text text-muted">{{$form.jenkinsUserName.description}}</small>
+                </div>
             </div>
 
             <div class="form-row-wrapper">
                 <label>{{$form.jenkinsToken.label}}:</label>
-                <input class="form-control" data-view-model="@blockchainDomainModel.jenkinsToken"/>
+                <div>
+                    <input class="form-control" data-view-model="@blockchainDomainModel.jenkinsToken"/>
+                    <small class="form-text text-muted">{{$form.jenkinsToken.description}}</small>
+                </div>
             </div>
 
             <div class="form-row-wrapper">
                 <label>{{$form.githubUsecaseRepository.label}}:</label>
-                <input class="form-control" data-view-model="@blockchainDomainModel.githubUsecaseRepository"/>
+                <div>
+                    <input class="form-control" data-view-model="@blockchainDomainModel.githubUsecaseRepository"/>
+                    <small class="form-text text-muted">{{$form.githubUsecaseRepository.description}}</small>
+                </div>
             </div>
 
             <div class="form-row-wrapper">

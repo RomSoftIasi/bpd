@@ -68,6 +68,31 @@ export default class BlockchainDomainService {
         });
     }
 
+    isExistingBlockchainDomain(organizationUid, domainData, domainUid, callback) {
+        if (typeof domainUid === "function") {
+            callback = domainUid;
+            domainUid = null;
+        }
+
+        this.listBlockchainDomains(organizationUid, (err, domainsList) => {
+            if (err) {
+                return callback(err);
+            }
+
+            const blockchainDomain = domainsList.find(domain => {
+                let found = domain.mainDomain.trim() === domainData.mainDomain.trim()
+                    || domain.subdomain.trim() === domainData.subdomain.trim();
+                if (domainUid) {
+                    found &= (domain.uid !== domainUid);
+                }
+
+                return found;
+            });
+
+            return callback(undefined, blockchainDomain);
+        });
+    }
+
     getBlockchainDomainData(organizationUid, blockchainDomainUid, callback) {
         const blockchainDomainDataPath = this.getBlockchainDomainDataPath(organizationUid, blockchainDomainUid);
         this.DSUStorage.getObject(blockchainDomainDataPath, callback);

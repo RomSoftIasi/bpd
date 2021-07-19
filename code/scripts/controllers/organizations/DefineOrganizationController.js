@@ -3,6 +3,7 @@ import OrganizationService from "../services/OrganizationService.js";
 import * as Loader from "../WebcSpinnerController.js";
 import {validateFormRequiredFields} from "../../utils/utils.js";
 import {getOrganizationFormViewModel} from "../../view-models/organization.js";
+import {displayValidationErrorModal, validateFormFields} from "./Validator.js";
 
 export default class DefineOrganizationController extends WebcController {
     constructor(...props) {
@@ -54,9 +55,9 @@ export default class DefineOrganizationController extends WebcController {
                 return console.error(err);
             }
 
-            if(organizationExists) {
+            if (organizationExists) {
                 Loader.hideLoader();
-                return this.displayErrorModal();
+                return displayValidationErrorModal.call(this);
             }
 
             this.OrganizationService.createOrganization(organizationName, (err, result) => {
@@ -71,31 +72,7 @@ export default class DefineOrganizationController extends WebcController {
         });
     }
 
-    displayErrorModal() {
-        const errorMessage = this.translate("validation.organizationName.organizationExists");
-        const modalConfiguration = {
-            model: {errorMessage: errorMessage},
-            controller: 'ErrorModalController',
-            disableBackdropClosing: false,
-            disableCancelButton: true,
-            confirmButtonText: this.translate("modal.confirmButtonText")
-        };
-        this.showModalFromTemplate('error-modal', () => { }, () => { }, modalConfiguration);
-    }
-
     isValidForm() {
-        return validateFormRequiredFields.call(this) && this.validateFormFields();
-    }
-
-    validateFormFields() {
-        const organizationModel = this.model.toObject("newOrganization");
-        const isValid = /^([a-z]|[A-Z]|[0-9]|\s|\.|-){1,30}$/sg.test(organizationModel.value);
-        if (!isValid) {
-            const inputField = this.querySelector(`#${organizationModel.id}`);
-            inputField.setCustomValidity(this.translate("validation.organizationName.validationMessage"));
-            inputField.reportValidity();
-        }
-
-        return isValid;
+        return validateFormRequiredFields.call(this) && validateFormFields.call(this);
     }
 }

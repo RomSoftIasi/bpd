@@ -1,37 +1,56 @@
 {
   "title": "Initiate Blockchain Domain",
-  "status": "Blockchain network cluster status",
+  "status": "Blockchain domain cluster status",
   "back": "Back",
-  "saveNetwork": "Save Network",
+  "saveNetwork": "Save Blockchain Domain",
   "mandatoryField": "[FIELD_NAME] is mandatory!",
+  "modal": {
+    "confirmButtonText": "Confirm",
+    "errorTitle": "Error"
+  },
+  "validation": {
+    "domainExists":"A Blockchain Domain with the same [FIELD_NAME] already exists!",
+    "mainDomainValidation": "Maximum of 63 lowercase alphanumeric characters, dashes included. Must start and end with an alphanumeric character.",
+    "subdomainValidation": "Maximum of 63 lowercase alphanumeric characters, dashes and dots included. Must start and end with an alphanumeric character.",
+    "vaultDomainValidation": "Maximum of 30 alphanumeric characters, dashes, underscores and dots included.",
+    "jenkinsValidation": "Jenkins URL does not have a valid format!",
+    "githubUsecaseRepositoryValidation": "Github usecase repository URL does not have a valid format!"
+  },
   "form": {
     "mainDomain": {
       "label": "Main domain",
-      "placeholder": "Enter main domain (e.g. epiqa)"
+      "placeholder": "Enter main domain (e.g. epiqa)",
+      "description": "Maximum of 63 lowercase alphanumeric characters, dashes included. Must start and end with an alphanumeric character."
     },
     "subdomain": {
       "label": "Subdomain",
-      "placeholder": "Enter subdomain (e.g. nvs.epiqa)"
+      "placeholder": "Enter subdomain (e.g. nvs.epiqa)",
+      "description": "Maximum of 63 lowercase alphanumeric characters, dashes and dots included. Must start and end with an alphanumeric character."
     },
     "vaultDomain": {
       "label": "Vault domain",
-      "placeholder": "Enter vault domain (e.g. nvs)"
+      "placeholder": "Enter vault domain (e.g. nvs)",
+      "description": "Maximum of 30 alphanumeric characters, dashes, underscores and dots included."
     },
     "jenkins": {
       "label": "Jenkins",
-      "placeholder": "https://jenkins/CI/Server/URL"
+      "placeholder": "https://jenkins/CI/Server/URL",
+      "description": "The URL to Jenkins Server"
     },
     "jenkinsUserName": {
       "label": "Jenkins user name",
-      "placeholder": "Jenkins user name"
+      "placeholder": "Jenkins user name",
+      "description": "Your Jenkins user name"
     },
     "jenkinsToken": {
       "label": "Jenkins Token",
-      "placeholder": "Jenkins Authorization Token"
+      "placeholder": "Jenkins Authorization Token",
+      "description": "Jenkins Authorization Token associated to you Jenkins user name"
     },
     "githubUsecaseRepository": {
       "label": "Github usecase repository",
-      "placeholder": "Github usecase repository URL (e.g. https://github.com/PharmaLedger-IMI/epi-workspace)"
+      "placeholder": "Github usecase repository URL (e.g. https://github.com/PharmaLedger-IMI/epi-workspace)",
+      "description": "Github usecase repository URL (e.g. https://github.com/PharmaLedger-IMI/epi-workspace)"
     },
     "deploymentConfiguration": {
       "label": "Deployment configuration",

@@ -1,6 +1,6 @@
 {
   "title": "Manage Blockchain Domain Deployment",
-  "status": "Blockchain network cluster status",
+  "status": "Blockchain domain cluster status",
   "mainDomain": "Main domain",
   "subdomain": "Subdomain",
   "vaultDomain": "Vault domain",

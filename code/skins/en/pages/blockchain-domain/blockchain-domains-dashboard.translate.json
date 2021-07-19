@@ -5,8 +5,8 @@
   "view": "View",
   "edit": "Edit",
   "back": "Back",
-  "initiateNetwork": "Initiate Network",
-  "joinNetwork": "Join Network",
+  "initiateNetwork": "Initiate Blockchain Domain",
+  "joinNetwork": "Join Blockchain Domain",
   "header": {
     "mainDomain": "Main Domain",
     "type": "Type",

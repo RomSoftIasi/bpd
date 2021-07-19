@@ -1,6 +1,7 @@
 {
   "theme": "blue-fluorite-theme",
   "skin": "en",
+  "logLevel": "none",
   "pages": [
     {
       "name": "Governance Dashboard",

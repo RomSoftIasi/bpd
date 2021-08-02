@@ -49,6 +49,17 @@ function getBlockchainDomainFormViewModel() {
             required: true,
             id: "github-repository"
         },
+        blockchainTypes:{
+            placeholder: this.translate("form.blockchainTypes.placeholder"),
+            name: this.translate("form.blockchainTypes.label"),
+            blockchainTypeValues: [
+                { value: "Default", text: "Default" },
+                { value: "Quorum", text: "Quorum" }
+            ],
+            value: "Default",
+            required: true,
+            id: "blockchain-types"
+        },
         deploymentConfiguration: {
             placeholder: this.translate("form.deploymentConfiguration.placeholder"),
             name: this.translate("form.deploymentConfiguration.label"),

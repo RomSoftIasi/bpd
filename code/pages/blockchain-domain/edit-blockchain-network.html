@@ -35,6 +35,16 @@
             </div>
 
             <div class="form-row-wrapper">
+                <label>{{$form.blockchainTypes.label}}:</label>
+                <div>
+                    <select class="form-select" data-for="@blockchainDomainModel.blockchainTypes.blockchainTypeValues" value="@blockchainDomainModel.blockchainTypes.value">
+                        <option value="@value">{{ @text }}</option>
+                    </select>
+                    <small class="form-text text-muted">{{$form.blockchainTypes.description}}</small>
+                </div>
+            </div>
+
+            <div class="form-row-wrapper">
                 <label>{{$form.jenkins.label}}:</label>
                 <div>
                     <input class="form-control" data-view-model="@blockchainDomainModel.jenkins"/>
@@ -68,7 +78,7 @@
 
             <div class="form-row-wrapper">
                 <label>{{$form.deploymentConfiguration.label}}:</label>
-                <textarea class="form-control"
+                <textarea class="form-control  area-configuration"
                           data-view-model="@blockchainDomainModel.deploymentConfiguration"></textarea>
             </div>
         </div>

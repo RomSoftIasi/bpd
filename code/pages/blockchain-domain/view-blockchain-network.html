@@ -31,6 +31,11 @@
             </div>
 
             <div class="form-row-wrapper">
+                <label>{{$blockchainTypes}}:</label>
+                <label class="font-weight-bold">{{@blockchainTypes}}</label>
+            </div>
+
+            <div class="form-row-wrapper">
                 <label>{{$jenkinsUserName}}:</label>
                 <label class="font-weight-bold">{{@jenkinsUserName}}</label>
             </div>
@@ -47,7 +52,7 @@
 
             <div class="form-row-wrapper">
                 <label>{{$deploymentConfiguration}}:</label>
-                <textarea class="form-control" readonly value="@deploymentConfiguration"></textarea>
+                <textarea class="form-control  area-configuration" readonly value="@deploymentConfiguration"></textarea>
             </div>
 
             <div class="form-row-wrapper" data-if="@displayLogs">

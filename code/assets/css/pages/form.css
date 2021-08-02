@@ -41,6 +41,10 @@ textarea.form-control {
     height: 200px;
 }
 
+textarea.area-configuration{
+    height: 70px;
+}
+
 label.download,
 .file-input-wrapper label {
     cursor: pointer;

@@ -158,13 +158,17 @@ export default class BlockchainDomainService {
 
     initiateInstallCluster(clusterDetails, callback) {
         const usecaseRepository = clusterDetails.githubUsecaseRepository || "";
+        let clusterOperation = "initiateNetworkWithDefaultConfiguration";
+        if (clusterDetails.blockchainTypes === 'Quorum'){
+            clusterOperation =  "initiateNetworkUsingBlockchain";
+        }
 
         let installClusterInfo = {
             blockchainNetwork: clusterDetails.subdomain,
             user: clusterDetails.jenkinsUserName,
             token: clusterDetails.jenkinsToken,
             jenkins: clusterDetails.jenkins,
-            clusterOperation: "initiateNetworkWithDefaultConfiguration",
+            clusterOperation: clusterOperation,
             configMap: clusterDetails.deploymentConfiguration,
             clusterStatus: clusterDetails.dataStatus,
             parametrizedPipeline: {

@@ -47,6 +47,11 @@
       "placeholder": "Jenkins Authorization Token",
       "description": "Jenkins Authorization Token associated to you Jenkins user name"
     },
+    "blockchainTypes": {
+      "label": "Blockchain",
+      "placeholder": "Default",
+      "description": "Blockchain distribution : Default, Quorum, etc."
+    },
     "githubUsecaseRepository": {
       "label": "Github usecase repository",
       "placeholder": "Github usecase repository URL (e.g. https://github.com/PharmaLedger-IMI/epi-workspace)",

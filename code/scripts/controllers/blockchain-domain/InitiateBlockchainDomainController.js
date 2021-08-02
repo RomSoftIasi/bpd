@@ -71,7 +71,6 @@ export default class InitiateBlockchainDomainController extends WebcController {
         Object.keys(domainModel).forEach(key => {
             domainData[key] = domainModel[key].value;
         });
-
         return domainData;
     }
 

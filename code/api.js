@@ -1,11 +1,9 @@
-const securityContext = require("opendsu").loadApi("sc");
-const mainDSU = securityContext.getMainDSU();
+const opendsu = require("opendsu")
+const securityContext = opendsu.loadApi("sc");
+const resolver = opendsu.loadAPI("resolver");
+const keySSISpace = opendsu.loadAPI("keyssi")
 
 function createSSIAndMount(path, callback) {
-    const opendsu = require("opendsu");
-    const resolver = opendsu.loadAPI("resolver");
-    const keySSISpace = opendsu.loadAPI("keyssi")
-
     const templateSSI = keySSISpace.buildTemplateSeedSSI("default");
     resolver.createDSU(templateSSI, (err, dsuInstance) => {
         if (err) {
@@ -16,37 +14,58 @@ function createSSIAndMount(path, callback) {
             if (err) {
                 return callback(err);
             }
-            mainDSU.mount(path + "/" + keySSI, keySSI, (err) => {
+
+            securityContext.getMainDSU((err, mainDSU) => {
                 if (err) {
-                    console.log(err);
+                    return callback(err);
                 }
-                callback(err, keySSI);
+
+                mainDSU.mount(path + "/" + keySSI, keySSI, (err) => {
+                    if (err) {
+                        console.log(err);
+                    }
+
+                    callback(err, keySSI);
+                });
             });
-        })
+        });
     });
 }
 
-function mount(path,keySSI, callback){
-    mainDSU.mount(path+"/"+keySSI, keySSI, (err) =>{
-        if (err)
-        {
+function mount(path, keySSI, callback) {
+    securityContext.getMainDSU((err, mainDSU) => {
+        if (err) {
             return callback(err);
         }
-        callback(undefined);
-    })
+
+        mainDSU.mount(path + "/" + keySSI, keySSI, (err, result) => {
+            callback(err, result);
+        });
+    });
 }
 
 function listDSUs(path, callback) {
-    mainDSU.listMountedDossiers(path, callback);
+    securityContext.getMainDSU((err, mainDSU) => {
+        if (err) {
+            return callback(err);
+        }
+
+        mainDSU.listMountedDossiers(path, callback);
+    });
 }
 
 function loadDSU(keySSI, callback) {
-    const resolver = require("opendsu").loadAPI("resolver");
     resolver.loadDSU(keySSI, callback);
 }
 
 function organizationUnmount(path, callback) {
-    mainDSU.unmount(path, callback);
+    securityContext.getMainDSU((err, mainDSU) => {
+        if (err) {
+            return callback(err);
+        }
+
+        mainDSU.unmount(path, callback);
+    });
 }
 
 function clusterUnmount(organizationUid, clusterPath, callback) {
@@ -54,11 +73,9 @@ function clusterUnmount(organizationUid, clusterPath, callback) {
         if (err) {
             return callback(err);
         }
+
         orgDossier.unmount(clusterPath, (err, data) => {
-            if (err) {
-                return callback(err);
-            }
-            callback(undefined, data);
+            callback(err, data);
         });
     });
 }

@@ -103,12 +103,17 @@ export default class BlockchainDomainService {
     }
 
     initiateUninstallCluster(clusterDetails, callback) {
+        let clusterOperation = "uninstallNetworkWithDefaultConfiguration";
+        if (clusterDetails.blockchainTypes === 'Quorum'){
+            clusterOperation =  "uninstallNetworkUsingBlockchain";
+        }
+
         let removeClusterInfo = {
             blockchainNetwork: clusterDetails.subdomain,
             user: clusterDetails.jenkinsUserName,
             token: clusterDetails.jenkinsToken,
             jenkins: clusterDetails.jenkins,
-            clusterOperation: "uninstallNetworkWithDefaultConfiguration",
+            clusterOperation: clusterOperation,
             configMap: clusterDetails.deploymentConfiguration,
             clusterStatus: clusterDetails.dataStatus,
             parametrizedPipeline: {

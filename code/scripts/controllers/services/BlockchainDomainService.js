@@ -284,13 +284,16 @@ export default class BlockchainDomainService {
 
     initiateUpgradeCluster(clusterDetails, callback) {
         const usecaseRepository = clusterDetails.githubUsecaseRepository || "";
-
+        let clusterOperation = "upgradeNetworkUsingDefaultConfiguration";
+        if (clusterDetails.blockchainTypes === 'Quorum'){
+            clusterOperation =  "upgradeNetworkUsingBlockchain";
+        }
         let installClusterInfo = {
             blockchainNetwork: clusterDetails.subdomain,
             user: clusterDetails.jenkinsUserName,
             token: clusterDetails.jenkinsToken,
             jenkins: clusterDetails.jenkins,
-            clusterOperation: "upgradeNetworkUsingDefaultConfiguration",
+            clusterOperation: clusterOperation,
             configMap: clusterDetails.deploymentConfiguration,
             clusterStatus: clusterDetails.dataStatus,
             parametrizedPipeline: {
@@ -309,13 +312,17 @@ export default class BlockchainDomainService {
 
     initiateRetryInstallCluster(clusterDetails, callback) {
         const usecaseRepository = clusterDetails.githubUsecaseRepository || "";
+        let clusterOperation = "retryInitiateNetworkWithDefaultConfiguration";
+        if (clusterDetails.blockchainTypes === 'Quorum'){
+            clusterOperation =  "retryInitiateNetworkWithBlockchain";
+        }
 
         let installClusterInfo = {
             blockchainNetwork: clusterDetails.subdomain,
             user: clusterDetails.jenkinsUserName,
             token: clusterDetails.jenkinsToken,
             jenkins: clusterDetails.jenkins,
-            clusterOperation: "retryInitiateNetworkWithDefaultConfiguration",
+            clusterOperation: clusterOperation,
             configMap: clusterDetails.deploymentConfiguration,
             clusterStatus: clusterDetails.dataStatus,
             parametrizedPipeline: {

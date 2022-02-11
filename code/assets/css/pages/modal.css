@@ -26,7 +26,7 @@ webc-modal::part(content) {
 }
 
 webc-modal::part(confirm) {
-    background: #008798;
+    background: #00345B;
 }
 
 @media (min-width: 500px) {

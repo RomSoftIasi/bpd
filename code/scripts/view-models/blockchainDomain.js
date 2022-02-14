@@ -53,7 +53,7 @@ function getBlockchainDomainFormViewModel() {
             placeholder: this.translate("form.blockchainTypes.placeholder"),
             name: this.translate("form.blockchainTypes.label"),
             blockchainTypeValues: [
-                { value: "Default", text: "Default" },
+                { value: "PrivateSky", text: "PrivateSky" },
                 { value: "Quorum", text: "Quorum" }
             ],
             value: "Default",

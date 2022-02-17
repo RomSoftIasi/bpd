@@ -7,7 +7,7 @@
   "jenkins": "Jenkins",
   "jenkinsUserName": "Jenkins user name",
   "jenkinsToken": "Jenkins Token",
-  "githubUsecaseRepository": "Github usecase repository",
+  "githubUsecaseRepository": "Github repository",
   "blockchainTypes": "Blockchain distribution : Default, Quorum, etc.",
   "deploymentConfiguration": "Deployment configuration",
   "installationLogs": "Installation logs",

@@ -6,7 +6,7 @@
   "vaultDomain": "Vault domain",
   "jenkins": "Jenkins",
   "jenkinsUserName": "Jenkins user name",
-  "githubUsecaseRepository": "Github usecase repository",
+  "githubUsecaseRepository": "Github repository",
   "deploymentConfiguration": "Deployment configuration",
   "installationLogs": "Installation logs",
   "back": "Back",

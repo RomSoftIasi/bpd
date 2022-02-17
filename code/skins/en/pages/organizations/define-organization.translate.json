@@ -6,7 +6,7 @@
   "form": {
     "organizationName": {
       "label": "Organization name",
-      "placeholder": "Organization name (e.g. Novartis)",
+      "placeholder": "Organization name (e.g. WeldGalaxy)",
       "description": "Maximum of 30 alphanumeric characters, including spaces, dots and dashes"
     }
   },

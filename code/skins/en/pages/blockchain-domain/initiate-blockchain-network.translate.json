@@ -14,7 +14,7 @@
     "subdomainValidation": "Maximum of 63 lowercase alphanumeric characters, dashes and dots included. Must start and end with an alphanumeric character.",
     "vaultDomainValidation": "Maximum of 30 alphanumeric characters, dashes, underscores and dots included.",
     "jenkinsValidation": "Jenkins URL does not have a valid format!",
-    "githubUsecaseRepositoryValidation": "Github usecase repository URL does not have a valid format!"
+    "githubUsecaseRepositoryValidation": "Github repository URL does not have a valid format!"
   },
   "form": {
     "mainDomain": {
@@ -53,9 +53,9 @@
       "description": "Blockchain distribution : PrivateSky, Quorum, etc."
     },
     "githubUsecaseRepository": {
-      "label": "Github usecase repository",
-      "placeholder": "Github usecase repository URL (e.g. https://github.com/RomSoftIasi/wg-workspace)",
-      "description": "Github usecase repository URL (e.g. https://github.com/RomSoftIasi/wg-workspace)"
+      "label": "Github repository",
+      "placeholder": "Github repository URL (e.g. https://github.com/RomSoftIasi/wg-workspace)",
+      "description": "Github repository URL (e.g. https://github.com/RomSoftIasi/wg-workspace)"
     },
     "deploymentConfiguration": {
       "label": "Deployment configuration",

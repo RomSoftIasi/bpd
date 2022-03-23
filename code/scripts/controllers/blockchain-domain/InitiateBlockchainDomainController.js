@@ -14,7 +14,7 @@ export default class InitiateBlockchainDomainController extends WebcController {
             organizationUid: organizationUid,
             blockchainDomainModel: {...getBlockchainDomainFormViewModel.call(this)}
         };
-        this.BlockchainDomainService = new BlockchainDomainService(this.DSUStorage);
+        this.BlockchainDomainService = new BlockchainDomainService();
 
         this.initNavigationListeners();
     }

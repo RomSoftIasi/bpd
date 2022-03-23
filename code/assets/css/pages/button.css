@@ -11,6 +11,7 @@ button {
     justify-content: center;
     min-height: 3rem;
     width: 18rem;
+    cursor: pointer;
 }
 
 button.red-button {

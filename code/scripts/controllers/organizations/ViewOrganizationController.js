@@ -11,8 +11,8 @@ export default class ViewOrganizationController extends WebcController {
         const {organizationUid} = this.getState();
         this.model = {organizationUid: organizationUid};
 
-        this.OrganizationService = new OrganizationService(this.DSUStorage);
-        this.BlockchainDomainService = new BlockchainDomainService(this.DSUStorage);
+        this.OrganizationService = new OrganizationService();
+        this.BlockchainDomainService = new BlockchainDomainService();
 
         this.initNavigationListeners();
         this.getOrganizationData();

@@ -6,7 +6,7 @@ export default class VotingSessionController extends WebcController {
     constructor(...props) {
         super(...props);
 
-        this.VotingSessionService = new VotingSessionService(this.DSUStorage);
+        this.VotingSessionService = new VotingSessionService();
 
         this.initNavigationListeners();
     }

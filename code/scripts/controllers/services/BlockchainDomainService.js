@@ -1,21 +1,24 @@
+import DSUService from "./DSUService.js";
 import ClusterControllerApi from "./ClustersControllerApi.js";
 
-export default class BlockchainDomainService {
+const pskPath = require("swarmutils").path;
+
+export default class BlockchainDomainService extends DSUService {
 
     ORGANIZATION_PATH = "/organizations";
     BLOCKCHAIN_DOMAINS_PATH = "/blockchain-domains";
 
-    constructor(DSUStorage) {
-        this.DSUStorage = DSUStorage;
+    constructor() {
+        super();
+
         this.ClusterControllerApi = new ClusterControllerApi();
     }
 
     createBlockchainDomain(organizationUid, blockchainDomainData, callback) {
         const blockchainDomainsPath = this.getBlockchainDomainsPath(organizationUid);
-        this.DSUStorage.call('createSSIAndMount', blockchainDomainsPath, (err, keySSI) => {
+        this.createDSUAndMount(blockchainDomainsPath, (err, keySSI) => {
             if (err) {
-                callback(err, undefined);
-                return;
+                return callback(err);
             }
 
             blockchainDomainData.keySSI = keySSI;
@@ -28,44 +31,21 @@ export default class BlockchainDomainService {
             blockchainDomainData.isUninstalling = false;
             blockchainDomainData.deploymentLogs = "";
             blockchainDomainData.dataStatus = this.getBlockchainDomainInstallStatus(blockchainDomainData);
-            this.updateDomain(organizationUid, blockchainDomainData, callback);
+            this.updateEntity(blockchainDomainData, blockchainDomainsPath, callback);
         });
     }
 
     updateDomain(organizationUid, blockchainDomainData, callback) {
         blockchainDomainData.dataStatus = this.getBlockchainDomainInstallStatus(blockchainDomainData);
-        const blockchainDomainDataPath = this.getBlockchainDomainDataPath(organizationUid, blockchainDomainData.uid);
-        this.DSUStorage.setObject(blockchainDomainDataPath, blockchainDomainData, (err) => {
+        const blockchainDomainsPath = this.getBlockchainDomainsPath(organizationUid);
+        this.updateEntity(blockchainDomainData, blockchainDomainsPath, (err) => {
             callback(err, blockchainDomainData);
         });
     }
 
     listBlockchainDomains(organizationUid, callback) {
         const blockchainDomainsPath = this.getBlockchainDomainsPath(organizationUid);
-        this.DSUStorage.call('listDSUs', blockchainDomainsPath, (err, blockchainDomainsIdentifierList) => {
-            if (err) {
-                return callback(err);
-            }
-
-            const blockchainDomainsList = [];
-            const getBlockchainDomainDSU = (blockchainDomainsIdentifierList) => {
-                if (!blockchainDomainsIdentifierList.length) {
-                    return callback(undefined, blockchainDomainsList);
-                }
-
-                const id = blockchainDomainsIdentifierList.pop();
-                this.getBlockchainDomainData(organizationUid, id.identifier, (err, blockchainDomainData) => {
-                    if (err) {
-                        return callback(err);
-                    }
-
-                    blockchainDomainsList.push(blockchainDomainData);
-                    getBlockchainDomainDSU(blockchainDomainsIdentifierList);
-                });
-            };
-
-            getBlockchainDomainDSU(blockchainDomainsIdentifierList);
-        });
+        this.getEntities(blockchainDomainsPath, callback);
     }
 
     isExistingBlockchainDomain(organizationUid, domainData, domainUid, callback) {
@@ -93,47 +73,18 @@ export default class BlockchainDomainService {
         });
     }
 
+    removeBlockchainDomainDefinition(organizationUid, blockchainDomainUid, callback) {
+        const blockchainDomainsPath = this.getBlockchainDomainsPath(organizationUid);
+        this.unmountEntity(blockchainDomainUid, blockchainDomainsPath, callback);
+    }
+
     getBlockchainDomainData(organizationUid, blockchainDomainUid, callback) {
-        const blockchainDomainDataPath = this.getBlockchainDomainDataPath(organizationUid, blockchainDomainUid);
-        this.DSUStorage.getObject(blockchainDomainDataPath, callback);
-    }
-
-    waitForClusterRemoval(blockchainNetworkName, callback) {
-        this.ClusterControllerApi.loopUntilClusterIsInstalled(blockchainNetworkName, callback);
-    }
-
-    initiateUninstallCluster(clusterDetails, callback) {
-        let clusterOperation = "uninstallNetworkWithDefaultConfiguration";
-        if (clusterDetails.blockchainTypes === 'Quorum'){
-            clusterOperation =  "uninstallNetworkUsingBlockchain";
-        }
-
-        let removeClusterInfo = {
-            blockchainNetwork: clusterDetails.subdomain,
-            user: clusterDetails.jenkinsUserName,
-            token: clusterDetails.jenkinsToken,
-            jenkins: clusterDetails.jenkins,
-            clusterOperation: clusterOperation,
-            configMap: clusterDetails.deploymentConfiguration,
-            clusterStatus: clusterDetails.dataStatus,
-            parametrizedPipeline: {
-                domain: clusterDetails.mainDomain,
-                subdomain: clusterDetails.subdomain,
-                vaultdomain: clusterDetails.vaultDomain
-            }
-        };
-
-        console.log(removeClusterInfo);
-        console.log(clusterDetails);
-        this.ClusterControllerApi.startRemoveCluster(removeClusterInfo, callback);
+        const blockchainDomainsPath = this.getBlockchainDomainsPath(organizationUid, blockchainDomainUid);
+        this.getEntity(blockchainDomainUid, blockchainDomainsPath, callback);
     }
 
     getBlockchainDomainsPath(uid) {
-        return `${this.ORGANIZATION_PATH}/${uid}${this.BLOCKCHAIN_DOMAINS_PATH}`;
-    }
-
-    getBlockchainDomainDataPath(organizationUid, blockchainDomainUid) {
-        return `${this.getBlockchainDomainsPath(organizationUid)}/${blockchainDomainUid}/data.json`;
+        return pskPath.join(this.ORGANIZATION_PATH, uid, this.BLOCKCHAIN_DOMAINS_PATH);
     }
 
     getBlockchainDomainInstallStatus(blockchainDomainData) {
@@ -157,15 +108,11 @@ export default class BlockchainDomainService {
         return dataStatus;
     }
 
-    waitForClusterInstallationToFinish(blockchainNetworkName, callback) {
-        this.ClusterControllerApi.loopUntilClusterIsInstalled(blockchainNetworkName, callback);
-    }
-
     initiateInstallCluster(clusterDetails, callback) {
         const usecaseRepository = clusterDetails.githubUsecaseRepository || "";
         let clusterOperation = "initiateNetworkWithDefaultConfiguration";
-        if (clusterDetails.blockchainTypes === 'Quorum'){
-            clusterOperation =  "initiateNetworkUsingBlockchain";
+        if (clusterDetails.blockchainTypes === 'Quorum') {
+            clusterOperation = "initiateNetworkUsingBlockchain";
         }
 
         let installClusterInfo = {
@@ -183,11 +130,45 @@ export default class BlockchainDomainService {
                 usecaseRepository: usecaseRepository,
                 workspace: usecaseRepository.split(".git")[0].split("/").pop()
             }
-        }
+        };
 
         console.log(installClusterInfo);
         console.log(clusterDetails);
         this.ClusterControllerApi.startDeployCluster(installClusterInfo, callback);
+    }
+
+    waitForClusterInstallationToFinish(blockchainNetworkName, callback) {
+        this.ClusterControllerApi.loopUntilClusterIsInstalled(blockchainNetworkName, callback);
+    }
+
+    initiateUninstallCluster(clusterDetails, callback) {
+        let clusterOperation = "uninstallNetworkWithDefaultConfiguration";
+        if (clusterDetails.blockchainTypes === 'Quorum') {
+            clusterOperation = "uninstallNetworkUsingBlockchain";
+        }
+
+        let removeClusterInfo = {
+            blockchainNetwork: clusterDetails.subdomain,
+            user: clusterDetails.jenkinsUserName,
+            token: clusterDetails.jenkinsToken,
+            jenkins: clusterDetails.jenkins,
+            clusterOperation: clusterOperation,
+            configMap: clusterDetails.deploymentConfiguration,
+            clusterStatus: clusterDetails.dataStatus,
+            parametrizedPipeline: {
+                domain: clusterDetails.mainDomain,
+                subdomain: clusterDetails.subdomain,
+                vaultdomain: clusterDetails.vaultDomain
+            }
+        };
+
+        console.log(removeClusterInfo);
+        console.log(clusterDetails);
+        this.ClusterControllerApi.startRemoveCluster(removeClusterInfo, callback);
+    }
+
+    waitForClusterRemoval(blockchainNetworkName, callback) {
+        this.ClusterControllerApi.loopUntilClusterIsInstalled(blockchainNetworkName, callback);
     }
 
     parseDeploymentLogs(deploymentLogs, jenkinsData, callback) {
@@ -232,7 +213,7 @@ export default class BlockchainDomainService {
                     getLogs(cElem.pipeline, cElem.buildNo);
                 }
             });
-        }
+        };
 
         const cElem = builds.shift();
         getLogs(cElem.pipeline, cElem.buildNo);
@@ -277,16 +258,11 @@ export default class BlockchainDomainService {
         });
     }
 
-    removeBlockchainDomainDefinition(organizationUid, blockchainDomainUid, callback) {
-        const clusterPath = `${this.BLOCKCHAIN_DOMAINS_PATH}/${blockchainDomainUid}`;
-        this.DSUStorage.call("clusterUnmount", organizationUid, clusterPath, callback);
-    }
-
     initiateUpgradeCluster(clusterDetails, callback) {
         const usecaseRepository = clusterDetails.githubUsecaseRepository || "";
         let clusterOperation = "upgradeNetworkUsingDefaultConfiguration";
-        if (clusterDetails.blockchainTypes === 'Quorum'){
-            clusterOperation =  "upgradeNetworkUsingBlockchain";
+        if (clusterDetails.blockchainTypes === 'Quorum') {
+            clusterOperation = "upgradeNetworkUsingBlockchain";
         }
         let installClusterInfo = {
             blockchainNetwork: clusterDetails.subdomain,
@@ -303,7 +279,7 @@ export default class BlockchainDomainService {
                 usecaseRepository: usecaseRepository,
                 workspace: usecaseRepository.split(".git")[0].split("/").pop()
             }
-        }
+        };
 
         console.log(installClusterInfo);
         console.log(clusterDetails);
@@ -313,8 +289,8 @@ export default class BlockchainDomainService {
     initiateRetryInstallCluster(clusterDetails, callback) {
         const usecaseRepository = clusterDetails.githubUsecaseRepository || "";
         let clusterOperation = "retryInitiateNetworkWithDefaultConfiguration";
-        if (clusterDetails.blockchainTypes === 'Quorum'){
-            clusterOperation =  "retryInitiateNetworkWithBlockchain";
+        if (clusterDetails.blockchainTypes === 'Quorum') {
+            clusterOperation = "retryInitiateNetworkWithBlockchain";
         }
 
         let installClusterInfo = {
@@ -332,7 +308,7 @@ export default class BlockchainDomainService {
                 usecaseRepository: usecaseRepository,
                 workspace: usecaseRepository.split(".git")[0].split("/").pop()
             }
-        }
+        };
 
         console.log(installClusterInfo);
         console.log(clusterDetails);

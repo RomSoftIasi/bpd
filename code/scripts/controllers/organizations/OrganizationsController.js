@@ -9,8 +9,8 @@ export default class OrganizationsController extends WebcController {
         super(...props);
 
         this.model = {organizations: []};
-        this.OrganizationService = new OrganizationService(this.DSUStorage);
-        this.BlockchainDomainService = new BlockchainDomainService(this.DSUStorage);
+        this.OrganizationService = new OrganizationService();
+        this.BlockchainDomainService = new BlockchainDomainService();
 
         this.initNavigationListeners();
         this.displayOrganizationsList();
@@ -49,7 +49,7 @@ export default class OrganizationsController extends WebcController {
             }
 
             this.model.hasOrganizations = organizationsList.length > 0;
-            const updatedOrganizationsModel = []
+            const updatedOrganizationsModel = [];
             const updateModel = (organizationsList) => {
                 if (!organizationsList.length) {
                     this.model.organizations = [...updatedOrganizationsModel];

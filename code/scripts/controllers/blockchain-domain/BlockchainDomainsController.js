@@ -14,8 +14,8 @@ export default class BlockchainDomainsController extends WebcController {
             blockchainDomains: []
         };
 
-        this.BlockchainDomainService = new BlockchainDomainService(this.DSUStorage);
-        this.NotificationService = getNotificationServiceInstance(this.DSUStorage);
+        this.BlockchainDomainService = new BlockchainDomainService();
+        this.NotificationService = getNotificationServiceInstance();
 
         this.initNavigationListeners();
         this.displayBlockchainDomainsList();

@@ -10,7 +10,7 @@ export default class DefineOrganizationController extends WebcController {
         super(...props);
 
         this.model = getOrganizationFormViewModel.call(this);
-        this.OrganizationService = new OrganizationService(this.DSUStorage);
+        this.OrganizationService = new OrganizationService();
 
         this.initNavigationListeners();
     }

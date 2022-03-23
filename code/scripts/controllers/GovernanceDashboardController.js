@@ -8,7 +8,7 @@ export default class GovernanceDashboardController extends WebcController {
         super(...props);
 
         this.model = {news: []};
-        this.VotingSessionService = new VotingSessionService(this.DSUStorage);
+        this.VotingSessionService = new VotingSessionService();
 
         this.initNavigationListeners();
         this.displayNewsList();

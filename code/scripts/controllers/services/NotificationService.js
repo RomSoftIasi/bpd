@@ -2,9 +2,8 @@ import BlockchainDomainService from "./BlockchainDomainService.js";
 
 class NotificationService {
 
-    constructor(DSUStorage) {
-        this.DSUStorage = DSUStorage;
-        this.BlockchainDomainService = new BlockchainDomainService(DSUStorage);
+    constructor() {
+        this.BlockchainDomainService = new BlockchainDomainService();
 
         this.installCallback = null;
         this.uninstallCallback = null;
@@ -96,14 +95,14 @@ class NotificationService {
 }
 
 let notificationServiceInstance = null;
-const getNotificationServiceInstance = function (DSUStorage) {
+const getNotificationServiceInstance = function () {
     if (notificationServiceInstance) {
         return notificationServiceInstance;
     }
 
-    notificationServiceInstance = new NotificationService(DSUStorage);
+    notificationServiceInstance = new NotificationService();
     return notificationServiceInstance;
-}
+};
 
 export {
     getNotificationServiceInstance

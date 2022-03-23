@@ -15,7 +15,7 @@ export default class EditBlockchainDomainController extends WebcController {
             blockchainDomainUid: blockchainDomainUid,
             blockchainDomainModel: {...getBlockchainDomainFormViewModel.call(this)}
         };
-        this.BlockchainDomainService = new BlockchainDomainService(this.DSUStorage);
+        this.BlockchainDomainService = new BlockchainDomainService();
 
         this.initNavigationListeners();
         this.getBlockchainDomainInformation(organizationUid, blockchainDomainUid);

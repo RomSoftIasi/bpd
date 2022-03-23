@@ -8,7 +8,7 @@ export default class ViewBlockchainDomainController extends WebcController {
 
         const {organizationUid, blockchainDomainUid} = this.getState();
         this.model = {};
-        this.BlockchainDomainService = new BlockchainDomainService(this.DSUStorage);
+        this.BlockchainDomainService = new BlockchainDomainService();
 
         this.initNavigationListeners();
         this.getBlockchainDomainInformation(organizationUid, blockchainDomainUid);

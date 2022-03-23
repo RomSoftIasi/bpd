@@ -12,7 +12,7 @@ export default class PerformVoteController extends WebcController {
             uid: uid,
             answers: []
         }
-        this.VotingSessionService = new VotingSessionService(this.DSUStorage);
+        this.VotingSessionService = new VotingSessionService();
 
         this.getVoteSessionData();
         this.initNavigationListeners();

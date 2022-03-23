@@ -1,93 +1,39 @@
+import DSUService from "./DSUService.js";
 import {downloadFile} from "../../utils/utils.js";
 
-export default class GovernanceService {
+export default class VotingSessionService extends DSUService {
 
     NEWS_PATH = "/news";
     VOTING_PATH = "/voting";
 
-    constructor(DSUStorage) {
-        this.DSUStorage = DSUStorage;
+    constructor() {
+        super();
     }
 
-    listNews(callback) {
-        this.DSUStorage.call('listDSUs', this.NEWS_PATH, (err, newsIdentifierList) => {
-            if (err) {
-                return callback(err);
-            }
+    listNews = (callback) => this.getEntities(this.NEWS_PATH, callback);
 
-            const newsDataList = [];
-            const getNewsDSU = (newsIdentifierList) => {
-                if (!newsIdentifierList.length) {
-                    return callback(undefined, newsDataList);
-                }
+    getNewsData = (uid, callback) => this.getEntity(uid, this.NEWS_PATH, callback);
 
-                const id = newsIdentifierList.pop();
-                this.getNewsData(id.identifier, (err, newsData) => {
-                    if (err) {
-                        return callback(err);
-                    }
+    listVoteSessions = (callback) => this.getEntities(this.VOTING_PATH, callback);
 
-                    newsDataList.push(newsData);
-                    getNewsDSU(newsIdentifierList);
-                });
-            };
-
-            getNewsDSU(newsIdentifierList);
-        });
-    }
-
-    getNewsData(identifier, callback) {
-        this.DSUStorage.getObject(this.getNewsDataPath(identifier), callback);
-    }
-
-    listVoteSessions(callback) {
-        this.DSUStorage.call('listDSUs', this.VOTING_PATH, (err, votingSessionsIdentifierList) => {
-            if (err) {
-                return callback(err);
-            }
-
-            const voteSessionsDataList = [];
-            const getVotingSessionsDSU = (votingSessionsIdentifierList) => {
-                if (!votingSessionsIdentifierList.length) {
-                    return callback(undefined, voteSessionsDataList);
-                }
-
-                const id = votingSessionsIdentifierList.pop();
-                this.getVoteData(id.identifier, (err, newsData) => {
-                    if (err) {
-                        return callback(err);
-                    }
-
-                    voteSessionsDataList.push(newsData);
-                    getVotingSessionsDSU(votingSessionsIdentifierList);
-                });
-            };
-
-            getVotingSessionsDSU(votingSessionsIdentifierList);
-        });
-    }
-
-    getVoteData(identifier, callback) {
-        this.DSUStorage.getObject(this.getVotingDataPath(identifier), callback);
-    }
+    getVoteData = (uid, callback) => this.getEntity(uid, this.VOTING_PATH, callback);
 
     registerVotingSession(voteData, callback) {
-        this.DSUStorage.call('createSSIAndMount', this.VOTING_PATH, (err, keySSI) => {
+        this.createDSUAndMount(this.VOTING_PATH, (err, keySSI) => {
             if (err) {
-                callback(err, undefined);
-                return;
+                return callback(err);
             }
 
             voteData.keySSI = keySSI;
             voteData.uid = keySSI;
-            this.updateVotingSessionData(voteData, callback);
+            this.updateEntity(voteData, callback);
         });
     }
 
     updateVotingSessionData(voteData, callback) {
-        this.DSUStorage.setObject(this.getVotingDataPath(voteData.uid), voteData, (err) => {
+        this.updateEntity(voteData, (err) => {
             if (err) {
-                return callback(err, undefined);
+                return callback(err);
             }
 
             this.uploadCandidateDocumentation(voteData, callback);
@@ -112,22 +58,12 @@ export default class GovernanceService {
             }
 
             voteData.votes = existingVotes;
-            this.updateVotingSessionData(voteData, (err, response) => {
-                callback(err, response);
-            });
+            this.updateVotingSessionData(voteData, callback);
         });
     }
 
     downloadCandidateDocumentation(uid, documentName) {
         const downloadPath = `${this.VOTING_PATH}/${uid}`;
         downloadFile(downloadPath, documentName);
-    }
-
-    getNewsDataPath(identifier) {
-        return `${this.NEWS_PATH}/${identifier}/data.json`;
-    }
-
-    getVotingDataPath(identifier) {
-        return `${this.VOTING_PATH}/${identifier}/data.json`;
     }
 }

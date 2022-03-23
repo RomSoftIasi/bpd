@@ -8,7 +8,7 @@ export default class VotingDashboardController extends WebcController {
         super(...props);
 
         this.model = {votingSessions: []};
-        this.VotingSessionService = new VotingSessionService(this.DSUStorage);
+        this.VotingSessionService = new VotingSessionService();
 
         this.initNavigationListeners();
         this.displayVotingSessions();

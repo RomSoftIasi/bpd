@@ -1,12 +1,10 @@
 import VotingSessionController from "./VotingSessionController.js"
-import VotingSessionService from "../services/VotingSessionService.js";
 
 export default class ConsultationVotingController extends VotingSessionController {
     constructor(...props) {
         super(...props);
 
         this.model = this.getDefaultViewModel();
-        this.VotingSessionService = new VotingSessionService(this.DSUStorage);
 
         this.initNavigationListeners();
     }
